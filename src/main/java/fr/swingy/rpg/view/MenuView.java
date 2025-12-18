@@ -2,9 +2,17 @@ package fr.swingy.rpg.view;
 
 public class MenuView
 {
+	private ConsoleView view;
+
+	public void clearConsole()
+	{
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+	}
 
 	public void showGameListMenu()
 	{
+		clearConsole();
 		System.out.println("====== SWINGY RPG ======");
 		System.out.println("1. Game 1");
 		System.out.println("2. Game 2");
@@ -14,6 +22,7 @@ public class MenuView
 
 	public void showMainMenu()
 	{
+		clearConsole();
 		System.out.println("====== SWINGY RPG ======");
 		System.out.println("1. New Game");
 		System.out.println("2. Load Game");
@@ -23,6 +32,7 @@ public class MenuView
 
 	public void showNewCharacterMenu()
 	{
+		clearConsole();
 		System.out.println("====== SWINGY RPG ======");
 		System.out.println("Choose your character :");
 		System.out.println("1. Warrior	(HP:120 ATK:15 DEF:10)");

@@ -30,7 +30,7 @@ public class GameController
 				loadGame();
 				break;
 			case "3" :
-				exitGame();
+				state.stop();
 				break;
 			default  :
 				view.showMessage("Invalid choice !");
@@ -43,18 +43,13 @@ public class GameController
 		switch (input)
 		{
 			case "1" :
-				view.showMessage("Loading Game 1");
-				exitGame();
+				state.setPlayer(PlayerFactory.createPlayer("1", "save1"));
 				break;
-			case "2" : 
-				view.showMessage("Loading Game 2");
-				exitGame();
-				break;
-			case "3" :
+			case "2" :
+				state.setPlayer(PlayerFactory.createPlayer("1", "save2"));
 				break;
 			default  :
 				view.showMessage("Invalid choice !");
-				loadGame();
 				break;
 		}
 	}
@@ -62,56 +57,57 @@ public class GameController
 	private void handleUserInputCharacter(String input)
 	{
 		Player player = PlayerFactory.createPlayer(input, "check");
-		if (input.equals("3"))
-		{
-			startGame();
-			return;
-		}
 		if (player == null)
-		{
-			view.showMessage("Invalid choice !");
-			startNewGame();
 			return;
-		}
 		view.showMessage("Enter your name : ");
 		String name = view.askInput();
 
 		if (name == null)
-		{
-			startNewGame();
 			return;
-		}
 		player.setName(name);
 		state.setPlayer(player);
 	}
 
 	private void loadGame()
 	{
-		view.showMessage("Current game :");
 		mview.showGameListMenu();
-		handleUserInputGameList(view.askInput());
+		String input = view.askInput();
+		while (!input.equals("3"))
+		{	
+			handleUserInputGameList(input);
+			if (state.getPlayer() != null)
+			{
+				view.showMessage("Starting Game");
+				view.showPlayer(state.getPlayer());
+				state.stop();
+				return;
+			}
+			mview.showGameListMenu();
+			input = view.askInput();
+		}
 	}
 
 	private void startNewGame()
 	{
 		mview.showNewCharacterMenu();
-		handleUserInputCharacter(view.askInput());
-		if (state.getPlayer() != null)
+		String input = view.askInput();
+		while (!input.equals("3"))
 		{
-			view.showMessage("Starting Game");
-			view.showPlayer(state.getPlayer());
-			state.stop();
+			handleUserInputCharacter(input);
+			if (state.getPlayer() != null)
+			{
+				view.showMessage("Starting Game");
+				view.showPlayer(state.getPlayer());
+				state.stop();
+				return;
+			}
+			mview.showNewCharacterMenu();
+			input = view.askInput();
 		}
-	}
-
-	private void exitGame()
-	{
-		state.stop();
 	}
 
 	public void startGame()
 	{
-		view.showMessage("Welcome to the rpg Game");
 		while (state.isRunning())
 		{
 			mview.showMainMenu();

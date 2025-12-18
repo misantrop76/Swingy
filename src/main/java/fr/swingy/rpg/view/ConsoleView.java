@@ -12,6 +12,12 @@ public class ConsoleView
 		this.scanner = new Scanner(System.in);
 	}
 
+	public void clearConsole()
+	{
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+	}
+
 	public String askInput()
 	{
 		return (scanner.nextLine());
@@ -19,11 +25,13 @@ public class ConsoleView
 
 	public void showMessage(String message)
 	{
+		clearConsole();
 		System.out.println(message);
 	}
 
 	public void showPlayer(Player player)
 	{
+		clearConsole();
 		System.out.print("Character : ");
 		System.out.println(player.getName());
 		System.out.print("Class : ");

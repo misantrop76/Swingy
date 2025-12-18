@@ -1,0 +1,16 @@
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/Main.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/entity/Mage.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/world/Tile.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/view/ConsoleView.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/fight/Battle.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/controller/GameController.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/entity/Player.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/weapon/Weapon.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/factory/PlayerFactory.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/entity/Character.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/view/MenuView.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/controller/FightController.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/entity/Enemy.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/world/Map.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/entity/Warrior.java
+/home/mminet/Documents/Swingy/src/main/java/fr/swingy/rpg/model/GameState.java
