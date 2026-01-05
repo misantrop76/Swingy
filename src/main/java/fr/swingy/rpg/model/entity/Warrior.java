@@ -4,7 +4,7 @@ public class Warrior extends Player
 {
 	public Warrior(String name)
 	{
-		super(name, 120, 15, 10);
+		super(name, 120, 15, 10, "🧍");
 	}
 
 	@Override

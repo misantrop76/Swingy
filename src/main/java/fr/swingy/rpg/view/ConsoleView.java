@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import fr.swingy.rpg.model.world.Map;
 import java.util.Scanner;
 import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.world.Tile;
 
 public class ConsoleView
@@ -48,9 +49,7 @@ public class ConsoleView
 		System.out.println();
 		System.out.println("        🏆🏆🏆  CONGRATULATIONS  🏆🏆🏆");
 		System.out.println();
-		System.out.println("╔════════════════ PLAYER STATS ════════════════╗");
 		showPlayer(player);
-		System.out.println("╚══════════════════════════════════════════════╝");
 	}
 
 	public void showGame(Map map, Player player)
@@ -71,13 +70,14 @@ public class ConsoleView
 
 	public void showPlayer(Player player)
 	{
-		System.out.println("╔══════════════════ SWINGY RPG ══════════════════╗");
-		System.out.println("║ 👤 Character : " + player.getName());
-		System.out.println("║ 🧙 Class     : " + player.getClassName());
-		System.out.println("║ ❤️  HP        : " + player.getHp());
-		System.out.println("║ 🛡️  Defence   : " + player.getDefence());
-		System.out.println("║ ⚔️  Attack    : " + player.getAttack());
-		System.out.println("╚════════════════════════════════════════════════╝");
+		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");
+		System.out.println("║ 👤 Character	: " + player.getName());
+		System.out.println("║ 🧙 Class	: " + player.getClassName());
+		System.out.println("║	❤️  HP		: " + player.getHp());
+		System.out.println("║	🛡️  Defence	: " + player.getDefence());
+		System.out.println("║	⚔️  Attack	: " + player.getAttack());
+		System.out.println("║	📈 Lvl		: " + player.getLvl() + " (" + player.getXp()  + "/" + player.getXpMax() + "XP)");
+		System.out.println("╚═════════════════════════════════════════════════╝");
 	}
 
 	public void showMap(Map map, int playerPos)
@@ -92,12 +92,10 @@ public class ConsoleView
 
 		for (Tile tile : mymap)
 		{
-			if (x == playerPos)
-				System.out.print(" 🧍");
-			else if (tile.getCharacter() == null)
-				System.out.print(" ⬜");
+			if (tile.getCharacter() == null)
+				System.out.print("⬛");
 			else
-				System.out.print(" 👾");
+				System.out.print(tile.getCharacter().getIcon());
 
 			x++;
 			if (x % height == 0)

@@ -8,11 +8,17 @@ public abstract class Player extends Character
 	protected int xp;
 	protected int prevPos;
 
-	public Player (String name, int hp, int attack, int defence)
+	public Player (String name, int hp, int attack, int defence, String icon)
 	{
-		super(name, hp, attack, defence);
+		super(name, hp, attack, defence, icon);
 		this.lvl = 1;
 		this.xp = 0;
+	}
+
+	public int getXpMax()
+	{
+		int lvl = this.lvl;
+		return (lvl * 1000 + ((lvl - 1) * (lvl - 1)) * 450);
 	}
 
 	public int getXp()

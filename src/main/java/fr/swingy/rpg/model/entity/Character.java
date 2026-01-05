@@ -7,13 +7,15 @@ public abstract class Character
 	protected int attack;
 	protected int defence;
 	protected int pos;
+	protected String icon;
 
-	public Character(String name, int hp, int attack, int defence)
+	public Character(String name, int hp, int attack, int defence, String icon)
 	{
 		this.name = name;
 		this.hp = hp;
 		this.attack = attack;
 		this.defence = defence;
+		this.icon = icon;
 	}
 
 	public boolean isAlive()
@@ -44,6 +46,16 @@ public abstract class Character
 	public int getPos()
 	{
 		return (this.pos);
+	}
+
+	public void setIcon(String icon)
+	{
+		this.icon = icon;
+	}
+
+	public String getIcon()
+	{
+		return (this.icon);
 	}
 
 	public int getHp()

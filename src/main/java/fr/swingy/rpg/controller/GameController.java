@@ -107,12 +107,11 @@ public class GameController
 	private void gameLoop()
 	{
 		Player player = state.getPlayer();
-		state.setMap(new Map(state.getPlayer().getLvl()));
+		state.setMap(new Map(state.getPlayer().getLvl(), player));
 		Map map = state.getMap();
 		view.showMessage("Starting Game");
 		player.setPos(map.getMap().size() / 2);
 		player.setPrevPos(player.getPos());
-		map.addCharacter(player.getPos(), player);
 		while (state.isRunning())
 		{
 			view.showGame(state.getMap(), player);
@@ -133,7 +132,7 @@ public class GameController
 			handleUserInputGameList(input);
 			if (state.getPlayer() != null)
 			{
-				state.getPlayer().setLvl(7);
+				state.getPlayer().setLvl(4);
 				gameLoop();
 				return;
 			}
