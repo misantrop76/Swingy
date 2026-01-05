@@ -6,6 +6,7 @@ public abstract class Character
 	protected int hp;
 	protected int attack;
 	protected int defence;
+	protected int pos;
 
 	public Character(String name, int hp, int attack, int defence)
 	{
@@ -33,6 +34,16 @@ public abstract class Character
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public void setPos(int pos)
+	{
+		this.pos = pos;
+	}
+
+	public int getPos()
+	{
+		return (this.pos);
 	}
 
 	public int getHp()

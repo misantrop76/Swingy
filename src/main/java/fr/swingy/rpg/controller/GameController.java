@@ -5,6 +5,8 @@ import fr.swingy.rpg.view.MenuView;
 import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.factory.PlayerFactory;
+import fr.swingy.rpg.model.world.Map;
+
 
 public class GameController
 {
@@ -68,6 +70,60 @@ public class GameController
 		state.setPlayer(player);
 	}
 
+	private void handleUserChoice(String input, Player player, int mapHeight)
+	{
+		int x = player.getPos() % mapHeight;
+		int y = player.getPos() / mapHeight;
+		switch (input)
+		{
+			case "1" :
+				y--;
+				break;
+			case "2" :
+				y++;
+				break;
+			case "3" :
+				x++;
+				break;
+			case "4" :
+				x--;
+				break;
+			case "5" :
+				state.stop();
+				return;
+			default  :
+				view.showMessage("Invalid choice !");
+				return;
+		}
+		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
+			player.setPos((y * mapHeight) + x);
+		else
+		{
+			state.stop();
+			view.showWinGame(player);
+		}
+	}
+
+	private void gameLoop()
+	{
+		Player player = state.getPlayer();
+		state.setMap(new Map(state.getPlayer().getLvl()));
+		Map map = state.getMap();
+		view.showMessage("Starting Game");
+		player.setPos(map.getMap().size() / 2);
+		player.setPrevPos(player.getPos());
+		map.addCharacter(player.getPos(), player);
+		while (state.isRunning())
+		{
+			view.showGame(state.getMap(), player);
+			handleUserChoice(view.askInput(), player, map.getHeight());
+			map.removeCharacter(player.getPrevPos());
+			map.addCharacter(player.getPos(), player);
+			player.setPrevPos(player.getPos());
+		}
+		state.stop();
+	}
+
 	private void loadGame()
 	{
 		mview.showGameListMenu();
@@ -77,9 +133,8 @@ public class GameController
 			handleUserInputGameList(input);
 			if (state.getPlayer() != null)
 			{
-				view.showMessage("Starting Game");
-				view.showPlayer(state.getPlayer());
-				state.stop();
+				state.getPlayer().setLvl(7);
+				gameLoop();
 				return;
 			}
 			mview.showGameListMenu();
@@ -96,9 +151,7 @@ public class GameController
 			handleUserInputCharacter(input);
 			if (state.getPlayer() != null)
 			{
-				view.showMessage("Starting Game");
-				view.showPlayer(state.getPlayer());
-				state.stop();
+				gameLoop();
 				return;
 			}
 			mview.showNewCharacterMenu();
