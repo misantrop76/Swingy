@@ -40,6 +40,7 @@ public class Map
 		for (int i = 0; i < this.height * this.height; i++)
 			this.map.add(new Tile());
 		addCharacter(this.map.size() / 2, player);
+		player.setPos(this.map.size() / 2);
 		Random random = new Random();
 		for (int i = 0; i < this.height * 2; i++)
 		{
@@ -49,6 +50,18 @@ public class Map
 				pos = random.nextInt(this.map.size());
 			addCharacter(pos, monster);
 		}
+	}
+
+	public Character getCharacter(int pos)
+	{
+		int i = 0;
+		for (Tile tile : this.map)
+		{
+			if (pos == i)
+				return (tile.getCharacter());
+			i++;
+		}
+		return (null);
 	}
 
 	public void	addCharacter(int pos, Character character)

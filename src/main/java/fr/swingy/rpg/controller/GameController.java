@@ -3,10 +3,12 @@ package fr.swingy.rpg.controller;
 import fr.swingy.rpg.view.ConsoleView;
 import fr.swingy.rpg.view.MenuView;
 import fr.swingy.rpg.model.GameState;
+import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.world.Map;
-
+import fr.swingy.rpg.controller.FightController;
+import java.util.Random;
 
 public class GameController
 {
@@ -70,6 +72,30 @@ public class GameController
 		state.setPlayer(player);
 	}
 
+	private Boolean handleUserChoiceFight()
+	{
+		Random random = new Random();
+		int choice = 0;
+		view.showFightChoice();
+		String input = view.askInput();
+		switch (input)
+		{
+			case "1" :
+				return true;
+			case "2" :
+				if (random.nextBoolean())
+					return true;
+				else
+				{
+					view.showMessage("You escape the fight !");
+					return false;
+				}
+			default  :
+				view.showMessage("Invalid choice !");
+				return true;
+		}
+	}
+
 	private void handleUserChoice(String input, Player player, int mapHeight)
 	{
 		int x = player.getPos() % mapHeight;
@@ -96,11 +122,35 @@ public class GameController
 				return;
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
-			player.setPos((y * mapHeight) + x);
+		{
+			Character isEnemy = state.getMap().getCharacter((y * mapHeight) + x);
+			if (isEnemy != null && handleUserChoiceFight())
+			{
+				FightController.startFight(state.getPlayer(), isEnemy);
+				if (isEnemy.getHp() == 0)
+					player.setPos((y * mapHeight) + x);
+				else
+				{
+					state.stop();
+					view.showLoseGame(state.getPlayer());
+				}
+			}
+			else if (isEnemy == null)
+				player.setPos((y * mapHeight) + x);
+		}
 		else
 		{
 			state.stop();
 			view.showWinGame(player);
+		}
+		if (player.getXp() >= player.getXpMax())
+		{
+			while (player.getXp() >= player.getXpMax())
+			{
+				player.setXp(player.getXp() - player.getXpMax());
+				player.setLvl(player.getLvl() + 1);
+			}
+			state.getMap().updateMap(player.getLvl(), player);
 		}
 	}
 

@@ -37,6 +37,13 @@ public class ConsoleView
 		System.out.println("  " + message);
 	}
 
+	public void showLoseGame(Player player)
+	{
+		System.out.println("You lose.");
+		System.out.println();
+		showPlayer(player);
+	}
+
 	public void showWinGame(Player player)
 	{
 		clearConsole();
@@ -50,6 +57,15 @@ public class ConsoleView
 		System.out.println("        🏆🏆🏆  CONGRATULATIONS  🏆🏆🏆");
 		System.out.println();
 		showPlayer(player);
+	}
+
+	public void showFightChoice()
+	{
+		clearConsole();
+		System.out.println("╔══════════════════ ACTION ══════════════════╗");
+		System.out.println("║ 1 ➜ Fight                                  ║");
+		System.out.println("║ 2 ➜ Run                                    ║");
+		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
 	public void showGame(Map map, Player player)
@@ -66,6 +82,12 @@ public class ConsoleView
 		System.out.println("║ 4 ➜ Move Left                              ║");
 		System.out.println("║ 5 ➜ Exit Game                              ║");
 		System.out.println("╚════════════════════════════════════════════╝");
+	}
+
+	public void showFightUpdate(Character attaker, Character target, int damage)
+	{
+		String print = attaker.getIcon() + "➜" + target.getIcon() + " : ";
+		System.out.println(print + attaker.getName() + " attack " + target.getName() + " , causing " + damage + " damage.");
 	}
 
 	public void showPlayer(Player player)

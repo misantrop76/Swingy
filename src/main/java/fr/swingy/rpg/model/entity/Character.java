@@ -1,5 +1,7 @@
 package fr.swingy.rpg.model.entity;
 
+import fr.swingy.rpg.view.ConsoleView;
+
 public abstract class Character
 {
 	protected String name;
@@ -23,9 +25,16 @@ public abstract class Character
 		return hp > 0;
 	}
 
-	public void takeDamage(int damage)
+	public void takeDamage(Character character)
 	{
-		hp -= damage;
+		ConsoleView view = new ConsoleView();
+		double reduction = this.getDefence() / (this.getDefence() + 100.0);
+		int degats = (int)(character.getAttack() * (1 - reduction));
+		degats = Math.max(degats, 1);
+		view.showFightUpdate(character, this, character.getAttack());
+		hp -= degats;
+		if (hp < 0)
+			hp = 0;
 	}
 
 	public String getName()
