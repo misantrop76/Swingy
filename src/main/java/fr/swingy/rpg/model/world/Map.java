@@ -3,10 +3,11 @@ package fr.swingy.rpg.model.world;
 import java.util.ArrayList;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.entity.Monster;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.factory.EnemyFactory;
 import java.util.Random;
 
-public class Map 
+public class Map
 {
 	private ArrayList <Tile>	map = new ArrayList<Tile>();
 	private int					height;
@@ -28,7 +29,7 @@ public class Map
 		for (Tile tile : this.map)
 		{	
 			if (pos == i)
-				tile.setCharacter(null);
+				tile.setCharacter(null, null);
 			i++;
 		}
 	}
@@ -39,16 +40,16 @@ public class Map
 		map.clear();
 		for (int i = 0; i < this.height * this.height; i++)
 			this.map.add(new Tile());
-		addCharacter(this.map.size() / 2, player);
+		addCharacter(this.map.size() / 2, player, null);
 		player.setPos(this.map.size() / 2);
 		Random random = new Random();
-		for (int i = 0; i < this.height * 2; i++)
+		for (int i = 0; i < this.height * 4; i++)
 		{
-			Monster monster = new Monster("Igor");
+			Enemy enemy = EnemyFactory.createEnemy(playerLvl);
 			int pos = random.nextInt(this.map.size());
 			while (map.get(pos).getCharacter() != null)
 				pos = random.nextInt(this.map.size());
-			addCharacter(pos, monster);
+			addCharacter(pos, enemy, enemy);
 		}
 	}
 
@@ -64,7 +65,19 @@ public class Map
 		return (null);
 	}
 
-	public void	addCharacter(int pos, Character character)
+	public Enemy getEnemy(int pos)
+	{
+		int i = 0;
+		for (Tile tile : this.map)
+		{
+			if (pos == i)
+				return (tile.getEnemy());
+			i++;
+		}
+		return (null);
+	}
+
+	public void	addCharacter(int pos, Character character, Enemy enemy)
 	{
 		int i = 0;
 		if (character == null)
@@ -72,7 +85,7 @@ public class Map
 		for (Tile tile : this.map)
 		{
 			if (pos == i)
-				tile.setCharacter(character);
+				tile.setCharacter(character, enemy);
 			i++;
 		}
 	}

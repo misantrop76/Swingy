@@ -1,6 +1,7 @@
 package fr.swingy.rpg.model.entity;
 
 import fr.swingy.rpg.view.ConsoleView;
+import java.util.Random;
 
 public abstract class Character
 {
@@ -28,11 +29,17 @@ public abstract class Character
 	public void takeDamage(Character character)
 	{
 		ConsoleView view = new ConsoleView();
+		Random random = new Random();
+
+		double variance = 0.85 + (random.nextDouble() * 0.30);
 		double reduction = this.getDefence() / (this.getDefence() + 100.0);
-		int degats = (int)(character.getAttack() * (1 - reduction));
-		degats = Math.max(degats, 1);
-		view.showFightUpdate(character, this, character.getAttack());
-		hp -= degats;
+		double degats = (double)character.getAttack() * (1 - reduction);
+		Boolean isCritical = random.nextInt(100) < 10;
+
+		if (isCritical)
+			degats *= 1.5;
+		view.showFightUpdate(character, this, (int)degats, isCritical);
+		hp -= (int)degats;
 		if (hp < 0)
 			hp = 0;
 	}

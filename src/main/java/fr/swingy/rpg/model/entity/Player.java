@@ -7,12 +7,34 @@ public abstract class Player extends Character
 	protected int lvl;
 	protected int xp;
 	protected int prevPos;
+	protected int hpMax;
 
 	public Player (String name, int hp, int attack, int defence, String icon)
 	{
 		super(name, hp, attack, defence, icon);
+		this.hpMax = hp;
 		this.lvl = 1;
 		this.xp = 0;
+	}
+
+	public void updateLvl()
+	{
+		this.xp -= this.getXpMax();
+		this.hpMax += 10;
+		this.hp = this.hpMax;
+		this.defence++;
+		this.attack++;
+		this.lvl++;
+	}
+
+	public int getHpMax()
+	{
+		return (this.hpMax);
+	}
+
+	public void setHpMax(int hpMax)
+	{
+		this.hpMax = hpMax;
 	}
 
 	public int getXpMax()

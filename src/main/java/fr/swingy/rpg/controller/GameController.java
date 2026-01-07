@@ -5,6 +5,7 @@ import fr.swingy.rpg.view.MenuView;
 import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.controller.FightController;
@@ -123,12 +124,15 @@ public class GameController
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
 		{
-			Character isEnemy = state.getMap().getCharacter((y * mapHeight) + x);
+			Enemy isEnemy = state.getMap().getEnemy((y * mapHeight) + x);
 			if (isEnemy != null && handleUserChoiceFight())
 			{
 				FightController.startFight(state.getPlayer(), isEnemy);
 				if (isEnemy.getHp() == 0)
+				{
+					state.getMap().removeCharacter((y * mapHeight) + x);
 					player.setPos((y * mapHeight) + x);
+				}
 				else
 				{
 					state.stop();
@@ -147,8 +151,8 @@ public class GameController
 		{
 			while (player.getXp() >= player.getXpMax())
 			{
-				player.setXp(player.getXp() - player.getXpMax());
-				player.setLvl(player.getLvl() + 1);
+				player.updateLvl();
+				view.showMessage("⬆️ LEVEL UP ⬆️");
 			}
 			state.getMap().updateMap(player.getLvl(), player);
 		}
@@ -167,7 +171,7 @@ public class GameController
 			view.showGame(state.getMap(), player);
 			handleUserChoice(view.askInput(), player, map.getHeight());
 			map.removeCharacter(player.getPrevPos());
-			map.addCharacter(player.getPos(), player);
+			map.addCharacter(player.getPos(), player, null);
 			player.setPrevPos(player.getPos());
 		}
 		state.stop();

@@ -18,7 +18,6 @@ public class MenuView
 		System.out.println("║ 2 ➜ Saved Game 2                      ║");
 		System.out.println("║ 3 ➜ Back                              ║");
 		System.out.println("╚══════════════════════════════════════╝");
-		System.out.print("➜ ");
 	}
 
 	public void showMainMenu()
@@ -31,7 +30,6 @@ public class MenuView
 		System.out.println("║ 2 ➜ Load Game                        ║");
 		System.out.println("║ 3 ➜ Exit                             ║");
 		System.out.println("╚══════════════════════════════════════╝");
-		System.out.print("➜ ");
 	}
 
 	public void showNewCharacterMenu()
@@ -40,15 +38,23 @@ public class MenuView
 		showTitle();
 
 		System.out.println("╔════════════ CREATE CHARACTER ════════════╗");
-		System.out.println("║ 1 ➜ 🗡️  Warrior                           ║");
-		System.out.println("║     HP : 120   ATK : 15   DEF : 10       ║");
+		System.out.println("║ 1 ➜ 🤺 Warrior                           ║");
+		System.out.println("║     HP : 130   ATK : 15   DEF : 12       ║");
 		System.out.println("║                                          ║");
-		System.out.println("║ 2 ➜ 🔮 Mage                              ║");
-		System.out.println("║     HP : 80    ATK : 25   DEF : 3        ║");
+		System.out.println("║ 2 ➜ 🧙 Mage                              ║");
+		System.out.println("║     HP : 80    ATK : 18   DEF : 5        ║");
 		System.out.println("║                                          ║");
-		System.out.println("║ 3 ➜ Back                                 ║");
+		System.out.println("║ 3 ➜ 🥷 Rogue                             ║");
+		System.out.println("║     HP : 100   ATK : 16   DEF : 8        ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 4 ➜ 🌟 Paladin                           ║");
+		System.out.println("║     HP : 120   ATK : 14   DEF : 15       ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 5 ➜ 🪓 Berserker                         ║");
+		System.out.println("║     HP : 150   ATK : 20   DEF : 7        ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 6 ➜ Back                                 ║");
 		System.out.println("╚══════════════════════════════════════════╝");
-		System.out.print("➜ ");
 	}
 
 	/* ======== TITLE ======== */

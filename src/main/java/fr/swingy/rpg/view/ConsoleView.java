@@ -30,11 +30,7 @@ public class ConsoleView
 
 	public void showMessage(String message)
 	{
-		clearConsole();
-		System.out.println("╔════════════════════════════════════╗");
-		System.out.println("║              MESSAGE               ║");
-		System.out.println("╠════════════════════════════════════╣");
-		System.out.println("  " + message);
+		System.out.println(message);
 	}
 
 	public void showLoseGame(Player player)
@@ -84,18 +80,43 @@ public class ConsoleView
 		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
-	public void showFightUpdate(Character attaker, Character target, int damage)
-	{
-		String print = attaker.getIcon() + "➜" + target.getIcon() + " : ";
-		System.out.println(print + attaker.getName() + " attack " + target.getName() + " , causing " + damage + " damage.");
-	}
+public void showFightUpdate(Character attacker, Character target, int damage, boolean isCritical)
+{
+    String prefix = attacker.getIcon() + " ➜ " + target.getIcon() + " : ";
+    String message;
+
+    if (isCritical)
+    {
+        message = "💥 CRITICAL! "
+                + attacker.getName()
+                + " attacks "
+                + target.getName()
+                + " for "
+                + damage
+                + " damage";
+    }
+    else
+    {
+        message = attacker.getName()
+                + " attacks "
+                + target.getName()
+                + " for "
+                + damage
+                + " damage";
+    }
+
+    message += " | HP: " + target.getHp();
+
+    System.out.println(prefix + message);
+}
+
 
 	public void showPlayer(Player player)
 	{
 		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");
 		System.out.println("║ 👤 Character	: " + player.getName());
 		System.out.println("║ 🧙 Class	: " + player.getClassName());
-		System.out.println("║	❤️  HP		: " + player.getHp());
+		System.out.println("║	❤️  HP		: " + player.getHp() + "/" + player.getHpMax());
 		System.out.println("║	🛡️  Defence	: " + player.getDefence());
 		System.out.println("║	⚔️  Attack	: " + player.getAttack());
 		System.out.println("║	📈 Lvl		: " + player.getLvl() + " (" + player.getXp()  + "/" + player.getXpMax() + "XP)");

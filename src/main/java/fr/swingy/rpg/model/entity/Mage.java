@@ -4,7 +4,7 @@ public class Mage extends Player
 {
 	public Mage(String name)
 	{
-		super(name, 120, 15, 10, "🧍");
+		super(name, 80, 18, 5, "🧙");
 	}
 
 	@Override
