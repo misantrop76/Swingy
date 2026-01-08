@@ -4,7 +4,7 @@ public class Rogue extends Player
 {
 	public Rogue(String name)
 	{
-		super(name, 100, 16, 8, "🥷");
+		super(name, 120, 18, 10, "🥷");
 	}
 
 	@Override

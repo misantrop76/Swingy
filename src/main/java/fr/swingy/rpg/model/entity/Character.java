@@ -1,5 +1,6 @@
 package fr.swingy.rpg.model.entity;
 
+import fr.swingy.rpg.model.artefacts.Artefact;
 import fr.swingy.rpg.view.ConsoleView;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ public abstract class Character
 	protected int defence;
 	protected int pos;
 	protected String icon;
+	protected Artefact artefact;
 
 	public Character(String name, int hp, int attack, int defence, String icon)
 	{
@@ -19,11 +21,22 @@ public abstract class Character
 		this.attack = attack;
 		this.defence = defence;
 		this.icon = icon;
+		this.artefact = null;
 	}
 
 	public boolean isAlive()
 	{
 		return hp > 0;
+	}
+
+	public void setArtefact(Artefact artefact)
+	{
+		this.artefact = artefact;
+	}
+
+	public Artefact getArtefact()
+	{
+		return (this.artefact);
 	}
 
 	public void takeDamage(Character character)
@@ -33,7 +46,7 @@ public abstract class Character
 
 		double variance = 0.85 + (random.nextDouble() * 0.30);
 		double reduction = this.getDefence() / (this.getDefence() + 100.0);
-		double degats = (double)character.getAttack() * (1 - reduction);
+		double degats = (double)character.getAttack() * (1 - reduction) * variance;
 		Boolean isCritical = random.nextInt(100) < 10;
 
 		if (isCritical)

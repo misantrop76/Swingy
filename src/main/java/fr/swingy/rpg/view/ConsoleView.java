@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import fr.swingy.rpg.model.world.Map;
 import java.util.Scanner;
 import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.world.Tile;
 
@@ -33,12 +34,21 @@ public class ConsoleView
 		System.out.println(message);
 	}
 
-	public void showLoseGame(Player player)
-	{
-		System.out.println("You lose.");
-		System.out.println();
-		showPlayer(player);
-	}
+public void showLoseGame(Player player)
+{
+    clearConsole();
+    System.out.println("██╗   ██╗ ██████╗ ██╗   ██╗    ██╗      ██████╗ ███████╗███████╗");
+    System.out.println("╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║     ██╔═══██╗██╔════╝██╔════╝");
+    System.out.println(" ╚████╔╝ ██║   ██║██║   ██║    ██║     ██║   ██║███████╗█████╗  ");
+    System.out.println("  ╚██╔╝  ██║   ██║██║   ██║    ██║     ██║   ██║╚════██║██╔══╝  ");
+    System.out.println("   ██║   ╚██████╔╝╚██████╔╝    ███████╗╚██████╔╝███████║███████╗");
+    System.out.println("   ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝ ╚═════╝ ╚══════╝╚══════╝");
+    System.out.println();
+    System.out.println("        ☠️ ☠️ ☠️   GAME OVER  ☠️ ☠️ ☠️");
+    System.out.println();
+    showPlayer(player);
+}
+
 
 	public void showWinGame(Player player)
 	{
@@ -55,9 +65,10 @@ public class ConsoleView
 		showPlayer(player);
 	}
 
-	public void showFightChoice()
+	public void showFightChoice(Enemy enemy)
 	{
 		clearConsole();
+		System.out.println("You meet a " + enemy.getName() + " " + enemy.getIcon() + "(" + enemy.getHp() + "PV)");
 		System.out.println("╔══════════════════ ACTION ══════════════════╗");
 		System.out.println("║ 1 ➜ Fight                                  ║");
 		System.out.println("║ 2 ➜ Run                                    ║");
@@ -137,8 +148,12 @@ public void showFightUpdate(Character attacker, Character target, int damage, bo
 		{
 			if (tile.getCharacter() == null)
 				System.out.print("⬛");
-			else
+			// else
+			// 	System.out.print(tile.getCharacter().getIcon());
+			else if (x == playerPos)
 				System.out.print(tile.getCharacter().getIcon());
+			else
+				System.out.print("❓");
 
 			x++;
 			if (x % height == 0)

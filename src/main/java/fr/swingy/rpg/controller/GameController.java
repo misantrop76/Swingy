@@ -73,11 +73,11 @@ public class GameController
 		state.setPlayer(player);
 	}
 
-	private Boolean handleUserChoiceFight()
+	private Boolean handleUserChoiceFight(Enemy enemy)
 	{
 		Random random = new Random();
 		int choice = 0;
-		view.showFightChoice();
+		view.showFightChoice(enemy);
 		String input = view.askInput();
 		switch (input)
 		{
@@ -87,10 +87,7 @@ public class GameController
 				if (random.nextBoolean())
 					return true;
 				else
-				{
-					view.showMessage("You escape the fight !");
 					return false;
-				}
 			default  :
 				view.showMessage("Invalid choice !");
 				return true;
@@ -125,15 +122,10 @@ public class GameController
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
 		{
 			Enemy isEnemy = state.getMap().getEnemy((y * mapHeight) + x);
-			if (isEnemy != null && handleUserChoiceFight())
+			if (isEnemy != null && handleUserChoiceFight(isEnemy))
 			{
-				FightController.startFight(state.getPlayer(), isEnemy);
-				if (isEnemy.getHp() == 0)
-				{
-					state.getMap().removeCharacter((y * mapHeight) + x);
-					player.setPos((y * mapHeight) + x);
-				}
-				else
+				FightController.startFight(state.getPlayer(), isEnemy, state.getMap());
+				if (player.getHp() == 0)
 				{
 					state.stop();
 					view.showLoseGame(state.getPlayer());
@@ -146,15 +138,6 @@ public class GameController
 		{
 			state.stop();
 			view.showWinGame(player);
-		}
-		if (player.getXp() >= player.getXpMax())
-		{
-			while (player.getXp() >= player.getXpMax())
-			{
-				player.updateLvl();
-				view.showMessage("⬆️ LEVEL UP ⬆️");
-			}
-			state.getMap().updateMap(player.getLvl(), player);
 		}
 	}
 
@@ -199,7 +182,7 @@ public class GameController
 	{
 		mview.showNewCharacterMenu();
 		String input = view.askInput();
-		while (!input.equals("3"))
+		while (!input.equals("6"))
 		{
 			handleUserInputCharacter(input);
 			if (state.getPlayer() != null)

@@ -5,13 +5,15 @@ import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.view.ConsoleView;
+import fr.swingy.rpg.model.world.Map;
 
 public class FightController 
 {
-	public static void startFight(Player player, Enemy enemy)
+	public static void startFight(Player player, Enemy enemy, Map map)
 	{
 		Random random = new Random();
-		System.out.println("⚔️ LET THE BATTLE BEGIN ⚔️");
+		System.out.println();
+		System.out.println("⚔️  LET THE BATTLE BEGIN ⚔️");
 
 		Boolean rand = random.nextBoolean();
 		while (player.getHp() > 0 && enemy.getHp() > 0)
@@ -35,11 +37,22 @@ public class FightController
 		}
 		ConsoleView view = new ConsoleView();
 		if (enemy.getHp() != 0)
-			view.showMessage("You lose the fight !");
+			view.showMessage("\nYou lose the battle !");
 		else
 		{
-			view.showMessage("You win the fight !");
+			map.removeCharacter(enemy.getPos());
+			player.setPos(enemy.getPos());
+			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
+			if (player.getXp() >= player.getXpMax())
+			{
+				while (player.getXp() >= player.getXpMax())
+				{
+					player.updateLvl();
+					view.showMessage("\n⬆️  LEVEL UP ⬆️");
+				}
+				map.updateMap(player.getLvl(), player);
+			}
 		}
 		try
 		{

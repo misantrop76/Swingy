@@ -15,6 +15,7 @@ public abstract class Player extends Character
 		this.hpMax = hp;
 		this.lvl = 1;
 		this.xp = 0;
+		this.artefact = null;
 	}
 
 	public void updateLvl()

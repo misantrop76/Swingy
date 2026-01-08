@@ -45,7 +45,7 @@ public class MenuView
 		System.out.println("║     HP : 80    ATK : 18   DEF : 5        ║");
 		System.out.println("║                                          ║");
 		System.out.println("║ 3 ➜ 🥷 Rogue                             ║");
-		System.out.println("║     HP : 100   ATK : 16   DEF : 8        ║");
+		System.out.println("║     HP : 120   ATK : 18   DEF : 10        ║");
 		System.out.println("║                                          ║");
 		System.out.println("║ 4 ➜ 🌟 Paladin                           ║");
 		System.out.println("║     HP : 120   ATK : 14   DEF : 15       ║");
