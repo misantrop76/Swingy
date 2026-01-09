@@ -7,6 +7,7 @@ import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.world.Tile;
+import fr.swingy.rpg.model.artefacts.Artefact;
 
 public class ConsoleView
 {
@@ -34,21 +35,39 @@ public class ConsoleView
 		System.out.println(message);
 	}
 
-public void showLoseGame(Player player)
-{
-    clearConsole();
-    System.out.println("██╗   ██╗ ██████╗ ██╗   ██╗    ██╗      ██████╗ ███████╗███████╗");
-    System.out.println("╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║     ██╔═══██╗██╔════╝██╔════╝");
-    System.out.println(" ╚████╔╝ ██║   ██║██║   ██║    ██║     ██║   ██║███████╗█████╗  ");
-    System.out.println("  ╚██╔╝  ██║   ██║██║   ██║    ██║     ██║   ██║╚════██║██╔══╝  ");
-    System.out.println("   ██║   ╚██████╔╝╚██████╔╝    ███████╗╚██████╔╝███████║███████╗");
-    System.out.println("   ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝ ╚═════╝ ╚══════╝╚══════╝");
-    System.out.println();
-    System.out.println("        ☠️ ☠️ ☠️   GAME OVER  ☠️ ☠️ ☠️");
-    System.out.println();
-    showPlayer(player);
-}
+	public void showLoseGame(Player player)
+	{
+	    clearConsole();
+	    System.out.println("██╗   ██╗ ██████╗ ██╗   ██╗    ██╗      ██████╗ ███████╗███████╗");
+	    System.out.println("╚██╗ ██╔╝██╔═══██╗██║   ██║    ██║     ██╔═══██╗██╔════╝██╔════╝");
+	    System.out.println(" ╚████╔╝ ██║   ██║██║   ██║    ██║     ██║   ██║███████╗█████╗  ");
+	    System.out.println("  ╚██╔╝  ██║   ██║██║   ██║    ██║     ██║   ██║╚════██║██╔══╝  ");
+	    System.out.println("   ██║   ╚██████╔╝╚██████╔╝    ███████╗╚██████╔╝███████║███████╗");
+	    System.out.println("   ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝ ╚═════╝ ╚══════╝╚══════╝");
+	    System.out.println();
+	    System.out.println("        ☠️ ☠️ ☠️   GAME OVER  ☠️ ☠️ ☠️");
+	    System.out.println();
+	    showPlayer(player);
+	}
 
+	public static void showArtefactChoice(Artefact eArtefact, Artefact pArtefact)
+	{
+		System.out.println();
+		System.out.println("The enemy drop an Artefact !");
+		if (pArtefact != null)
+		{
+			System.out.println("Current Artefact:");
+			System.out.println(pArtefact.getName() + " (" + pArtefact.getBonus() + ")");
+		}
+		System.out.println("New Artefact:");
+		System.out.println(eArtefact.getName() + " (" + eArtefact.getBonus() + ")");
+		System.out.println();
+		System.out.println("Do you want to equip it ?");
+		System.out.println("╔══════════════════ ACTION ══════════════════╗");
+		System.out.println("║ 1 ➜ YES                                    ║");
+		System.out.println("║ 2 ➜ NO                                     ║");
+		System.out.println("╚════════════════════════════════════════════╝");
+	}
 
 	public void showWinGame(Player player)
 	{
@@ -131,6 +150,8 @@ public void showFightUpdate(Character attacker, Character target, int damage, bo
 		System.out.println("║	🛡️  Defence	: " + player.getDefence());
 		System.out.println("║	⚔️  Attack	: " + player.getAttack());
 		System.out.println("║	📈 Lvl		: " + player.getLvl() + " (" + player.getXp()  + "/" + player.getXpMax() + "XP)");
+		if (player.getArtefact() != null)
+			System.out.println("║ Artefact : " + player.getArtefact().getName() + " (" + player.getArtefact().getBonus() + ")");
 		System.out.println("╚═════════════════════════════════════════════════╝");
 	}
 

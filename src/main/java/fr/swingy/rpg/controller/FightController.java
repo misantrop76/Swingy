@@ -9,6 +9,22 @@ import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.artefacts.Artefact;
 public class FightController 
 {
+	public static Boolean handleArtefactChoice(Artefact artefactEnemy, Artefact artefactPlayer)
+	{
+		ConsoleView view = new ConsoleView();
+		view.showArtefactChoice(artefactEnemy, artefactPlayer);
+		String input = view.askInput();
+		switch (input)
+		{
+			case "1" : 
+				return true;
+			case "2" : 
+				return false;
+			default  :
+				return true;
+		}
+	}
+
 	public static void startFight(Player player, Enemy enemy, Map map)
 	{
 		Random random = new Random();
@@ -40,12 +56,11 @@ public class FightController
 			view.showMessage("\nYou lose the battle !");
 		else
 		{
-			if (enemy.getArtefact() != null)
+			Artefact artefact = enemy.getArtefact();
+			if (artefact != null && handleArtefactChoice(artefact, player.getArtefact()))
 			{
-				Artefact artefact = enemy.getArtefact();
-				player.setArtefact(artefact);//&& handleArtefactChoice(player.getArtefact(), ))
+				player.setArtefact(artefact);
 				enemy.setArtefact(null);
-				view.showMessage("New Artefact ! : " + artefact.getName());
 			}
 			map.removeCharacter(enemy.getPos());
 			player.setPos(enemy.getPos());

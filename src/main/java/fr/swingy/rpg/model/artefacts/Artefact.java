@@ -38,4 +38,17 @@ public abstract class Artefact
 	{
 		return (this.name);
 	}
+
+	public String getBonus()
+	{
+		String bonus = "";
+
+		if (this.attackBonus != 0)
+			bonus = bonus + "+" + this.attackBonus + "ATK ";
+		if (this.hpBonus != 0)
+			bonus = bonus + "+" + this.hpBonus + "HP ";
+		if (this.defenceBonus != 0)
+			bonus = bonus + "+" + this.defenceBonus + "DEF ";
+		return bonus;
+	}
 }
