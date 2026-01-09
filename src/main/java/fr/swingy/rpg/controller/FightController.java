@@ -6,7 +6,7 @@ import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.view.ConsoleView;
 import fr.swingy.rpg.model.world.Map;
-
+import fr.swingy.rpg.model.artefacts.Artefact;
 public class FightController 
 {
 	public static void startFight(Player player, Enemy enemy, Map map)
@@ -40,6 +40,13 @@ public class FightController
 			view.showMessage("\nYou lose the battle !");
 		else
 		{
+			if (enemy.getArtefact() != null)
+			{
+				Artefact artefact = enemy.getArtefact();
+				player.setArtefact(artefact);//&& handleArtefactChoice(player.getArtefact(), ))
+				enemy.setArtefact(null);
+				view.showMessage("New Artefact ! : " + artefact.getName());
+			}
 			map.removeCharacter(enemy.getPos());
 			player.setPos(enemy.getPos());
 			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");

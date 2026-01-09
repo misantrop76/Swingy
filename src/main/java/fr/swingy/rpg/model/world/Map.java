@@ -5,6 +5,7 @@ import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.factory.EnemyFactory;
+import fr.swingy.rpg.model.factory.ArtefactFactory;
 import java.util.Random;
 
 public class Map
@@ -47,6 +48,7 @@ public class Map
 		for (int i = 0; i < this.height * 4; i++)
 		{
 			Enemy enemy = EnemyFactory.createEnemy(playerLvl);
+			enemy.setArtefact(ArtefactFactory.createArtefact(enemy.getLvl()));
 			int pos = random.nextInt(this.map.size());
 			while (map.get(pos).getCharacter() != null)
 				pos = random.nextInt(this.map.size());

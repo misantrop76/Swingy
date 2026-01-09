@@ -4,6 +4,6 @@ public class Skeleton extends Enemy
 {
 	public Skeleton(String name)
 	{
-		super(name, 50, 10, 7, "💀", 3);
+		super(name, 50, 10, 7, "💀", 2);
 	}
 }

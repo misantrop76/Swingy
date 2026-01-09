@@ -4,6 +4,6 @@ public class DarkKnight extends Enemy
 {
 	public DarkKnight(String name)
 	{
-		super(name, 100, 15, 10, "👹", 5);
+		super(name, 100, 15, 10, "👹", 3);
 	}
 }
