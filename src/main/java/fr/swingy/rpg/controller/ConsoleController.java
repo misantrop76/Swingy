@@ -11,13 +11,13 @@ import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.controller.FightController;
 import java.util.Random;
 
-public class GameController
+public class ConsoleController
 {
 	private final MenuView		mview;
 	private final GameState		state;
 	private final ConsoleView	view;
 
-	public GameController(MenuView mview, ConsoleView view,GameState state)
+	public ConsoleController(MenuView mview, ConsoleView view,GameState state)
 	{
 		this.mview = mview;
 		this.state = state;
