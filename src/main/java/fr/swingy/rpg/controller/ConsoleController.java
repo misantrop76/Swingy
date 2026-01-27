@@ -17,7 +17,7 @@ public class ConsoleController
 	private final GameState		state;
 	private final ConsoleView	view;
 
-	public ConsoleController(MenuView mview, ConsoleView view,GameState state)
+	public ConsoleController(MenuView mview, ConsoleView view, GameState state)
 	{
 		this.mview = mview;
 		this.state = state;
@@ -28,10 +28,10 @@ public class ConsoleController
 	{
 		switch (input)
 		{
-			case "1" : 
+			case "1" :
 				startNewGame();
 				break;
-			case "2" : 
+			case "2" :
 				loadGame();
 				break;
 			case "3" :

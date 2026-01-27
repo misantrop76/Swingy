@@ -5,7 +5,7 @@ import fr.swingy.rpg.model.world.Map;
 
 public class GameState
 {
-
+	private String	menuLvl = null;
 	private boolean running = true;
 	private Player	player = null;
 	private Map		map = null;
@@ -38,5 +38,15 @@ public class GameState
 	public void setMap(Map map)
 	{
 		this.map = map;
+	}
+
+	public String getMenuLvl()
+	{
+		return (this.menuLvl);
+	}
+
+	public void setMenuLvl(int menuLvl)
+	{
+		this.menuLvl = menuLvl;
 	}
 }

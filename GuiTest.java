@@ -3,10 +3,10 @@ import java.awt.*;
 
 public class GuiTest {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args)
+	{
 		Dimension tailleEcran = Toolkit.getDefaultToolkit().getScreenSize();
-		int largeur = tailleEcran.width;
+		int largeur = tailleEcran.height;
 		int hauteur = tailleEcran.height;
 		JFrame frame = new JFrame("Ma première GUI Java");
 		frame.setSize(largeur, hauteur);
@@ -16,6 +16,7 @@ public class GuiTest {
 		boutonQuitter.addActionListener(e -> System.exit(0));
 		frame.setLayout(new GridBagLayout());
 		frame.add(boutonQuitter);
+		frame.setResizable(false);
 		frame.setVisible(true);
 	}
 }

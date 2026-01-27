@@ -9,7 +9,7 @@ import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.world.Tile;
 import fr.swingy.rpg.model.artefacts.Artefact;
 
-public class ConsoleView
+public class ConsoleView implements View
 {
 	private Scanner scanner;
 
@@ -112,32 +112,32 @@ public class ConsoleView
 
 public void showFightUpdate(Character attacker, Character target, int damage, boolean isCritical)
 {
-    String prefix = attacker.getIcon() + " ➜ " + target.getIcon() + " : ";
-    String message;
+	String prefix = attacker.getIcon() + " ➜ " + target.getIcon() + " : ";
+	String message;
 
-    if (isCritical)
-    {
-        message = "💥 CRITICAL! "
-                + attacker.getName()
-                + " attacks "
-                + target.getName()
-                + " for "
-                + damage
-                + " damage";
-    }
-    else
-    {
-        message = attacker.getName()
-                + " attacks "
-                + target.getName()
-                + " for "
-                + damage
-                + " damage";
-    }
+	if (isCritical)
+	{
+		message = "💥 CRITICAL! "
+				+ attacker.getName()
+				+ " attacks "
+				+ target.getName()
+				+ " for "
+				+ damage
+				+ " damage";
+	}
+	else
+	{
+		message = attacker.getName()
+				+ " attacks "
+				+ target.getName()
+				+ " for "
+				+ damage
+				+ " damage";
+	}
 
-    message += " | HP: " + target.getHp();
+	message += " | HP: " + target.getHp();
 
-    System.out.println(prefix + message);
+	System.out.println(prefix + message);
 }
 
 
@@ -169,8 +169,6 @@ public void showFightUpdate(Character attacker, Character target, int damage, bo
 		{
 			if (tile.getCharacter() == null)
 				System.out.print("⬛");
-			// else
-			// 	System.out.print(tile.getCharacter().getIcon());
 			else if (x == playerPos)
 				System.out.print(tile.getCharacter().getIcon());
 			else
@@ -180,5 +178,79 @@ public void showFightUpdate(Character attacker, Character target, int damage, bo
 			if (x % height == 0)
 				System.out.println();
 		}
+	}
+	public void clearConsole()
+	{
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
+	}
+
+	public void showGameListMenu()
+	{
+		clearConsole();
+		showTitle();
+
+		System.out.println("╔══════════════ LOAD GAME ══════════════╗");
+		System.out.println("║ 1 ➜ Saved Game 1                      ║");
+		System.out.println("║ 2 ➜ Saved Game 2                      ║");
+		System.out.println("║ 3 ➜ Back                              ║");
+		System.out.println("╚═══════════════════════════════════════╝");
+	}
+
+
+	public int showMainMenu()
+	{
+		clearConsole();
+		showTitle();
+
+		System.out.println("╔══════════════ MAIN MENU ═════════════╗");
+		System.out.println("║ 1 ➜ New Game                         ║");
+		System.out.println("║ 2 ➜ Load Game                        ║");
+		System.out.println("║ 3 ➜ Switch to GUI mode               ║");
+		System.out.println("║ 4 ➜ Exit                             ║");
+		System.out.println("╚══════════════════════════════════════╝");
+
+		return (askInput());
+	}
+
+	public void showNewCharacterMenu()
+	{
+		clearConsole();
+		showTitle();
+
+		System.out.println("╔════════════ CREATE CHARACTER ════════════╗");
+		System.out.println("║ 1 ➜ 🤺 Warrior                           ║");
+		System.out.println("║     HP : 130   ATK : 15   DEF : 12       ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 2 ➜ 🧙 Mage                              ║");
+		System.out.println("║     HP : 80    ATK : 18   DEF : 5        ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 3 ➜ 🥷 Rogue                             ║");
+		System.out.println("║     HP : 120   ATK : 18   DEF : 10       ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 4 ➜ 🌟 Paladin                           ║");
+		System.out.println("║     HP : 120   ATK : 14   DEF : 15       ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 5 ➜ 🪓 Berserker                         ║");
+		System.out.println("║     HP : 150   ATK : 20   DEF : 7        ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 6 ➜ Switch to GUI mode                   ║");
+		System.out.println("║                                          ║");
+		System.out.println("║ 7 ➜ Back                                 ║");
+		System.out.println("╚══════════════════════════════════════════╝");
+	}
+
+	private void showTitle()
+	{
+		System.out.println("╔══════════════════════════════════════╗");
+		System.out.println("║          🐉  SWINGY RPG  🐉          ║");
+		System.out.println("╚══════════════════════════════════════╝");
+		System.out.println();
+	}
+
+	@override
+	public String getViewName()
+	{
+		return ("CONSOLE");
 	}
 }

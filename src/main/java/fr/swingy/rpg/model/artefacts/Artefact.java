@@ -42,7 +42,8 @@ public abstract class Artefact
 	public String getBonus()
 	{
 		String bonus = "";
-
+		if (this == null)
+			return (null);
 		if (this.attackBonus != 0)
 			bonus = bonus + "+" + this.attackBonus + "ATK ";
 		if (this.hpBonus != 0)
