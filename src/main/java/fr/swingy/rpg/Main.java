@@ -18,7 +18,7 @@ public class Main
 				throw new IllegalArgumentException("Error : Illegal Arguments");
 		}
 
-		GameController controller = new ConsoleController();
+		GameController controller = new GameController();
 
 		controller.startGame(args[0].toUpperCase());
 	}

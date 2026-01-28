@@ -21,7 +21,7 @@ public abstract class Artefact
 
 	public int getlvl()
 	{
-		return (this.hpBonus);
+		return (this.lvl);
 	}
 
 	public int getDefenceBonus()
@@ -44,12 +44,14 @@ public abstract class Artefact
 		String bonus = "";
 		if (this == null)
 			return (null);
+		bonus += this.name + " lvl " + this.lvl + "(";
 		if (this.attackBonus != 0)
 			bonus = bonus + "+" + this.attackBonus + "ATK ";
 		if (this.hpBonus != 0)
 			bonus = bonus + "+" + this.hpBonus + "HP ";
 		if (this.defenceBonus != 0)
 			bonus = bonus + "+" + this.defenceBonus + "DEF ";
+		bonus += ")";
 		return bonus;
 	}
 }

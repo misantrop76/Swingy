@@ -2,10 +2,11 @@ package fr.swingy.rpg.model;
 
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.world.Map;
+import fr.swingy.rpg.controller.GameController;
 
 public class GameState
 {
-	private String	menuLvl = null;
+	private GameController.menuLvl menu = null;
 	private boolean running = true;
 	private Player	player = null;
 	private Map		map = null;
@@ -40,13 +41,13 @@ public class GameState
 		this.map = map;
 	}
 
-	public String getMenuLvl()
+	public GameController.menuLvl getMenuLvl()
 	{
-		return (this.menuLvl);
+		return (this.menu);
 	}
 
-	public void setMenuLvl(int menuLvl)
+	public void setMenuLvl(GameController.menuLvl menu)
 	{
-		this.menuLvl = menuLvl;
+		this.menu = menu;
 	}
 }

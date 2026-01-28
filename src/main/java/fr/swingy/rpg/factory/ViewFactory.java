@@ -1,6 +1,7 @@
 package fr.swingy.rpg.factory;
 
 import fr.swingy.rpg.view.gui.GuiView;
+import fr.swingy.rpg.view.View;
 import fr.swingy.rpg.view.console.ConsoleView;
 
 public class ViewFactory

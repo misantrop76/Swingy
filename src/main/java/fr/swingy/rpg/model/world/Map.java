@@ -23,18 +23,6 @@ public class Map
 		return (this.height);
 	}
 
-
-	public void removeCharacter(int pos)
-	{
-		int i = 0;
-		for (Tile tile : this.map)
-		{	
-			if (pos == i)
-				tile.setCharacter(null, null);
-			i++;
-		}
-	}
-
 	public void updateMap(int playerLvl, Player player)
 	{
 		this.height = (playerLvl - 1) * 5 + 10 - (playerLvl % 2);
@@ -84,8 +72,6 @@ public class Map
 	public void	addCharacter(int pos, Character character, Enemy enemy)
 	{
 		int i = 0;
-		if (character == null)
-			return;
 		for (Tile tile : this.map)
 		{
 			if (pos == i)
