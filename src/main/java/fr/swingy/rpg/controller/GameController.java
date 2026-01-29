@@ -89,12 +89,15 @@ public class GameController
 			else if (input.equals("6"))
 				this.state.stop();
 		}
+		view.close();
 	}
 
 	public void handleMainMenu()
 	{
 		this.view.showMainMenu();
 		String input = this.view.askInput("Enter your choice");
+		if (input == null)
+			return;
 		switch (input)
 		{
 			case "1":

@@ -28,8 +28,26 @@ public abstract class Player extends Character
 		this.lvl++;
 	}
 
+	@Override
+	public int getDefence()
+	{
+		if (this.artefact != null)
+			return (this.artefact.getDefenceBonus() + this.defence);
+		return (this.defence);
+	}
+
+	@Override
+	public int getAttack()
+	{
+		if (this.artefact != null)
+			return (this.artefact.getAttackBonus() + this.defence);
+		return (this.attack);
+	}
+
 	public int getHpMax()
 	{
+		if (this.artefact != null)
+			return (this.hpMax + this.artefact.getHpBonus());
 		return (this.hpMax);
 	}
 

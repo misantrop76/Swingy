@@ -110,36 +110,6 @@ public class ConsoleView implements View
 		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
-// public void showFightUpdate(Character attacker, Character target, int damage, boolean isCritical)
-// {
-// 	String prefix = attacker.getIcon() + " ➜ " + target.getIcon() + " : ";
-// 	String message;
-
-// 	if (isCritical)
-// 	{
-// 		message = "💥 CRITICAL! "
-// 				+ attacker.getName()
-// 				+ " attacks "
-// 				+ target.getName()
-// 				+ " for "
-// 				+ damage
-// 				+ " damage";
-// 	}
-// 	else
-// 	{
-// 		message = attacker.getName()
-// 				+ " attacks "
-// 				+ target.getName()
-// 				+ " for "
-// 				+ damage
-// 				+ " damage";
-// 	}
-
-// 	message += " | HP: " + target.getHp();
-
-// 	System.out.println(prefix + message);
-// }
-
 	public void showPlayer(GameViewData data)
 	{
 		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");

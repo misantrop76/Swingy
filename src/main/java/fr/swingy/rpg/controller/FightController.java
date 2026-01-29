@@ -131,6 +131,7 @@ public class FightController
 			if (artefact != null && handleArtefactChoice(artefact, player.getArtefact(), view))
 			{
 				player.setArtefact(artefact);
+				player.setHp(player.getHp() + artefact.getHpBonus());
 				enemy.setArtefact(null);
 			}
 			player.setPos(enemy.getPos());
