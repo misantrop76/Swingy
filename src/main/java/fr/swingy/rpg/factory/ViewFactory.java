@@ -1,6 +1,6 @@
 package fr.swingy.rpg.factory;
 
-//import fr.swingy.rpg.view.gui.GuiView;
+import fr.swingy.rpg.view.gui.GuiView;
 import fr.swingy.rpg.view.View;
 import fr.swingy.rpg.view.console.ConsoleView;
 import fr.swingy.rpg.controller.GameController;
@@ -14,6 +14,6 @@ public class ViewFactory
 		{
 			return new ConsoleView(controller);
 		}
-		return new ConsoleView(controller);
+		return new GuiView(controller);
 	}
 }

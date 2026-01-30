@@ -8,22 +8,22 @@ import fr.swingy.rpg.view.View;
 
 public class ConsoleView implements View, Runnable
 {
-	private Scanner scanner;
+	private final Scanner scanner = new Scanner(System.in);;
 	private Thread inputThread;
 	private boolean isRunning;
 	private GameController controller;
 
 	public ConsoleView(GameController controller)
 	{
-		this.scanner = new Scanner(System.in);
 		this.isRunning = false;
 		this.controller = controller;
-		this.inputThread = new Thread(this);
 	}
 
 	@Override
 	public void start()
 	{
+		System.out.println("he");
+		this.inputThread = new Thread(this);
 		isRunning = true;
 		inputThread.start();
 	}
@@ -31,6 +31,7 @@ public class ConsoleView implements View, Runnable
 	@Override
 	public void run()
 	{
+		System.out.println();
 		while (isRunning)
 			controller.handleInputPlayer(scanner.nextLine());
 	}
@@ -39,7 +40,6 @@ public class ConsoleView implements View, Runnable
 	public void close()
 	{
 		isRunning = false;
-		scanner.close();
 	}
 
 	public void clearConsole()
@@ -90,6 +90,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 1 ➜ YES                                    ║");
 		System.out.println("║ 2 ➜ NO                                     ║");
 		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -117,6 +118,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 1 ➜ Fight                                  ║");
 		System.out.println("║ 2 ➜ Run                                    ║");
 		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -135,6 +137,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 5 ➜ Switch to GUI mode                     ║");
 		System.out.println("║ 6 ➜ Exit Game                              ║");
 		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	private void showPlayer(GameViewData data)
@@ -175,6 +178,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 2 ➜ Saved Game 2                      ║");
 		System.out.println("║ 3 ➜ Back                              ║");
 		System.out.println("╚═══════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -189,6 +193,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 3 ➜ Switch to GUI mode               ║");
 		System.out.println("║ 4 ➜ Exit                             ║");
 		System.out.println("╚══════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -217,6 +222,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║                                          ║");
 		System.out.println("║ 7 ➜ Back                                 ║");
 		System.out.println("╚══════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	private void showTitle()

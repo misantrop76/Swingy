@@ -41,10 +41,15 @@ public class GameController
 			{
 				case MAIN_MENU:
 					view.showMainMenu();
+					break;
 				case CHARACTER_MENU:
 					view.showNewCharacterMenu();
+					break;
 				case LOAD_MENU:
 					view.showGameListMenu();
+					break;
+				case NAME:
+					view.showMessage("Enter your name :");
 				default:
 					break;
 			}
@@ -128,7 +133,12 @@ public class GameController
 					break;
 			}
 		}
-
+		if (state.isRunning() == false)
+		{
+			view.close();
+			return;
+		}
+		refresh();
 	}
 
 	private void handleMove(String input)
@@ -152,6 +162,12 @@ public class GameController
 				break;
 			case "4" :
 				x--;
+				break;
+			case "5" :
+				switchView();
+				break;
+			case "6":
+				state.stop();
 				break;
 			default  :
 				view.showMessage("Invalid input !");
@@ -194,8 +210,10 @@ public class GameController
 				break;
 			case "4":
 				this.state.stop();
+				break;
 			default:
 				view.showMessage("Invalid input !");
+				break;
 		}
 	}
 
@@ -218,6 +236,7 @@ public class GameController
 				break;
 			case "7":
 				this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+				break;
 			default:
 				view.showMessage("Invalid input !");
 				break;
@@ -228,14 +247,13 @@ public class GameController
 	{
 		View newView = null;
 		String viewName = view.getViewName();
+		this.view.close();
 		if (viewName.equals("CONSOLE"))
 			newView = ViewFactory.create("GUI", this);
 		else
 			newView = ViewFactory.create("CONSOLE", this);
-		this.view.close();
 		this.view = newView;
 		view.start();
-		refresh();
 	}
 
 	public GameViewData getGameViewData()

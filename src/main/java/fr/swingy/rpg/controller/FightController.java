@@ -33,7 +33,7 @@ public class FightController
 		}
 	}
 
-	public static Boolean handleArtefactChoice(View view, GameState state, String input)
+	public static void handleArtefactChoice(View view, GameState state, String input)
 	{
 		Artefact artefact = state.getCurrentEnnemy().getArtefact();
 		Player player = state.getPlayer();
@@ -126,11 +126,15 @@ public class FightController
 		}
 		else
 		{
-			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			Artefact artefact = enemy.getArtefact();
 			if (artefact != null)
 				state.setGameLvl(GameController.GameLvl.ARTEFACT);
+			else
+				state.setGameLvl(GameController.GameLvl.MAP);
+			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
+			state.getMap().addCharacter(player.getPos(), null, null);
 			player.setPos(enemy.getPos());
+			state.getMap().addCharacter(enemy.getPos(), player, null);
 			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
 			if (player.getXp() >= player.getXpMax())
 			{

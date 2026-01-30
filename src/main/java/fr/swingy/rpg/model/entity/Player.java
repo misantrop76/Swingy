@@ -40,7 +40,7 @@ public abstract class Player extends Character
 	public int getAttack()
 	{
 		if (this.artefact != null)
-			return (this.artefact.getAttackBonus() + this.defence);
+			return (this.artefact.getAttackBonus() + this.attack);
 		return (this.attack);
 	}
 
