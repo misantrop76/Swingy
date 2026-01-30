@@ -2,16 +2,44 @@ package fr.swingy.rpg.view.console;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.GameViewData;
 import fr.swingy.rpg.view.View;
 
-public class ConsoleView implements View
+public class ConsoleView implements View, Runnable
 {
 	private Scanner scanner;
+	private Thread inputThread;
+	private boolean isRunning;
+	private GameController controller;
 
-	public ConsoleView ()
+	public ConsoleView(GameController controller)
 	{
 		this.scanner = new Scanner(System.in);
+		this.isRunning = false;
+		this.controller = controller;
+		this.inputThread = new Thread(this);
+	}
+
+	@Override
+	public void start()
+	{
+		isRunning = true;
+		inputThread.start();
+	}
+
+	@Override
+	public void run()
+	{
+		while (isRunning)
+			controller.handleInputPlayer(scanner.nextLine());
+	}
+
+	@Override
+	public void close()
+	{
+		isRunning = false;
+		scanner.close();
 	}
 
 	public void clearConsole()
@@ -20,18 +48,13 @@ public class ConsoleView implements View
 		System.out.flush();
 	}
 
-
-	public String askInput(String request)
-	{
-		System.out.print(request + " ➜ ");
-		return scanner.nextLine();
-	}
-
+	@Override
 	public void showMessage(String message)
 	{
 		System.out.println(message);
 	}
-
+	
+	@Override
 	public void showLoseGame(GameViewData data)
 	{
 	    clearConsole();
@@ -47,6 +70,7 @@ public class ConsoleView implements View
 	    showPlayer(data);
 	}
 
+	@Override
 	public void showArtefactChoice(String eArtefact, String pArtefact)
 	{
 		System.out.println();
@@ -68,6 +92,7 @@ public class ConsoleView implements View
 		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
+	@Override
 	public void showWinGame(GameViewData data)
 	{
 		clearConsole();
@@ -83,6 +108,7 @@ public class ConsoleView implements View
 		showPlayer(data);
 	}
 
+	@Override
 	public void showFightChoice(String enemyName)
 	{
 		clearConsole();
@@ -93,6 +119,7 @@ public class ConsoleView implements View
 		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
+	@Override
 	public void showGame(GameViewData data)
 	{
 		clearConsole();
@@ -110,7 +137,7 @@ public class ConsoleView implements View
 		System.out.println("╚════════════════════════════════════════════╝");
 	}
 
-	public void showPlayer(GameViewData data)
+	private void showPlayer(GameViewData data)
 	{
 		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");
 		System.out.println("║ 👤 Character	: " + data.heroName);
@@ -124,7 +151,7 @@ public class ConsoleView implements View
 		System.out.println("╚═════════════════════════════════════════════════╝");
 	}
 
-	public void showMap(GameViewData data)
+	private void showMap(GameViewData data)
 	{
 		System.out.println();
 		System.out.println("🗺️  MAP");
@@ -137,6 +164,7 @@ public class ConsoleView implements View
 		}
 	}
 
+	@Override
 	public void showGameListMenu()
 	{
 		clearConsole();
@@ -149,7 +177,7 @@ public class ConsoleView implements View
 		System.out.println("╚═══════════════════════════════════════╝");
 	}
 
-
+	@Override
 	public void showMainMenu()
 	{
 		clearConsole();
@@ -163,6 +191,7 @@ public class ConsoleView implements View
 		System.out.println("╚══════════════════════════════════════╝");
 	}
 
+	@Override
 	public void showNewCharacterMenu()
 	{
 		clearConsole();
@@ -198,18 +227,9 @@ public class ConsoleView implements View
 		System.out.println();
 	}
 
+	@Override
 	public String getViewName()
 	{
 		return ("CONSOLE");
-	}
-
-	public void	close()
-	{
-
-	}
-
-	public void	start()
-	{
-		
 	}
 }

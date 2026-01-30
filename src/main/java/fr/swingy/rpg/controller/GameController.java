@@ -5,7 +5,6 @@ import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.factory.PlayerFactory;
-import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.artefacts.Artefact;
 import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.world.Tile;
@@ -18,19 +17,121 @@ public class GameController
 	private View view;
 	private GameState state;
 
-	public enum menuLvl
+	public enum MenuLvl
 	{
 		MAIN_MENU,
 		CHARACTER_MENU,
-		LOAD_MENU
+		LOAD_MENU,
+		NAME
 	}
+
+	public enum GameLvl
+	{
+		MAP,
+		FIGHT,
+		ARTEFACT
+	}
+
+	private void refresh()
+	{
+		Enemy currentEnnemy = state.getCurrentEnnemy();
+		if (state.getMenuLvl() != null)
+		{
+			switch (state.getMenuLvl())
+			{
+				case MAIN_MENU:
+					view.showMainMenu();
+				case CHARACTER_MENU:
+					view.showNewCharacterMenu();
+				case LOAD_MENU:
+					view.showGameListMenu();
+				default:
+					break;
+			}
+		}
+		else if (state.getGameLvl() != null)
+		{
+			switch (state.getGameLvl())
+			{
+				case MAP:
+					view.showGame(getGameViewData());
+					break;
+				case FIGHT:
+					String enemystats = "You meet a " + currentEnnemy.getName() + " " + currentEnnemy.getIcon() + "(" + currentEnnemy.getHp() + "PV)";
+					view.showFightChoice(enemystats);					
+					break;
+				case ARTEFACT:
+					String playerArtefact = null;
+					if (state.getPlayer().getArtefact() != null)
+						playerArtefact = state.getPlayer().getArtefact().getBonus();
+					view.showArtefactChoice(currentEnnemy.getArtefact().getBonus(), playerArtefact);
+					break;
+				default:
+					break;
+			}
+		}
+		return;
+	}
+
 	public GameController()
 	{
 		this.state = new GameState();
-		this.state.setMenuLvl(menuLvl.MAIN_MENU);
+		this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+		this.state.setGameLvl(null);
 	}
 
-	public void move(String input)
+	public void startGame(String mode)
+	{
+		this.view = ViewFactory.create(mode, this);
+		this.view.start();
+		refresh();
+	}
+
+	private void handleLoadCharacter(String input)
+	{
+
+	}
+
+	public	void handleInputPlayer(String input)
+	{
+		if (state.getMenuLvl() != null)
+		{
+			switch (state.getMenuLvl())
+			{
+				case MAIN_MENU:
+					handleMainMenu(input);
+					break;
+				case CHARACTER_MENU:
+					handleCharacter(input);
+					break;
+				case NAME:
+					state.getPlayer().setName(input);
+					state.setMenuLvl(null);
+					state.setGameLvl(GameLvl.MAP);
+					break;
+				case LOAD_MENU:
+					handleLoadCharacter(input);
+			}
+		}
+		else if (state.getGameLvl() != null)
+		{
+			switch (state.getGameLvl())
+			{
+				case MAP:
+					handleMove(input);
+					break;
+				case FIGHT:
+					FightController.handleUserChoiceFight(view, this, state, input);
+					break;
+				case ARTEFACT:
+					FightController.handleArtefactChoice(view, state, input);
+					break;
+			}
+		}
+
+	}
+
+	private void handleMove(String input)
 	{
 		Player player = state.getPlayer();
 		Map map = state.getMap();
@@ -53,13 +154,16 @@ public class GameController
 				x--;
 				break;
 			default  :
-				return;
+				view.showMessage("Invalid input !");
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
 		{
 			Enemy isEnemy = map.getEnemy((y * mapHeight) + x);
-			if (isEnemy != null && FightController.handleUserChoiceFight(isEnemy, view))
-				FightController.startFight(this, state, isEnemy, view);
+			if (isEnemy != null)
+			{
+				state.setCurrentEnnemy(isEnemy);
+				state.setGameLvl(GameLvl.FIGHT);
+			}
 			else if (isEnemy == null)
 				player.setPos((y * mapHeight) + x);
 			map.addCharacter(player.getPrevPos(), null, null);
@@ -69,112 +173,69 @@ public class GameController
 		{
 			state.stop();
 			view.showWinGame(getGameViewData());
+			view.close();
 		}
 	}
 
-	public void startGame(String mode)
+	public void handleMainMenu(String input)
 	{
-		this.view = ViewFactory.create(mode);
-		this.view.start();
-		String input = null;
-		gameMenu();
-		while (this.state.isRunning())
-		{
-			this.view.showGame(getGameViewData());
-			input = this.view.askInput("Enter your choice");
-			if (input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '4')
-				move(input);
-			else if (input.equals("5"))
-				switchView();
-			else if (input.equals("6"))
-				this.state.stop();
-		}
-		view.close();
-	}
-
-	public void handleMainMenu()
-	{
-		this.view.showMainMenu();
-		String input = this.view.askInput("Enter your choice");
 		if (input == null)
 			return;
 		switch (input)
 		{
 			case "1":
-				this.state.setMenuLvl(menuLvl.CHARACTER_MENU);
+				this.state.setMenuLvl(MenuLvl.CHARACTER_MENU);
 				break;
 			case "2":
-				this.state.setMenuLvl(menuLvl.LOAD_MENU);
+				this.state.setMenuLvl(MenuLvl.LOAD_MENU);
 				break;
 			case "3":
 				switchView();
-				return;
+				break;
 			case "4":
 				this.state.stop();
 			default:
-				return;
+				view.showMessage("Invalid input !");
 		}
 	}
 
-	public void handleCharacter()
+	private void handleCharacter(String input)
 	{
-		this.view.showNewCharacterMenu();
-		String input = this.view.askInput("Enter your choice");
-		if (input.length() != 1 || input.charAt(0) < '1' || input.charAt(0) > '7')
-			return;
-		if (input.charAt(0) == '6')
+		switch (input)
 		{
-			switchView();
-			return;
+			case "1":
+			case "2":
+			case "3":
+			case "4":
+			case "5":
+				Player player = PlayerFactory.createPlayer(input, "default");
+				this.state.setPlayer(player);
+				this.state.setMap(new Map(state.getPlayer().getLvl(), player));
+				this.state.setMenuLvl(MenuLvl.NAME);
+				break;
+			case "6":
+				switchView();
+				break;
+			case "7":
+				this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+			default:
+				view.showMessage("Invalid input !");
+				break;
 		}
-		else if (input.charAt(0) == '7')
-		{
-			this.state.setMenuLvl(menuLvl.MAIN_MENU);
-			return;
-		}
-		String name = this.view.askInput("Enter your name");
-
-		while (name == null || name.length() == 0)
-			name = this.view.askInput("Enter your name");
-		Player player = PlayerFactory.createPlayer(input, name);
-		this.state.setPlayer(player);
-		this.state.setMap(new Map(state.getPlayer().getLvl(), player));
-		this.state.setMenuLvl(null);
 	}
 
-	public void gameMenu()
-	{
-		while (this.state.isRunning() && this.state.getMenuLvl() != null)
-		{
-			menuLvl menu = this.state.getMenuLvl();
-			switch (menu)
-			{
-				case MAIN_MENU:
-					handleMainMenu();
-					break;
-				case LOAD_MENU:
-					System.out.println("loadmenu");		/// TO DO
-					this.state.setMenuLvl(null);
-					break;
-				case CHARACTER_MENU:
-					handleCharacter();
-					break;
-			}
-		}
-
-	}
-
-	public void switchView()
+	private void switchView()
 	{
 		View newView = null;
 		String viewName = view.getViewName();
 		if (viewName.equals("CONSOLE"))
-			newView = ViewFactory.create("GUI");
+			newView = ViewFactory.create("GUI", this);
 		else
-			newView = ViewFactory.create("CONSOLE");
+			newView = ViewFactory.create("CONSOLE", this);
 		this.view.close();
 		this.view = newView;
 		view.start();
+		refresh();
 	}
 
 	public GameViewData getGameViewData()

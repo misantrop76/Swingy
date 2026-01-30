@@ -1,18 +1,19 @@
 package fr.swingy.rpg.factory;
 
-import fr.swingy.rpg.view.gui.GuiView;
+//import fr.swingy.rpg.view.gui.GuiView;
 import fr.swingy.rpg.view.View;
 import fr.swingy.rpg.view.console.ConsoleView;
+import fr.swingy.rpg.controller.GameController;
 
 public class ViewFactory
 {
 
-	public static View create(String mode)
+	public static View create(String mode, GameController controller)
 	{
 		if ("console".equalsIgnoreCase(mode))
 		{
-			return new ConsoleView();
+			return new ConsoleView(controller);
 		}
-		return new GuiView();
+		return new ConsoleView(controller);
 	}
 }

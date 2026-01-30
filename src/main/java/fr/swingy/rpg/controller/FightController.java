@@ -11,43 +11,43 @@ import fr.swingy.rpg.model.artefacts.Artefact;
 
 public class FightController 
 {
-	public static Boolean handleUserChoiceFight(Enemy enemy, View view)
+	public static void handleUserChoiceFight(View view, GameController controller, GameState state, String input)
 	{
+		Enemy isEnemy = state.getCurrentEnnemy();
 		Random random = new Random();
-		int choice = 0;
-		String enemystats = "You meet a " + enemy.getName() + " " + enemy.getIcon() + "(" + enemy.getHp() + "PV)";
-		view.showFightChoice(enemystats);
-		String input = view.askInput("Enter your choice");
+
 		switch (input)
 		{
 			case "1" :
-				return true;
+				startFight(controller, state, isEnemy, view);
+				break;
 			case "2" :
 				if (random.nextBoolean())
-					return true;
+					startFight(controller, state, isEnemy, view);
 				else
-					return false;
+					state.setGameLvl(GameController.GameLvl.MAP);
+				break;
 			default  :
-				return true;
+				startFight(controller, state, isEnemy, view);
+				break;
 		}
 	}
 
-	public static Boolean handleArtefactChoice(Artefact artefactEnemy, Artefact artefactPlayer, View view)
+	public static Boolean handleArtefactChoice(View view, GameState state, String input)
 	{
-		String playerArtefact = null;
-		if (artefactPlayer != null)
-			playerArtefact = artefactEnemy.getBonus();
-		view.showArtefactChoice(artefactEnemy.getBonus(), playerArtefact);
-		String input = view.askInput("Enter your choice");
+		Artefact artefact = state.getCurrentEnnemy().getArtefact();
+		Player player = state.getPlayer();
+
 		switch (input)
 		{
 			case "1" : 
-				return true;
-			case "2" : 
-				return false;
+				player.setArtefact(artefact);
+				player.setHp(player.getHp() + artefact.getHpBonus());
+				break;
 			default  :
-				return false;
+				break;
 		}
+		state.setGameLvl(GameController.GameLvl.MAP);
 	}
 
 	public static void takeDamage(Character characterAtt, Character characterDef, View view)
@@ -128,12 +128,8 @@ public class FightController
 		{
 			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			Artefact artefact = enemy.getArtefact();
-			if (artefact != null && handleArtefactChoice(artefact, player.getArtefact(), view))
-			{
-				player.setArtefact(artefact);
-				player.setHp(player.getHp() + artefact.getHpBonus());
-				enemy.setArtefact(null);
-			}
+			if (artefact != null)
+				state.setGameLvl(GameController.GameLvl.ARTEFACT);
 			player.setPos(enemy.getPos());
 			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
 			if (player.getXp() >= player.getXpMax())

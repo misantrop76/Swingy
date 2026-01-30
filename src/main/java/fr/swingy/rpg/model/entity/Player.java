@@ -92,5 +92,10 @@ public abstract class Player extends Character
 		return (this.prevPos);
 	}
 
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
 	public abstract String getClassName();
 }
