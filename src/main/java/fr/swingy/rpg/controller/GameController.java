@@ -94,7 +94,16 @@ public class GameController
 
 	private void handleLoadCharacter(String input)
 	{
-
+		switch (input)
+		{
+			case "1":
+				break;
+			case "2":
+				break;
+			case "3":
+				state.stop();
+				break;
+		}
 	}
 
 	public	void handleInputPlayer(String input)
@@ -274,11 +283,11 @@ public class GameController
 		for (Tile tile : map)
 		{
 			if (tile.getCharacter() == null)
-				mapData[a] += "⬛";
+				mapData[a] += "O";
 			else if (x == player.getPos())
-				mapData[a] += tile.getCharacter().getIcon();
+				mapData[a] += "P";
 			else
-				mapData[a] += "❓";
+				mapData[a] += "?";
 			x++;
 			if (x % height == 0)
 				a++;
