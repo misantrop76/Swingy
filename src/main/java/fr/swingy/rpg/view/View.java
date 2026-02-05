@@ -17,6 +17,7 @@ public interface View
 	void showWinGame(GameViewData data);
 	void showArtefactChoice(String eArtefact, String pArtefact);
 	void showFightChoice(String enemyName);
+	void showNameInput();
 
 	String getViewName();
 }

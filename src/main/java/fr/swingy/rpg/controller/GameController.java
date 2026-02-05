@@ -49,7 +49,8 @@ public class GameController
 					view.showGameListMenu();
 					break;
 				case NAME:
-					view.showMessage("Enter your name :");
+					view.showNameInput();
+					break;
 				default:
 					break;
 			}
@@ -97,12 +98,19 @@ public class GameController
 		switch (input)
 		{
 			case "1":
-				break;
 			case "2":
-				break;
 			case "3":
-				state.stop();
+				Player player = PlayerFactory.createPlayer("5", "default");
+				this.state.setPlayer(player);
+				this.state.setMap(new Map(state.getPlayer().getLvl(), player));
+				this.state.setMenuLvl(null);
+				this.state.setGameLvl(GameLvl.MAP);
 				break;
+			case "4":
+				switchView();
+				break;
+			case "5":
+				state.setMenuLvl(MenuLvl.MAIN_MENU);
 		}
 	}
 

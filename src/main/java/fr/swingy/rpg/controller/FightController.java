@@ -63,7 +63,7 @@ public class FightController
 			degats *= 1.5;
 		characterDef.setHp(characterDef.getHp() - (int)degats);
 
-		String prefix = characterAtt.getIcon() + " ➜ " + characterDef.getIcon() + " : ";
+		String prefix = characterAtt.getIcon() + " -> " + characterDef.getIcon() + " : ";
 		String message;
 
 		if (isCritical)

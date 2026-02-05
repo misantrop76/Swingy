@@ -3,8 +3,10 @@ package fr.swingy.rpg.view.gui;
 import fr.swingy.rpg.model.GameViewData;
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.view.View;
+import fr.swingy.rpg.view.gui.MapPanel;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 
 public class GuiView implements View
@@ -26,13 +28,11 @@ public class GuiView implements View
 		Dimension tailleEcran = Toolkit.getDefaultToolkit().getScreenSize();
 		int size = tailleEcran.height;
 		this.frame = new JFrame("🐉 Swingy RPG");
-		this.frame.setSize(size, size);
+		this.frame.setSize((int)(size * 1.2), (int)(size * 0.9));
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
-		//this.frame.setLayout(new GridBagLayout());
 		this.frame.setResizable(false);
 		this.frame.getContentPane().setBackground(Color.WHITE);
-		// this.frame.setVisible(true);
 		this.panel = new JPanel();
 		this.text = new JLabel();
 	}
@@ -62,6 +62,35 @@ public class GuiView implements View
 	}
 
 	@Override
+	public void showNameInput()
+	{
+		panel.removeAll();
+		panel.updateUI();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		JTextField nameInput = new JTextField();
+
+		text.setFont(new Font("Arial", Font.BOLD, 50));
+		text.setForeground(Color.WHITE);
+		text.setAlignmentX(Component.CENTER_ALIGNMENT);
+		text.setText("Enter your name : ");
+
+		nameInput.setColumns(20);
+		nameInput.setMaximumSize(new Dimension(150, 30));
+		nameInput.setAlignmentX(Component.CENTER_ALIGNMENT);
+		nameInput.setToolTipText("Enter your name");
+		nameInput.addActionListener(e -> controller.handleInputPlayer(nameInput.getText()));
+		panel.add(Box.createVerticalGlue());
+		panel.add(text);
+		panel.add(Box.createVerticalStrut(20));
+		panel.add(nameInput);
+		panel.add(Box.createVerticalGlue());
+
+		frame.add(panel);
+		frame.setVisible(true);
+	}
+
+	@Override
 	public void showMessage(String message)
 	{
 		text.setText(message);
@@ -86,12 +115,12 @@ public class GuiView implements View
 		exit.addActionListener(e -> controller.handleInputPlayer("4"));
 	
 		text.setText("SWINGY");
-		text.setFont(new Font("Arial", Font.BOLD, 65));
+		text.setFont(new Font("Arial", Font.BOLD, 90));
 		text.setForeground(Color.WHITE);
 		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createVerticalGlue());
 		panel.add(this.text);
-		panel.add(Box.createVerticalStrut(80));
+		panel.add(Box.createVerticalStrut(90));
 		panel.add(newGame);
 		panel.add(Box.createVerticalStrut(50));
 		panel.add(loadGame);
@@ -105,11 +134,46 @@ public class GuiView implements View
 		frame.setVisible(true);
 	}
 
-
-	private void getName(String input)
+	@Override
+	public void showGameListMenu()
 	{
-		controller.handleInputPlayer(input);
-		controller.handleInputPlayer("Ronald");
+		panel.removeAll();
+		panel.updateUI();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+
+		JButton rogue = createJButton("Rogue    HP : 120   ATK : 18   DEF : 10", 30);
+		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30);
+		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
+		JButton console = createJButton("Switch to GUI mode", 50);
+		JButton back = createJButton("Back", 50);
+
+		rogue.addActionListener(e -> controller.handleInputPlayer("1"));
+		paladin.addActionListener(e -> controller.handleInputPlayer("2"));
+		berserker.addActionListener(e -> controller.handleInputPlayer("3"));
+		console.addActionListener(e -> controller.handleInputPlayer("4"));
+		back.addActionListener(e -> controller.handleInputPlayer("5"));
+
+		text.setText("CHOOSE YOUR GAME");
+		text.setFont(new Font("Arial", Font.BOLD, 70));
+		text.setForeground(Color.WHITE);
+		text.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.add(Box.createVerticalGlue());
+		panel.add(text);
+		panel.add(Box.createVerticalStrut(90));
+		panel.add(rogue);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(paladin);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(berserker);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(console);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(back);
+		panel.add(Box.createVerticalGlue());
+		// frame.add(text);
+		frame.add(panel);
+		frame.setVisible(true);
 	}
 
 	@Override
@@ -128,16 +192,16 @@ public class GuiView implements View
 		JButton console = createJButton("Switch to GUI mode", 50);
 		JButton back = createJButton("Back", 50);
 
-		warrior.addActionListener(e -> getName("1"));
-		mage.addActionListener(e -> getName("2"));
-		rogue.addActionListener(e -> getName("3"));
-		paladin.addActionListener(e -> getName("4"));
-		berserker.addActionListener(e -> getName("5"));
+		warrior.addActionListener(e -> controller.handleInputPlayer("1"));
+		mage.addActionListener(e -> controller.handleInputPlayer("2"));
+		rogue.addActionListener(e -> controller.handleInputPlayer("3"));
+		paladin.addActionListener(e -> controller.handleInputPlayer("4"));
+		berserker.addActionListener(e -> controller.handleInputPlayer("5"));
 		console.addActionListener(e -> controller.handleInputPlayer("6"));
 		back.addActionListener(e -> controller.handleInputPlayer("7"));
 
-		text.setText("CHOOSE YOUR CHARACTER");
-		text.setFont(new Font("Arial", Font.BOLD, 50));
+		text.setText("CHOOSE YOUR\n CHARACTER");
+		text.setFont(new Font("Arial", Font.BOLD, 70));
 		text.setForeground(Color.WHITE);
 		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createVerticalGlue());
@@ -157,9 +221,26 @@ public class GuiView implements View
 		panel.add(Box.createVerticalStrut(50));
 		panel.add(back);
 		panel.add(Box.createVerticalGlue());
-		// frame.add(text);
 		frame.add(panel);
 		frame.setVisible(true);
+	}
+
+	private ImageIcon createEmoji(String path, int targetW, int targetH)
+	{
+		//path = panel.class.getResource(path);
+		ImageIcon raw = new ImageIcon(path);
+		int w = raw.getIconWidth();
+		int h = raw.getIconHeight();
+
+		if (w <= 0 || h <= 0)
+			return raw;
+
+		double scale = Math.min((double) targetW / w, (double) targetH / h);
+		int newW = (int) Math.round(w * scale);
+		int newH = (int) Math.round(h * scale);
+
+		Image scaled = raw.getImage().getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+		return new ImageIcon(scaled);
 	}
 
 	@Override
@@ -167,66 +248,116 @@ public class GuiView implements View
 	{
 		panel.removeAll();
 		panel.updateUI();
-		panel.setLayout(new GridLayout(0, 3, 0, 1));
-		StringBuilder sb = new StringBuilder();
-		JLabel stats = new JLabel(
-			"<html style='color:white; font-family:Segoe UI Emoji;'>" +
-			"<b>👤 " + data.heroName + "</b> (" + data.heroClassName + ")<br>" +
-			"❤️ " + data.heroHp + "/" + data.heroHpMax + "<br>" +
-			"⚔️ " + data.heroAttack + " &nbsp; 🛡️ " + data.heroDefence +
-			"</html>"
-		);
-		stats.setOpaque(true);
-		stats.setBackground(new Color(30, 30, 30));
-		stats.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panel.setLayout(new BorderLayout());
+		panel.setBackground(Color.DARK_GRAY);
 
-		sb.append("👤 ").append(data.heroName).append(" (")
-			.append(data.heroClassName).append(")\n")
-			.append("❤️ ").append(data.heroHp).append("/")
-			.append(data.heroHpMax).append("\n")
-			.append("⚔️ ").append(data.heroAttack)
-			.append(" | 🛡️ ").append(data.heroDefence).append("\n\n");
+		JPanel mapPanel = new MapPanel(data.map);
+		mapPanel.setBackground(Color.BLACK);
+		//mapPanel.add(new JLabel("MAP HERE"));
+		panel.add(mapPanel, BorderLayout.CENTER);
 
-		for (int a = 0; data.map[a] != null; a++)
-			sb.append(data.map[a]).append("\n");
 
-		JButton up = createJButton("Move Up", 40);
-		JButton down = createJButton("Move Down", 40);
-		JButton right = createJButton("Move Right", 40);
-		JButton left = createJButton("Move Left", 40);
-		JButton console = createJButton("Switch to Console mode", 40);
-		JButton exit = createJButton("Exit Game", 40);
+		JPanel rightPanel = new JPanel(new BorderLayout());
+		rightPanel.setPreferredSize(new Dimension(300, 0));
+		rightPanel.setBackground(Color.DARK_GRAY);
 
-		up.addActionListener(e -> getName("1"));
-		down.addActionListener(e -> getName("2"));
-		right.addActionListener(e -> getName("3"));
-		left.addActionListener(e -> getName("4"));
-		console.addActionListener(e -> getName("5"));
+
+		JPanel statsPanel = new JPanel();
+		statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+		statsPanel.add(Box.createVerticalGlue());
+		statsPanel.setBackground(Color.DARK_GRAY);
+		statsPanel.add(Box.createVerticalStrut(50));
+		JLabel name = new JLabel("Name : " + data.heroName);
+		JLabel className = new JLabel("Class Name : " + data.heroClassName);
+		JLabel hp = new JLabel("HP : " + data.heroHp + "/" + data.heroHpMax);
+		JLabel atk = new JLabel("ATK : " + data.heroAttack);
+		JLabel def = new JLabel("DEF : " + data.heroDefence);
+		JLabel xp = new JLabel("XP : " + data.heroXp + "/" + data.heroXpMax);
+
+		for (JLabel lbl : new JLabel[]{name, className, hp, atk, def, xp})
+		{
+			statsPanel.add(Box.createVerticalStrut(20));
+			lbl.setForeground(Color.WHITE);
+			lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+			lbl.setFont(new Font("Arial", Font.BOLD, 20));
+			statsPanel.add(lbl);
+		}
+		if (data.heroArtefact != null)
+		{
+			JLabel artefact = new JLabel("Artefact : " + data.heroArtefact);
+			artefact.setForeground(Color.WHITE);
+			artefact.setAlignmentX(Component.CENTER_ALIGNMENT);
+			artefact.setFont(new Font("Arial", Font.BOLD, 20));
+			statsPanel.add(artefact);
+			statsPanel.add(Box.createVerticalStrut(20));
+		}
+		rightPanel.add(statsPanel, BorderLayout.NORTH);
+
+
+		JPanel controlPanel = new JPanel();
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+		controlPanel.setBackground(Color.DARK_GRAY);
+
+		JPanel	controle = new JPanel();
+		controle.setLayout(new GridBagLayout());
+	
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(5, 5, 5, 5);
+
+		controle.setBackground(Color.DARK_GRAY);
+
+
+		JButton up = new JButton(createEmoji("/arrow_up.png", 58 , 58));
+		JButton down = new JButton(createEmoji("/arrow_down.png", 58, 58));
+		JButton right = new JButton(createEmoji("/arrow_right.png", 58, 58));
+		JButton left = new JButton(createEmoji("/arrow_left.png", 58, 58));
+
+		JButton console = createJButton("Switch Console", 30);
+		JButton exit = createJButton("Exit", 30);
+
+		up.setPreferredSize(new Dimension(50, 50));
+		down.setPreferredSize(new Dimension(50, 50));
+		left.setPreferredSize(new Dimension(50, 50));
+		right.setPreferredSize(new Dimension(50, 50));
+		// up.setFocusable(false);
+		// down.setFocusable(false);
+		// right.setFocusable(false);
+		// left.setFocusable(false);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		controle.add(up, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		controle.add(down, gbc);
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		controle.add(right, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		controle.add(left, gbc);
+	
+		controlPanel.add(Box.createVerticalGlue());
+		controlPanel.add(controle);
+		controlPanel.add(Box.createVerticalStrut(100));
+		controlPanel.add(console);
+		controlPanel.add(Box.createVerticalStrut(40));
+		controlPanel.add(exit);
+		controlPanel.add(Box.createVerticalStrut(140));
+
+		up.addActionListener(e -> controller.handleInputPlayer("1"));
+		down.addActionListener(e -> controller.handleInputPlayer("2"));
+		left.addActionListener(e -> controller.handleInputPlayer("3"));
+		right.addActionListener(e -> controller.handleInputPlayer("4"));
+		console.addActionListener(e -> controller.handleInputPlayer("5"));
 		exit.addActionListener(e -> controller.handleInputPlayer("6"));
 
-		panel.add(Box.createVerticalGlue());
-		panel.add(up);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(down);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(right);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(left);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(console);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(exit);
-		panel.add(Box.createVerticalGlue());
-		panel.setBackground(Color.DARK_GRAY);
+
+		rightPanel.add(controlPanel, BorderLayout.SOUTH);
+		panel.add(rightPanel, BorderLayout.EAST);
+
 		frame.add(panel);
-		panel.setVisible(true);
 		frame.setVisible(true);
-	}
-
-	@Override
-	public void showGameListMenu()
-	{
-
 	}
 
 	@Override
