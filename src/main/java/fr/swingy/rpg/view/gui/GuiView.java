@@ -4,6 +4,7 @@ import fr.swingy.rpg.model.GameViewData;
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.view.View;
 import fr.swingy.rpg.view.gui.MapPanel;
+import java.net.URL;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -227,8 +228,13 @@ public class GuiView implements View
 
 	private ImageIcon createEmoji(String path, int targetW, int targetH)
 	{
-		//path = panel.class.getResource(path);
-		ImageIcon raw = new ImageIcon(path);
+        URL url = GuiView.class.getResource(path);
+        if (url == null)
+        {
+            System.err.println("[MapPanel] Ressource introuvable: " + path);
+            return null;
+        }
+		ImageIcon raw = new ImageIcon(url);
 		int w = raw.getIconWidth();
 		int h = raw.getIconHeight();
 
@@ -251,9 +257,9 @@ public class GuiView implements View
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.DARK_GRAY);
 
-		JPanel mapPanel = new MapPanel(data.map);
+		MapPanel mapPanel = new MapPanel(data.map);
+		mapPanel.setDrawGrid(false);
 		mapPanel.setBackground(Color.BLACK);
-		//mapPanel.add(new JLabel("MAP HERE"));
 		panel.add(mapPanel, BorderLayout.CENTER);
 
 
@@ -320,10 +326,7 @@ public class GuiView implements View
 		down.setPreferredSize(new Dimension(50, 50));
 		left.setPreferredSize(new Dimension(50, 50));
 		right.setPreferredSize(new Dimension(50, 50));
-		// up.setFocusable(false);
-		// down.setFocusable(false);
-		// right.setFocusable(false);
-		// left.setFocusable(false);
+	
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		controle.add(up, gbc);
@@ -347,8 +350,8 @@ public class GuiView implements View
 
 		up.addActionListener(e -> controller.handleInputPlayer("1"));
 		down.addActionListener(e -> controller.handleInputPlayer("2"));
-		left.addActionListener(e -> controller.handleInputPlayer("3"));
-		right.addActionListener(e -> controller.handleInputPlayer("4"));
+		right.addActionListener(e -> controller.handleInputPlayer("3"));
+		left.addActionListener(e -> controller.handleInputPlayer("4"));
 		console.addActionListener(e -> controller.handleInputPlayer("5"));
 		exit.addActionListener(e -> controller.handleInputPlayer("6"));
 
@@ -363,16 +366,37 @@ public class GuiView implements View
 	@Override
 	public void showFightChoice(String enemyName)
 	{
-		//gameArea.setText("⚠️ Enemy encountered : " + enemyName + "\n\n1 ➜ Fight\n2 ➜ Run");
+		text.setText(enemyName);
+		JButton yes = createJButton("YES", 30);
+		JButton no = createJButton("NO", 30);
+		yes.addActionListener(e -> controller.handleInputPlayer("1"));
+		no.addActionListener(e -> controller.handleInputPlayer("2"));
+		panel.removeAll();
+		panel.updateUI();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		panel.add(text);
+		panel.add(yes);
+		panel.add(no);
 	}
 
 	@Override
 	public void showArtefactChoice(String eArtefact, String pArtefact)
 	{
-		// gameArea.setText(
-		// 	"🎁 New Artefact:\n" + eArtefact +
-		// 	(pArtefact != null ? "\n\nCurrent:\n" + pArtefact : "")
-		// );
+		if (pArtefact != null)
+			eArtefact = pArtefact + " -> " + eArtefact;
+		text.setText(eArtefact);
+		JButton yes = createJButton("YES", 30);
+		JButton no = createJButton("NO", 30);
+		yes.addActionListener(e -> controller.handleInputPlayer("1"));
+		no.addActionListener(e -> controller.handleInputPlayer("2"));
+		panel.removeAll();
+		panel.updateUI();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		panel.add(text);
+		panel.add(yes);
+		panel.add(no);
 	}
 
 	@Override
