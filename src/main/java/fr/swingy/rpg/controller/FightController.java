@@ -1,13 +1,14 @@
 package fr.swingy.rpg.controller;
 
 import java.util.Random;
-import fr.swingy.rpg.model.entity.Character;
-import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.entity.Enemy;
-import fr.swingy.rpg.view.View;
+
 import fr.swingy.rpg.model.GameState;
-import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.artefacts.Artefact;
+import fr.swingy.rpg.model.entity.Character;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.world.Map;
+import fr.swingy.rpg.view.View;
 
 public class FightController 
 {
@@ -96,7 +97,7 @@ public class FightController
 		Random random = new Random();
 		Player player = state.getPlayer();
 		Map map = state.getMap();
-		view.showMessage("\n⚔️  LET THE BATTLE BEGIN ⚔️");
+		view.showStartFight();
 
 		Boolean rand = random.nextBoolean();
 		while (player.getHp() > 0 && enemy.getHp() > 0)
@@ -131,7 +132,7 @@ public class FightController
 				state.setGameLvl(GameController.GameLvl.ARTEFACT);
 			else
 				state.setGameLvl(GameController.GameLvl.MAP);
-			view.showMessage("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
+			view.showUpdateFight("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			state.getMap().addCharacter(player.getPos(), null, null);
 			player.setPos(enemy.getPos());
 			state.getMap().addCharacter(enemy.getPos(), player, null);

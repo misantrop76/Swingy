@@ -1,22 +1,35 @@
 package fr.swingy.rpg.view.gui;
 
-import fr.swingy.rpg.model.GameViewData;
-import fr.swingy.rpg.controller.GameController;
-import fr.swingy.rpg.view.View;
-import fr.swingy.rpg.view.gui.MapPanel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.net.URL;
 
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicArrowButton;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import fr.swingy.rpg.controller.GameController;
+import fr.swingy.rpg.model.GameViewData;
+import fr.swingy.rpg.view.View;
 
 public class GuiView implements View
 {
 	private JFrame frame;
 	private JPanel panel;
-	private CardLayout cardLayout;
-	private JLabel text;
-	private GameController controller;
+	private final GameController controller;
 
 	public GuiView(GameController controller)
 	{
@@ -35,7 +48,6 @@ public class GuiView implements View
 		this.frame.setResizable(false);
 		this.frame.getContentPane().setBackground(Color.WHITE);
 		this.panel = new JPanel();
-		this.text = new JLabel();
 	}
 
 	@Override
@@ -48,6 +60,15 @@ public class GuiView implements View
 	public String getViewName()
 	{
 		return "GUI";
+	}
+
+	private JLabel createJLabel(String text, int size)
+	{
+		JLabel newJLabel = new JLabel(text);
+		newJLabel.setFont(new Font("Arial", Font.BOLD, size));
+		newJLabel.setForeground(Color.WHITE);
+		newJLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		return (newJLabel);
 	}
 
 	private JButton createJButton(String name, int size)
@@ -63,30 +84,54 @@ public class GuiView implements View
 	}
 
 	@Override
+	public void showStartFight()
+	{
+		panel.removeAll();
+		panel.updateUI();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		JLabel text = createJLabel("LET'S BATTLE BEGIN !", 70);
+
+		panel.add(Box.createVerticalGlue());
+		panel.add(text);
+		panel.add(Box.createVerticalGlue());
+		frame.add(panel);
+		frame.setVisible(true);
+	}
+
+	@Override
+	public void showUpdateFight(String fightUpdate)
+	{
+		panel.add(Box.createVerticalStrut(20));
+		JLabel text = createJLabel(fightUpdate, 30);
+		panel.add(text);
+		frame.add(panel);
+		frame.setVisible(true);
+	}
+
+	@Override
 	public void showNameInput()
 	{
 		panel.removeAll();
 		panel.updateUI();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
+
 		JTextField nameInput = new JTextField();
+		JLabel text = createJLabel("Enter your name : ", 50);
 
-		text.setFont(new Font("Arial", Font.BOLD, 50));
-		text.setForeground(Color.WHITE);
-		text.setAlignmentX(Component.CENTER_ALIGNMENT);
-		text.setText("Enter your name : ");
-
+		nameInput.setFont(new Font("Arial", Font.BOLD, 40));
+		nameInput.setForeground(Color.DARK_GRAY);
 		nameInput.setColumns(20);
-		nameInput.setMaximumSize(new Dimension(150, 30));
+		nameInput.setMaximumSize(new Dimension(300, 50));
 		nameInput.setAlignmentX(Component.CENTER_ALIGNMENT);
-		nameInput.setToolTipText("Enter your name");
 		nameInput.addActionListener(e -> controller.handleInputPlayer(nameInput.getText()));
 		panel.add(Box.createVerticalGlue());
 		panel.add(text);
-		panel.add(Box.createVerticalStrut(20));
+		panel.add(Box.createVerticalStrut(40));
 		panel.add(nameInput);
+		panel.add(Box.createVerticalStrut(50));
 		panel.add(Box.createVerticalGlue());
-
 		frame.add(panel);
 		frame.setVisible(true);
 	}
@@ -94,7 +139,8 @@ public class GuiView implements View
 	@Override
 	public void showMessage(String message)
 	{
-		text.setText(message);
+		JLabel text = createJLabel(message, 50);
+		panel.add(text);
 	}
 
 	@Override
@@ -110,17 +156,14 @@ public class GuiView implements View
 		JButton console = createJButton("Switch to Console", 40);
 		JButton exit = createJButton("Exit", 40);
 
+		JLabel text = createJLabel("SWINGY", 70);
 		newGame.addActionListener(e -> controller.handleInputPlayer("1"));
 		loadGame.addActionListener(e -> controller.handleInputPlayer("2"));
 		console.addActionListener(e -> controller.handleInputPlayer("3"));
 		exit.addActionListener(e -> controller.handleInputPlayer("4"));
 	
-		text.setText("SWINGY");
-		text.setFont(new Font("Arial", Font.BOLD, 90));
-		text.setForeground(Color.WHITE);
-		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createVerticalGlue());
-		panel.add(this.text);
+		panel.add(text);
 		panel.add(Box.createVerticalStrut(90));
 		panel.add(newGame);
 		panel.add(Box.createVerticalStrut(50));
@@ -148,6 +191,7 @@ public class GuiView implements View
 		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
 		JButton console = createJButton("Switch to GUI mode", 50);
 		JButton back = createJButton("Back", 50);
+		JLabel text = createJLabel("CHOOSE YOUR GAME", 70);
 
 		rogue.addActionListener(e -> controller.handleInputPlayer("1"));
 		paladin.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -155,10 +199,6 @@ public class GuiView implements View
 		console.addActionListener(e -> controller.handleInputPlayer("4"));
 		back.addActionListener(e -> controller.handleInputPlayer("5"));
 
-		text.setText("CHOOSE YOUR GAME");
-		text.setFont(new Font("Arial", Font.BOLD, 70));
-		text.setForeground(Color.WHITE);
-		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createVerticalGlue());
 		panel.add(text);
 		panel.add(Box.createVerticalStrut(90));
@@ -192,6 +232,7 @@ public class GuiView implements View
 		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
 		JButton console = createJButton("Switch to GUI mode", 50);
 		JButton back = createJButton("Back", 50);
+		JLabel text = createJLabel("CHOOSE YOUR\n CHARACTER", 70);
 
 		warrior.addActionListener(e -> controller.handleInputPlayer("1"));
 		mage.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -201,10 +242,6 @@ public class GuiView implements View
 		console.addActionListener(e -> controller.handleInputPlayer("6"));
 		back.addActionListener(e -> controller.handleInputPlayer("7"));
 
-		text.setText("CHOOSE YOUR\n CHARACTER");
-		text.setFont(new Font("Arial", Font.BOLD, 70));
-		text.setForeground(Color.WHITE);
-		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel.add(Box.createVerticalGlue());
 		panel.add(text);
 		panel.add(Box.createVerticalStrut(70));
@@ -256,15 +293,16 @@ public class GuiView implements View
 		panel.updateUI();
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.DARK_GRAY);
-
+		Dimension screenSize = panel.getSize();
 		MapPanel mapPanel = new MapPanel(data.map);
+		mapPanel.setPreferredSize( new Dimension(screenSize.height, screenSize.height));
 		mapPanel.setDrawGrid(false);
 		mapPanel.setBackground(Color.BLACK);
 		panel.add(mapPanel, BorderLayout.CENTER);
 
 
 		JPanel rightPanel = new JPanel(new BorderLayout());
-		rightPanel.setPreferredSize(new Dimension(300, 0));
+		rightPanel.setPreferredSize(new Dimension(screenSize.width - screenSize.height, screenSize.height));
 		rightPanel.setBackground(Color.DARK_GRAY);
 
 
@@ -366,18 +404,26 @@ public class GuiView implements View
 	@Override
 	public void showFightChoice(String enemyName)
 	{
-		text.setText(enemyName);
+		JLabel text = createJLabel(enemyName, 70);
 		JButton yes = createJButton("YES", 30);
 		JButton no = createJButton("NO", 30);
+		JLabel fight = createJLabel("Fight ?", 70);
 		yes.addActionListener(e -> controller.handleInputPlayer("1"));
 		no.addActionListener(e -> controller.handleInputPlayer("2"));
 		panel.removeAll();
 		panel.updateUI();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
+		panel.add(Box.createVerticalGlue());
 		panel.add(text);
+		panel.add(Box.createVerticalStrut(10));
+		panel.add(fight);
+		panel.add(Box.createVerticalStrut(100));
 		panel.add(yes);
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(no);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalGlue());
 	}
 
 	@Override
@@ -385,18 +431,30 @@ public class GuiView implements View
 	{
 		if (pArtefact != null)
 			eArtefact = pArtefact + " -> " + eArtefact;
-		text.setText(eArtefact);
+		JLabel text = createJLabel("The enemy drop an artefact !", 70);
+		JLabel question = createJLabel("Equip it ?", 70);
+		JLabel proposal = createJLabel(eArtefact, 70);
 		JButton yes = createJButton("YES", 30);
 		JButton no = createJButton("NO", 30);
+	
 		yes.addActionListener(e -> controller.handleInputPlayer("1"));
 		no.addActionListener(e -> controller.handleInputPlayer("2"));
 		panel.removeAll();
 		panel.updateUI();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
+		panel.add(Box.createVerticalGlue());
 		panel.add(text);
+		panel.add(Box.createVerticalStrut(10));
+		panel.add(question);
+		panel.add(Box.createVerticalStrut(30));
+		panel.add(proposal);
+		panel.add(Box.createVerticalStrut(100));
 		panel.add(yes);
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(no);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalGlue());
 	}
 
 	@Override

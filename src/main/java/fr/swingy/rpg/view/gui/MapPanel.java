@@ -1,11 +1,20 @@
 package fr.swingy.rpg.view.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class MapPanel extends JPanel
 {
@@ -38,14 +47,15 @@ public class MapPanel extends JPanel
         }
         else
         {
-            this.map = new String[newMap.length];
+            this.map = new String[newMap.length - 1];
             int maxLen = 0;
-            for (int i = 0; i < newMap.length; i++)
+            for (int i = 0; i < newMap.length - 1; i++)
             {
                 String line = newMap[i];
                 if (line == null) line = "";
                 this.map[i] = line;
-                if (line.length() > maxLen) maxLen = line.length();
+                if (line.length() > maxLen)
+					maxLen = line.length();
             }
             this.rows = this.map.length;
             this.cols = maxLen;

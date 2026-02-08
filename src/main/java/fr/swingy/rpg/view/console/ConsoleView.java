@@ -1,7 +1,7 @@
 package fr.swingy.rpg.view.console;
 
-import java.util.ArrayList;
 import java.util.Scanner;
+
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.GameViewData;
 import fr.swingy.rpg.view.View;
@@ -45,6 +45,18 @@ public class ConsoleView implements View, Runnable
 	{
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
+	}
+
+	@Override
+	public void showStartFight()
+	{
+		System.out.println("LET'S BATTLE BEGIN !");
+	}
+
+	@Override
+	public void showUpdateFight(String fightUpdate)
+	{
+		System.out.println(fightUpdate);
 	}
 
 	@Override
