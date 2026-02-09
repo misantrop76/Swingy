@@ -3,7 +3,7 @@ package fr.swingy.rpg.view.console;
 import java.util.Scanner;
 
 import fr.swingy.rpg.controller.GameController;
-import fr.swingy.rpg.model.GameViewData;
+import fr.swingy.rpg.model.dto.GameViewData;
 import fr.swingy.rpg.view.View;
 
 public class ConsoleView implements View, Runnable
@@ -48,24 +48,6 @@ public class ConsoleView implements View, Runnable
 	}
 
 	@Override
-	public void showStartFight()
-	{
-		System.out.println("LET'S BATTLE BEGIN !");
-	}
-
-	@Override
-	public void showUpdateFight(String fightUpdate)
-	{
-		System.out.println(fightUpdate);
-	}
-
-	@Override
-	public void showMessage(String message)
-	{
-		System.out.println(message);
-	}
-
-	@Override
 	public void showNameInput()
 	{
 		System.out.print("Enter your name : ");
@@ -88,26 +70,29 @@ public class ConsoleView implements View, Runnable
 	}
 
 	@Override
-	public void showArtefactChoice(String eArtefact, String pArtefact)
+	public void showArtefactChoice(GameViewData data)
 	{
-		System.out.println();
-		System.out.println("The enemy drop an Artefact !");
-		System.out.println();
-		if (pArtefact != null)
+		if (data.enemyArtefact != null)
 		{
-			System.out.println("Current Artefact:");
-			System.out.println(pArtefact);
 			System.out.println();
+			System.out.println("The enemy drop an Artefact !");
+			System.out.println();
+			if (data.heroData.heroArtefact != null)
+			{
+				System.out.println("Current Artefact:");
+				System.out.println(data.heroData.heroArtefact);
+				System.out.println();
+			}
+			System.out.println("New Artefact:");
+			System.out.println(data.enemyArtefact);
+			System.out.println();
+			System.out.println("Do you want to equip it ?");
+			System.out.println("╔══════════════════ ACTION ══════════════════╗");
+			System.out.println("║ 1 -> YES                                   ║");
+			System.out.println("║ 2 -> NO                                    ║");
+			System.out.println("╚════════════════════════════════════════════╝");
+			System.out.print("Enter your choice : ");
 		}
-		System.out.println("New Artefact:");
-		System.out.println(eArtefact);
-		System.out.println();
-		System.out.println("Do you want to equip it ?");
-		System.out.println("╔══════════════════ ACTION ══════════════════╗");
-		System.out.println("║ 1 -> YES                                   ║");
-		System.out.println("║ 2 -> NO                                    ║");
-		System.out.println("╚════════════════════════════════════════════╝");
-		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -127,10 +112,10 @@ public class ConsoleView implements View, Runnable
 	}
 
 	@Override
-	public void showFightChoice(String enemyName)
+	public void showFightChoice(GameViewData data)
 	{
 		clearConsole();
-		System.out.println(enemyName);
+		System.out.println("You meet a " + data.enemyClassName);
 		System.out.println("╔══════════════════ ACTION ══════════════════╗");
 		System.out.println("║ 1 -> Fight                                 ║");
 		System.out.println("║ 2 -> Run                                   ║");
@@ -160,14 +145,14 @@ public class ConsoleView implements View, Runnable
 	private void showPlayer(GameViewData data)
 	{
 		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");
-		System.out.println("║ Character : " + data.heroName);
-		System.out.println("║     Class : " + data.heroClassName);
-		System.out.println("║           HP : " + data.heroHp + "/" + data.heroHpMax);
-		System.out.println("║	   Defence : " + data.heroDefence);
-		System.out.println("║	    Attack : " + data.heroAttack);
-		System.out.println("║          Lvl : " + data.heroLevel + " (" + data.heroXp  + "/" + data.heroXpMax + "XP)");
-		if (data.heroArtefact != null)
-			System.out.println("║     Artefact : " + data.heroArtefact);
+		System.out.println("║ Character : " + data.heroData.heroName);
+		System.out.println("║     Class : " + data.heroData.heroClassName);
+		System.out.println("║           HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
+		System.out.println("║	   Defence : " + data.heroData.heroDefence);
+		System.out.println("║	    Attack : " + data.heroData.heroAttack);
+		System.out.println("║          Lvl : " + data.heroData.heroLevel + " (" + data.heroData.heroXp  + "/" + data.heroData.heroXpMax + "XP)");
+		if (data.heroData.heroArtefact != null)
+			System.out.println("║     Artefact : " + data.heroData.heroArtefact);
 		System.out.println("╚═════════════════════════════════════════════════╝");
 	}
 

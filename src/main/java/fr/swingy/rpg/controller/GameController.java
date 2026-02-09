@@ -8,7 +8,9 @@ import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.artefacts.Artefact;
 import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.world.Tile;
-import fr.swingy.rpg.model.GameViewData;
+import fr.swingy.rpg.model.dto.GameViewData;
+import fr.swingy.rpg.model.dto.PlayerViewData;
+import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.factory.ViewFactory;
 import java.util.ArrayList;
 
@@ -29,7 +31,9 @@ public class GameController
 	{
 		MAP,
 		FIGHT,
-		ARTEFACT
+		ARTEFACT,
+		LOSE,
+		WIN
 	}
 
 	private void refresh()
@@ -63,15 +67,13 @@ public class GameController
 					view.showGame(getGameViewData());
 					break;
 				case FIGHT:
-					String enemystats = "You meet a " + currentEnnemy.getName() + " " + currentEnnemy.getIcon() + "(" + currentEnnemy.getHp() + "PV)";
-					view.showFightChoice(enemystats);					
+					view.showFightChoice(getGameViewData());				
 					break;
 				case ARTEFACT:
-					String playerArtefact = null;
-					if (state.getPlayer().getArtefact() != null)
-						playerArtefact = state.getPlayer().getArtefact().getBonus();
-					view.showArtefactChoice(currentEnnemy.getArtefact().getBonus(), playerArtefact);
+					view.showArtefactChoice(getGameViewData());
 					break;
+				case LOSE:
+					view.showLoseGame(getGameViewData());
 				default:
 					break;
 			}
@@ -143,10 +145,10 @@ public class GameController
 					handleMove(input);
 					break;
 				case FIGHT:
-					FightController.handleUserChoiceFight(view, this, state, input);
+					FightController.handleUserChoiceFight(this, state, input);
 					break;
 				case ARTEFACT:
-					FightController.handleArtefactChoice(view, state, input);
+					FightController.handleArtefactChoice(state, input);
 					break;
 			}
 		}
@@ -187,7 +189,7 @@ public class GameController
 				state.stop();
 				break;
 			default  :
-				view.showMessage("Invalid input !");
+				break;
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
 		{
@@ -229,7 +231,6 @@ public class GameController
 				this.state.stop();
 				break;
 			default:
-				view.showMessage("Invalid input !");
 				break;
 		}
 	}
@@ -255,7 +256,6 @@ public class GameController
 				this.state.setMenuLvl(MenuLvl.MAIN_MENU);
 				break;
 			default:
-				view.showMessage("Invalid input !");
 				break;
 		}
 	}
@@ -300,19 +300,16 @@ public class GameController
 			if (x % height == 0)
 				a++;
 		}
+		PlayerViewData pvd = new PlayerViewData(player.getName(), player.getLvl(), player.getHpMax(),
+		player.getHp(), player.getXpMax(), player.getXp(), player.getDefence(), player.getAttack(),
+		player.getClassName(), player.getArtefact() != null ? player.getArtefact().getBonus(): null);
 
 		return (new GameViewData(
-			player.getName(),
-			player.getLvl(),
-			player.getXp(),
-			player.getXpMax(),
-			player.getHp(),
-			player.getHpMax(),
-			player.getDefence(),
-			player.getAttack(),
-			artefact,
+			pvd,
 			mapData,
-			player.getClassName()
+			state.fightUpdate,
+			state.getCurrentEnnemy().getName(),
+			state.getCurrentEnnemy() != null ? state.getCurrentEnnemy().getArtefact().getBonus(): null
 		));
 	}
 }

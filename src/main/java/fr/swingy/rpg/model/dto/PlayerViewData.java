@@ -1,23 +1,20 @@
-package fr.swingy.rpg.model;
+package fr.swingy.rpg.model.dto;
 
-public class GameViewData
+public class PlayerViewData
 {
 	public final String heroName;
 	public final int heroLevel;
 	public final int heroHpMax;
-	public final int heroXp;
-	public final int heroXpMax;
 	public final int heroHp;
+	public final int heroXpMax;
+	public final int heroXp;
 	public final int heroDefence;
 	public final int heroAttack;
 	public final String heroClassName;
 	public final String heroArtefact;
-	public final String[] map;
 
-
-	public GameViewData(String heroName, int heroLevel, int heroXp, int heroXpMax,
-		int heroHp, int heroHpMax, int heroDefence, int heroAttack, String heroArtefact,
-		String [] map, String heroClassName)
+	public PlayerViewData(String heroName, int heroLevel, int heroHpMax, int heroHp,
+	int heroXpMax, int heroXp, int heroDefence, int heroAttack, String heroClassName, String heroArtefact)
 	{
 		this.heroName = heroName;
 		this.heroLevel = heroLevel;
@@ -29,6 +26,5 @@ public class GameViewData
 		this.heroAttack = heroAttack;
 		this.heroArtefact = heroArtefact;
 		this.heroClassName = heroClassName;
-		this.map = map;
 	}
 }

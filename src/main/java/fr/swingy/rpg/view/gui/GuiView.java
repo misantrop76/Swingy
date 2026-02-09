@@ -22,7 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.swingy.rpg.controller.GameController;
-import fr.swingy.rpg.model.GameViewData;
+import fr.swingy.rpg.model.dto.GameViewData;
+
 import fr.swingy.rpg.view.View;
 
 public class GuiView implements View
@@ -84,32 +85,6 @@ public class GuiView implements View
 	}
 
 	@Override
-	public void showStartFight()
-	{
-		panel.removeAll();
-		panel.updateUI();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBackground(Color.DARK_GRAY);
-		JLabel text = createJLabel("LET'S BATTLE BEGIN !", 70);
-
-		panel.add(Box.createVerticalGlue());
-		panel.add(text);
-		panel.add(Box.createVerticalGlue());
-		frame.add(panel);
-		frame.setVisible(true);
-	}
-
-	@Override
-	public void showUpdateFight(String fightUpdate)
-	{
-		panel.add(Box.createVerticalStrut(20));
-		JLabel text = createJLabel(fightUpdate, 30);
-		panel.add(text);
-		frame.add(panel);
-		frame.setVisible(true);
-	}
-
-	@Override
 	public void showNameInput()
 	{
 		panel.removeAll();
@@ -134,13 +109,6 @@ public class GuiView implements View
 		panel.add(Box.createVerticalGlue());
 		frame.add(panel);
 		frame.setVisible(true);
-	}
-
-	@Override
-	public void showMessage(String message)
-	{
-		JLabel text = createJLabel(message, 50);
-		panel.add(text);
 	}
 
 	@Override
@@ -311,12 +279,12 @@ public class GuiView implements View
 		statsPanel.add(Box.createVerticalGlue());
 		statsPanel.setBackground(Color.DARK_GRAY);
 		statsPanel.add(Box.createVerticalStrut(50));
-		JLabel name = new JLabel("Name : " + data.heroName);
-		JLabel className = new JLabel("Class Name : " + data.heroClassName);
-		JLabel hp = new JLabel("HP : " + data.heroHp + "/" + data.heroHpMax);
-		JLabel atk = new JLabel("ATK : " + data.heroAttack);
-		JLabel def = new JLabel("DEF : " + data.heroDefence);
-		JLabel xp = new JLabel("XP : " + data.heroXp + "/" + data.heroXpMax);
+		JLabel name = new JLabel("Name : " + data.heroData.heroName);
+		JLabel className = new JLabel("Class Name : " + data.heroData.heroClassName);
+		JLabel hp = new JLabel("HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
+		JLabel atk = new JLabel("ATK : " + data.heroData.heroAttack);
+		JLabel def = new JLabel("DEF : " + data.heroData.heroDefence);
+		JLabel xp = new JLabel("XP : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax);
 
 		for (JLabel lbl : new JLabel[]{name, className, hp, atk, def, xp})
 		{
@@ -326,9 +294,9 @@ public class GuiView implements View
 			lbl.setFont(new Font("Arial", Font.BOLD, 20));
 			statsPanel.add(lbl);
 		}
-		if (data.heroArtefact != null)
+		if (data.heroData.heroArtefact != null)
 		{
-			JLabel artefact = new JLabel("Artefact : " + data.heroArtefact);
+			JLabel artefact = new JLabel("Artefact : " + data.heroData.heroArtefact);
 			artefact.setForeground(Color.WHITE);
 			artefact.setAlignmentX(Component.CENTER_ALIGNMENT);
 			artefact.setFont(new Font("Arial", Font.BOLD, 20));
@@ -402,8 +370,9 @@ public class GuiView implements View
 	}
 
 	@Override
-	public void showFightChoice(String enemyName)
+	public void showFightChoice(GameViewData data)
 	{
+		String enemyName = data.enemyClassName;
 		JLabel text = createJLabel(enemyName, 70);
 		JButton yes = createJButton("YES", 30);
 		JButton no = createJButton("NO", 30);
@@ -427,8 +396,11 @@ public class GuiView implements View
 	}
 
 	@Override
-	public void showArtefactChoice(String eArtefact, String pArtefact)
+	public void showArtefactChoice(GameViewData data)
 	{
+
+		String eArtefact = data.enemyArtefact;
+		String pArtefact = data.heroData.heroArtefact;
 		if (pArtefact != null)
 			eArtefact = pArtefact + " -> " + eArtefact;
 		JLabel text = createJLabel("The enemy drop an artefact !", 70);

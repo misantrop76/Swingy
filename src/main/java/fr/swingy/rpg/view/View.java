@@ -1,6 +1,6 @@
 package fr.swingy.rpg.view;
 
-import fr.swingy.rpg.model.GameViewData;
+import fr.swingy.rpg.model.dto.GameViewData;
 
 public interface View
 {
@@ -11,14 +11,11 @@ public interface View
 	void showNewCharacterMenu();
 	void showGame(GameViewData data);
 	void showGameListMenu();
-	void showMessage(String message);
 	void showLoseGame(GameViewData data);
 	void showWinGame(GameViewData data);
-	void showArtefactChoice(String eArtefact, String pArtefact);
-	void showFightChoice(String enemyName);
+	void showArtefactChoice(GameViewData data);
+	void showFightChoice(GameViewData data);
 	void showNameInput();
-	void showStartFight();
-	void showUpdateFight(String fightUpdate);
 
 	String getViewName();
 }

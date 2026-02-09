@@ -8,33 +8,32 @@ import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.world.Map;
-import fr.swingy.rpg.view.View;
+import fr.swingy.rpg.model.dto.FightUpdateView;
 
 public class FightController 
 {
-	public static void handleUserChoiceFight(View view, GameController controller, GameState state, String input)
+	public static void handleUserChoiceFight(GameController controller, GameState state, String input)
 	{
-		Enemy isEnemy = state.getCurrentEnnemy();
 		Random random = new Random();
 
 		switch (input)
 		{
 			case "1" :
-				startFight(controller, state, isEnemy, view);
+				startFight(controller, state);
 				break;
 			case "2" :
 				if (random.nextBoolean())
-					startFight(controller, state, isEnemy, view);
+					startFight(controller, state);
 				else
 					state.setGameLvl(GameController.GameLvl.MAP);
 				break;
 			default  :
-				startFight(controller, state, isEnemy, view);
+				startFight(controller, state);
 				break;
 		}
 	}
 
-	public static void handleArtefactChoice(View view, GameState state, String input)
+	public static void handleArtefactChoice(GameState state, String input)
 	{
 		Artefact artefact = state.getCurrentEnnemy().getArtefact();
 		Player player = state.getPlayer();
@@ -48,10 +47,11 @@ public class FightController
 			default  :
 				break;
 		}
+		state.setCurrentEnnemy(null);
 		state.setGameLvl(GameController.GameLvl.MAP);
 	}
 
-	public static void takeDamage(Character characterAtt, Character characterDef, View view)
+	public static FightUpdateView newFightUpdate(Character characterAtt, Character characterDef, boolean isPlayerAttacking)
 	{
 		Random random = new Random();
 
@@ -63,97 +63,45 @@ public class FightController
 		if (isCritical)
 			degats *= 1.5;
 		characterDef.setHp(characterDef.getHp() - (int)degats);
+		FightUpdateView fightUpdate = new FightUpdateView(isPlayerAttacking, isCritical, (int)degats,
+		isPlayerAttacking ? characterAtt.getHp(): characterDef.getHp(), isPlayerAttacking ? characterDef.getHp(): characterAtt.getHp());
 
-		String prefix = characterAtt.getIcon() + " -> " + characterDef.getIcon() + " : ";
-		String message;
-
-		if (isCritical)
-		{
-			message = "💥 CRITICAL! "
-					+ characterAtt.getName()
-					+ " attacks "
-					+ characterDef.getName()
-					+ " for "
-					+ (int)degats
-					+ " damage";
-		}
-		else
-		{
-			message = characterAtt.getName()
-					+ " attacks "
-					+ characterDef.getName()
-					+ " for "
-					+ (int)degats
-					+ " damage";
-		}
-
-		message += " | HP: " + characterDef.getHp();
-
-		view.showMessage(prefix + message);
+		return (fightUpdate);
 	}
 
-	public static void startFight(GameController controller,GameState state, Enemy enemy, View view)
+	public static void startFight(GameController controller,GameState state)
 	{
 		Random random = new Random();
 		Player player = state.getPlayer();
 		Map map = state.getMap();
-		view.showStartFight();
-
 		Boolean rand = random.nextBoolean();
+		Enemy enemy = state.getCurrentEnnemy();
+		state.fightUpdate = new FightUpdateView[0];
+		int i = 0;
 		while (player.getHp() > 0 && enemy.getHp() > 0)
 		{
 			if (rand)
-				takeDamage(player, enemy, view);
+				state.fightUpdate[i] = newFightUpdate(player, enemy, true);
 			else
-				takeDamage(enemy, player, view);
-			if (rand)
-				rand = false;
-			else
-				rand = true;
-			try
-			{
-				Thread.sleep(500);
-			}
-			catch (Exception e)
-			{
-				view.showMessage(e.getMessage());
-			}
+				state.fightUpdate[i] = newFightUpdate(enemy, player, false);
+			rand = rand ? false: true;
+			i++;
 		}
 		if (enemy.getHp() != 0)
-		{
-			view.showMessage("\nYou lose the battle !");
-			state.stop();
-			view.showLoseGame(controller.getGameViewData());
-		}
+			state.setGameLvl(GameController.GameLvl.LOSE);
 		else
 		{
-			Artefact artefact = enemy.getArtefact();
-			if (artefact != null)
-				state.setGameLvl(GameController.GameLvl.ARTEFACT);
-			else
-				state.setGameLvl(GameController.GameLvl.MAP);
-			view.showUpdateFight("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
+			state.setGameLvl(GameController.GameLvl.ARTEFACT);
+			//iew.showUpdateFight("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			state.getMap().addCharacter(player.getPos(), null, null);
 			player.setPos(enemy.getPos());
 			state.getMap().addCharacter(enemy.getPos(), player, null);
 			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
-			if (player.getXp() >= player.getXpMax())
+			while (player.getXp() >= player.getXpMax())
 			{
-				while (player.getXp() >= player.getXpMax())
-				{
-					player.updateLvl();
-					view.showMessage("\n⬆️  LEVEL UP ⬆️");
-				}
+				player.updateLvl();
 				map.updateMap(player.getLvl(), player);
 			}
-		}
-		try
-		{
-			Thread.sleep(2000);
-		}
-		catch (Exception e)
-		{
-			System.out.println(e);
 		}
 	}
 }
