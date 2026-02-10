@@ -1,7 +1,6 @@
 package fr.swingy.rpg.model.entity;
 
 import fr.swingy.rpg.model.artefacts.Artefact;
-import java.util.Random;
 
 public abstract class Character
 {

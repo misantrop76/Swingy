@@ -1,23 +1,37 @@
 package fr.swingy.rpg.controller;
 
-import fr.swingy.rpg.view.View;
+import java.util.ArrayList;
+
+import fr.swingy.rpg.factory.ViewFactory;
 import fr.swingy.rpg.model.GameState;
-import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.entity.Enemy;
-import fr.swingy.rpg.model.factory.PlayerFactory;
-import fr.swingy.rpg.model.artefacts.Artefact;
-import fr.swingy.rpg.model.world.Map;
-import fr.swingy.rpg.model.world.Tile;
 import fr.swingy.rpg.model.dto.GameViewData;
 import fr.swingy.rpg.model.dto.PlayerViewData;
-import fr.swingy.rpg.model.dto.FightUpdateView;
-import fr.swingy.rpg.factory.ViewFactory;
-import java.util.ArrayList;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.factory.PlayerFactory;
+import fr.swingy.rpg.model.world.Map;
+import fr.swingy.rpg.model.world.Tile;
+import fr.swingy.rpg.view.View;
 
 public class GameController
 {
 	private View view;
-	private GameState state;
+	private final GameState state;
+	private static GameController instance;
+
+	private GameController()
+	{
+		this.state = new GameState();
+		this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+		this.state.setGameLvl(null);
+	}
+
+	public static GameController getInstance()
+	{
+		if (instance == null)
+			instance = new GameController();
+		return (instance);
+	}
 
 	public enum MenuLvl
 	{
@@ -38,7 +52,6 @@ public class GameController
 
 	private void refresh()
 	{
-		Enemy currentEnnemy = state.getCurrentEnnemy();
 		if (state.getMenuLvl() != null)
 		{
 			switch (state.getMenuLvl())
@@ -54,7 +67,6 @@ public class GameController
 					break;
 				case NAME:
 					view.showNameInput();
-					break;
 				default:
 					break;
 			}
@@ -67,10 +79,10 @@ public class GameController
 					view.showGame(getGameViewData());
 					break;
 				case FIGHT:
-					view.showFightChoice(getGameViewData());				
+					view.showFightChoice(getGameViewData());
 					break;
 				case ARTEFACT:
-					view.showArtefactChoice(getGameViewData());
+					view.showFight(getGameViewData());
 					break;
 				case LOSE:
 					view.showLoseGame(getGameViewData());
@@ -78,15 +90,8 @@ public class GameController
 					break;
 			}
 		}
-		return;
 	}
 
-	public GameController()
-	{
-		this.state = new GameState();
-		this.state.setMenuLvl(MenuLvl.MAIN_MENU);
-		this.state.setGameLvl(null);
-	}
 
 	public void startGame(String mode)
 	{
@@ -113,6 +118,27 @@ public class GameController
 				break;
 			case "5":
 				state.setMenuLvl(MenuLvl.MAIN_MENU);
+			default:
+				break;
+		}
+	}
+
+	private void handleLoseMenu(String input)
+	{
+		switch (input)
+		{
+			case "1":
+				state.setGameLvl(null);
+				state.setMenuLvl(MenuLvl.MAIN_MENU);
+				view.showMainMenu();
+				break;
+			case "2":
+				switchView();
+				break;
+			case "3":
+				state.stop();
+			default:
+				break;
 		}
 	}
 
@@ -135,6 +161,8 @@ public class GameController
 					break;
 				case LOAD_MENU:
 					handleLoadCharacter(input);
+				default:
+					break;
 			}
 		}
 		else if (state.getGameLvl() != null)
@@ -152,6 +180,10 @@ public class GameController
 						FightController.handleArtefactChoice(state, input);
 					else
 						state.setGameLvl(GameLvl.MAP);
+					break;
+				case LOSE:
+					handleLoseMenu(input);
+				default:
 					break;
 			}
 		}
@@ -171,6 +203,7 @@ public class GameController
 		int x = player.getPos() % mapHeight;
 		int y = player.getPos() / mapHeight;
 		player.setPrevPos(player.getPos());
+
 		switch (input)
 		{
 			case "1" :
@@ -190,8 +223,7 @@ public class GameController
 				break;
 			case "6":
 				state.stop();
-				break;
-			default  :
+			default	:
 				break;
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
@@ -234,7 +266,6 @@ public class GameController
 				break;
 			case "4":
 				this.state.stop();
-				break;
 			default:
 				break;
 		}
@@ -259,7 +290,6 @@ public class GameController
 				break;
 			case "7":
 				this.state.setMenuLvl(MenuLvl.MAIN_MENU);
-				break;
 			default:
 				break;
 		}
@@ -267,7 +297,7 @@ public class GameController
 
 	private void switchView()
 	{
-		View newView = null;
+		View newView;
 		String viewName = view.getViewName();
 		this.view.close();
 		if (viewName.equals("CONSOLE"))

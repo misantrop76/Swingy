@@ -13,7 +13,7 @@ public interface View
 	void showGameListMenu();
 	void showLoseGame(GameViewData data);
 	void showWinGame(GameViewData data);
-	void showArtefactChoice(GameViewData data);
+	void showFight(GameViewData data);
 	void showFightChoice(GameViewData data);
 	void showNameInput();
 

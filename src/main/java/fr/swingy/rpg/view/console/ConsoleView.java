@@ -3,21 +3,22 @@ package fr.swingy.rpg.view.console;
 import java.util.Scanner;
 
 import fr.swingy.rpg.controller.GameController;
-import fr.swingy.rpg.model.dto.GameViewData;
 import fr.swingy.rpg.model.dto.FightUpdateView;
+import fr.swingy.rpg.model.dto.GameViewData;
 import fr.swingy.rpg.view.View;
 
 public class ConsoleView implements View, Runnable
 {
-	private final Scanner scanner = new Scanner(System.in);;
+	private final Scanner scanner = new Scanner(System.in);
 	private Thread inputThread;
 	private boolean isRunning;
-	private GameController controller;
+	private final GameController controller;
 
     private final String reset = "\u001B[0m";
     private final String red = "\u001B[31m";
     private final String green = "\u001B[32m";
-    private final String blue = "\u001B[34m";
+    private final String blue = "\u001B[33m";
+	private final String resetScreen = "\033[H\033[2J";
 
 
 	public ConsoleView(GameController controller)
@@ -50,7 +51,7 @@ public class ConsoleView implements View, Runnable
 
 	public void clearConsole()
 	{
-		System.out.print("\033[H\033[2J");
+		System.out.print(resetScreen);
 		System.out.flush();
 	}
 
@@ -74,10 +75,16 @@ public class ConsoleView implements View, Runnable
 	    System.out.println("                       GAME OVER");
 	    System.out.println();
 	    showPlayer(data);
+		System.out.println("╔══════════════════ ACTION ══════════════════╗");
+		System.out.println("║ 1 -> Main Menu                             ║");
+		System.out.println("║ 2 -> Switch to GUI mode                    ║");
+		System.out.println("║ 3 -> Exit Game                             ║");
+		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
-	public void showArtefactChoice(GameViewData data)
+	public void showFight(GameViewData data)
 	{
 		clearConsole();
 		for (FightUpdateView fightHit : data.fightUpdate)
@@ -188,19 +195,29 @@ public class ConsoleView implements View, Runnable
 	private void showMap(GameViewData data)
 	{
 		System.out.println();
-		System.out.println("🗺️  MAP");
-		System.out.println("────────────────────────");
+		for (int i = 0; i < (data.map[0].length() / 2) - 1; i++)
+			System.out.print(" ");
+		System.out.println("MAP");
+		for (int i = 0; i < data.map[0].length(); i++)
+			System.out.print("─");
+		System.out.println();
 
 		for (int x = 0; data.map[x] != null; x++)
 		{
 			for (int i = 0; i < data.map[x].length(); i++)
 			{
-				if (data.map[x].charAt(i)  == 'P')
-					System.out.print(green + "P" + reset);
-				else if (data.map[x].charAt(i)  == '?')
-					System.out.print(red + "?" + reset);
-				else
-					System.out.print(blue +  "O" + reset);
+				switch (data.map[x].charAt(i))
+				{
+					case 'P':
+						System.out.print(green + "P" + reset);
+						break;
+					case '?':
+						System.out.print(red + "?" + reset);
+						break;
+					default:
+						System.out.print(blue +  "O" + reset);
+						break;
+				}
 			}
 			System.out.println();
 		}
