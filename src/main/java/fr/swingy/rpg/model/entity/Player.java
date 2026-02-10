@@ -29,6 +29,16 @@ public abstract class Player extends Character
 	}
 
 	@Override
+	public void setHp(int hp)
+	{
+		this.hp = hp;
+		if (this.hp < 0)
+			this.hp = 0;
+		if (this.hp > this.hpMax)
+			this.hp = this.hpMax;
+	}
+
+	@Override
 	public int getDefence()
 	{
 		if (this.artefact != null)
@@ -54,6 +64,8 @@ public abstract class Player extends Character
 	public void setHpMax(int hpMax)
 	{
 		this.hpMax = hpMax;
+		if (this.hp > this.hpMax)
+			this.hp = this.hpMax;
 	}
 
 	public int getXpMax()

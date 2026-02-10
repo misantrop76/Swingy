@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.dto.GameViewData;
+import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.view.View;
 
 public class ConsoleView implements View, Runnable
@@ -12,6 +13,12 @@ public class ConsoleView implements View, Runnable
 	private Thread inputThread;
 	private boolean isRunning;
 	private GameController controller;
+
+    private final String reset = "\u001B[0m";
+    private final String red = "\u001B[31m";
+    private final String green = "\u001B[32m";
+    private final String blue = "\u001B[34m";
+
 
 	public ConsoleView(GameController controller)
 	{
@@ -72,6 +79,26 @@ public class ConsoleView implements View, Runnable
 	@Override
 	public void showArtefactChoice(GameViewData data)
 	{
+		clearConsole();
+		for (FightUpdateView fightHit : data.fightUpdate)
+		{
+			String annonce = "";
+			if (fightHit.isCritical)
+				annonce += "Bim !! Critical Hit ! ";
+			if (fightHit.isPlayerAttacking)
+				annonce += "You attack the " + data.enemyClassName + ", causing " + fightHit.damage + " damage. " +fightHit.enemyHp + " HP left.";
+			else
+				annonce += "The " + data.enemyClassName + " attack You, causing " + fightHit.damage + " damage. " +fightHit.playerHp + " HP left.";
+			System.out.println(annonce);
+			try
+			{
+				Thread.sleep(10);
+			}
+			catch (Exception e)
+			{
+				System.err.println(e);
+			}
+		}
 		if (data.enemyArtefact != null)
 		{
 			System.out.println();
@@ -93,6 +120,8 @@ public class ConsoleView implements View, Runnable
 			System.out.println("╚════════════════════════════════════════════╝");
 			System.out.print("Enter your choice : ");
 		}
+		else
+			controller.handleInputPlayer("");
 	}
 
 	@Override
@@ -164,7 +193,15 @@ public class ConsoleView implements View, Runnable
 
 		for (int x = 0; data.map[x] != null; x++)
 		{
-			System.out.print(data.map[x]);
+			for (int i = 0; i < data.map[x].length(); i++)
+			{
+				if (data.map[x].charAt(i)  == 'P')
+					System.out.print(green + "P" + reset);
+				else if (data.map[x].charAt(i)  == '?')
+					System.out.print(red + "?" + reset);
+				else
+					System.out.print(blue +  "O" + reset);
+			}
 			System.out.println();
 		}
 	}

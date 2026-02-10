@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.dto.GameViewData;
+import fr.swingy.rpg.model.dto.FightUpdateView;
 
 import fr.swingy.rpg.view.View;
 
@@ -259,8 +260,9 @@ public class GuiView implements View
 	{
 		panel.removeAll();
 		panel.updateUI();
+		frame.add(panel);
+		frame.setVisible(true);
 		panel.setLayout(new BorderLayout());
-		panel.setBackground(Color.DARK_GRAY);
 		Dimension screenSize = panel.getSize();
 		MapPanel mapPanel = new MapPanel(data.map);
 		mapPanel.setPreferredSize( new Dimension(screenSize.height, screenSize.height));
@@ -284,7 +286,7 @@ public class GuiView implements View
 		JLabel hp = new JLabel("HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
 		JLabel atk = new JLabel("ATK : " + data.heroData.heroAttack);
 		JLabel def = new JLabel("DEF : " + data.heroData.heroDefence);
-		JLabel xp = new JLabel("XP : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax);
+		JLabel xp = new JLabel("LVL " + data.heroData.heroLevel + " : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax + " XP");
 
 		for (JLabel lbl : new JLabel[]{name, className, hp, atk, def, xp})
 		{
@@ -296,16 +298,14 @@ public class GuiView implements View
 		}
 		if (data.heroData.heroArtefact != null)
 		{
+			statsPanel.add(Box.createVerticalStrut(20));
 			JLabel artefact = new JLabel("Artefact : " + data.heroData.heroArtefact);
 			artefact.setForeground(Color.WHITE);
 			artefact.setAlignmentX(Component.CENTER_ALIGNMENT);
 			artefact.setFont(new Font("Arial", Font.BOLD, 20));
 			statsPanel.add(artefact);
-			statsPanel.add(Box.createVerticalStrut(20));
 		}
 		rightPanel.add(statsPanel, BorderLayout.NORTH);
-
-
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
 		controlPanel.setBackground(Color.DARK_GRAY);
@@ -320,7 +320,7 @@ public class GuiView implements View
 		controle.setBackground(Color.DARK_GRAY);
 
 
-		JButton up = new JButton(createEmoji("/arrow_up.png", 58 , 58));
+		JButton up = new JButton(createEmoji("/arrow_up.png", 58, 58));
 		JButton down = new JButton(createEmoji("/arrow_down.png", 58, 58));
 		JButton right = new JButton(createEmoji("/arrow_right.png", 58, 58));
 		JButton left = new JButton(createEmoji("/arrow_left.png", 58, 58));
@@ -398,35 +398,65 @@ public class GuiView implements View
 	@Override
 	public void showArtefactChoice(GameViewData data)
 	{
-
-		String eArtefact = data.enemyArtefact;
-		String pArtefact = data.heroData.heroArtefact;
-		if (pArtefact != null)
-			eArtefact = pArtefact + " -> " + eArtefact;
-		JLabel text = createJLabel("The enemy drop an artefact !", 70);
-		JLabel question = createJLabel("Equip it ?", 70);
-		JLabel proposal = createJLabel(eArtefact, 70);
-		JButton yes = createJButton("YES", 30);
-		JButton no = createJButton("NO", 30);
-	
-		yes.addActionListener(e -> controller.handleInputPlayer("1"));
-		no.addActionListener(e -> controller.handleInputPlayer("2"));
 		panel.removeAll();
 		panel.updateUI();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBackground(Color.DARK_GRAY);
-		panel.add(Box.createVerticalGlue());
-		panel.add(text);
-		panel.add(Box.createVerticalStrut(10));
-		panel.add(question);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(proposal);
-		panel.add(Box.createVerticalStrut(100));
-		panel.add(yes);
-		panel.add(Box.createVerticalStrut(30));
-		panel.add(no);
-		panel.add(Box.createVerticalStrut(50));
-		panel.add(Box.createVerticalGlue());
+		for (FightUpdateView fightHit : data.fightUpdate)
+		{
+			String annonce = "";
+			if (fightHit.isCritical)
+				annonce += "Bim !! Critical Hit ! ";
+			if (fightHit.isPlayerAttacking)
+				annonce += "You attack the " + data.enemyClassName + ", causing " + fightHit.damage + " damage. " +fightHit.enemyHp + " HP left.";
+			else
+				annonce += "The " + data.enemyClassName + " attack You, causing " + fightHit.damage + " damage. " +fightHit.playerHp + " HP left.";
+			JLabel text = createJLabel(annonce, 40);
+			panel.add(text);
+			panel.updateUI();
+			frame.add(panel);
+			frame.setVisible(true);
+			try
+			{
+				Thread.sleep(10);
+			}
+			catch (Exception e)
+			{
+				System.err.println(e);
+			}
+		}
+		if (data.enemyArtefact != null)
+		{
+			String eArtefact = data.enemyArtefact;
+			String pArtefact = data.heroData.heroArtefact;
+			if (pArtefact != null)
+				eArtefact = pArtefact + " -> " + eArtefact;
+			JLabel text = createJLabel("The enemy drop an artefact !", 70);
+			JLabel question = createJLabel("Equip it ?", 70);
+			JLabel proposal = createJLabel(eArtefact, 70);
+			JButton yes = createJButton("YES", 30);
+			JButton no = createJButton("NO", 30);
+		
+			yes.addActionListener(e -> controller.handleInputPlayer("1"));
+			no.addActionListener(e -> controller.handleInputPlayer("2"));
+			panel.removeAll();
+			panel.updateUI();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.setBackground(Color.DARK_GRAY);
+			panel.add(Box.createVerticalGlue());
+			panel.add(text);
+			panel.add(Box.createVerticalStrut(10));
+			panel.add(question);
+			panel.add(Box.createVerticalStrut(30));
+			panel.add(proposal);
+			panel.add(Box.createVerticalStrut(100));
+			panel.add(yes);
+			panel.add(Box.createVerticalStrut(30));
+			panel.add(no);
+			panel.add(Box.createVerticalStrut(50));
+			panel.add(Box.createVerticalGlue());
+		}
+		else
+			controller.handleInputPlayer("");
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package fr.swingy.rpg.controller;
 
 import java.util.Random;
-
+import java.util.ArrayList;
 import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.artefacts.Artefact;
 import fr.swingy.rpg.model.entity.Character;
@@ -76,16 +76,15 @@ public class FightController
 		Map map = state.getMap();
 		Boolean rand = random.nextBoolean();
 		Enemy enemy = state.getCurrentEnnemy();
-		state.fightUpdate = new FightUpdateView[0];
+		state.fightUpdate = new ArrayList<FightUpdateView>();
 		int i = 0;
 		while (player.getHp() > 0 && enemy.getHp() > 0)
 		{
 			if (rand)
-				state.fightUpdate[i] = newFightUpdate(player, enemy, true);
+				state.fightUpdate.add(newFightUpdate(player, enemy, true));
 			else
-				state.fightUpdate[i] = newFightUpdate(enemy, player, false);
+				state.fightUpdate.add(newFightUpdate(enemy, player, false));
 			rand = rand ? false: true;
-			i++;
 		}
 		if (enemy.getHp() != 0)
 			state.setGameLvl(GameController.GameLvl.LOSE);

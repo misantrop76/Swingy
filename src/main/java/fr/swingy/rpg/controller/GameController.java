@@ -148,7 +148,10 @@ public class GameController
 					FightController.handleUserChoiceFight(this, state, input);
 					break;
 				case ARTEFACT:
-					FightController.handleArtefactChoice(state, input);
+					if (state.getCurrentEnnemy() != null && state.getCurrentEnnemy().getArtefact() != null)
+						FightController.handleArtefactChoice(state, input);
+					else
+						state.setGameLvl(GameLvl.MAP);
 					break;
 			}
 		}
@@ -196,6 +199,8 @@ public class GameController
 			Enemy isEnemy = map.getEnemy((y * mapHeight) + x);
 			if (isEnemy != null)
 			{
+				if (player.getArtefact() != null && isEnemy.getArtefact() != null && player.getArtefact().getBonus().equals(isEnemy.getArtefact().getBonus()))
+					isEnemy.setArtefact(null);
 				state.setCurrentEnnemy(isEnemy);
 				state.setGameLvl(GameLvl.FIGHT);
 			}
@@ -276,13 +281,22 @@ public class GameController
 	public GameViewData getGameViewData()
 	{
 		Player player = state.getPlayer();
-		String artefact = null;
+		String artefactPlayer = null;
+		String artefactEnemy = null;
+		String enemyName = null;
 		ArrayList<Tile> map = state.getMap().getMap();
 		int height = state.getMap().getHeight();
 		String[] mapData = new String[height + 1];
 
 		if (player != null && player.getArtefact() != null)
-			artefact = player.getArtefact().getBonus();
+			artefactPlayer = player.getArtefact().getBonus();
+		if (state.getCurrentEnnemy() != null)
+		{
+			if (state.getCurrentEnnemy().getArtefact() != null)
+				artefactEnemy = state.getCurrentEnnemy().getArtefact().getBonus();
+			enemyName = state.getCurrentEnnemy().getName();
+		}
+
 		int a = 0;
 		int x = 0;
 		mapData[height] = null;
@@ -302,14 +316,14 @@ public class GameController
 		}
 		PlayerViewData pvd = new PlayerViewData(player.getName(), player.getLvl(), player.getHpMax(),
 		player.getHp(), player.getXpMax(), player.getXp(), player.getDefence(), player.getAttack(),
-		player.getClassName(), player.getArtefact() != null ? player.getArtefact().getBonus(): null);
+		player.getClassName(), artefactPlayer);
 
 		return (new GameViewData(
 			pvd,
 			mapData,
 			state.fightUpdate,
-			state.getCurrentEnnemy().getName(),
-			state.getCurrentEnnemy() != null ? state.getCurrentEnnemy().getArtefact().getBonus(): null
+			enemyName,
+			artefactEnemy
 		));
 	}
 }
