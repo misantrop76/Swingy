@@ -83,6 +83,13 @@ public class ConsoleView implements View, Runnable
 		System.out.print("Enter your choice : ");
 	}
 
+	private void printSpace(int space)
+	{
+		for (int i = 0; i < space; i++)
+			System.out.print(" ");
+		System.out.println("║");
+	}
+
 	@Override
 	public void showFight(GameViewData data)
 	{
@@ -99,7 +106,7 @@ public class ConsoleView implements View, Runnable
 			System.out.println(annonce);
 			try
 			{
-				Thread.sleep(10);
+				Thread.sleep(500);
 			}
 			catch (Exception e)
 			{
@@ -180,25 +187,34 @@ public class ConsoleView implements View, Runnable
 
 	private void showPlayer(GameViewData data)
 	{
-		System.out.println("╔══════════════════ PLAYER STATS ═════════════════╗");
-		System.out.println("║ Character : " + data.heroData.heroName);
-		System.out.println("║     Class : " + data.heroData.heroClassName);
-		System.out.println("║           HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
-		System.out.println("║	   Defence : " + data.heroData.heroDefence);
-		System.out.println("║	    Attack : " + data.heroData.heroAttack);
-		System.out.println("║          Lvl : " + data.heroData.heroLevel + " (" + data.heroData.heroXp  + "/" + data.heroData.heroXpMax + "XP)");
+		System.out.println("╔════════════════ PLAYER STATS ═══════════════╗");
+		System.out.print("║ Character : " + data.heroData.heroName);
+		printSpace(32 - data.heroData.heroName.length());
+		System.out.print("║     Class : " + data.heroData.heroClassName);
+		printSpace(32 - data.heroData.heroClassName.length());
+		System.out.print("║        HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
+		printSpace(31 - (Integer.toString(data.heroData.heroHp).length() + Integer.toString(data.heroData.heroHp).length()));
+		System.out.print("║   Defence : " + data.heroData.heroDefence);
+		printSpace(32 - Integer.toString(data.heroData.heroDefence).length());
+		System.out.print("║    Attack : " + data.heroData.heroAttack);
+		printSpace(32 - Integer.toString(data.heroData.heroAttack).length());
+		System.out.print("║       Lvl : " + data.heroData.heroLevel + " (" + data.heroData.heroXp  + "/" + data.heroData.heroXpMax + "XP)");
+		printSpace(26 - (Integer.toString(data.heroData.heroLevel).length() + Integer.toString(data.heroData.heroXp).length() + Integer.toString(data.heroData.heroXpMax).length()));
 		if (data.heroData.heroArtefact != null)
-			System.out.println("║     Artefact : " + data.heroData.heroArtefact);
-		System.out.println("╚═════════════════════════════════════════════════╝");
+		{
+			System.out.print("║  Artefact : " + data.heroData.heroArtefact);
+			printSpace(32 - data.heroData.heroArtefact.length());
+		}
+		System.out.println("╚═════════════════════════════════════════════╝");
 	}
 
 	private void showMap(GameViewData data)
 	{
 		System.out.println();
-		for (int i = 0; i < (data.map[0].length() / 2) - 1; i++)
+		for (int i = 0; i < data.map[0].length() - 1; i++)
 			System.out.print(" ");
 		System.out.println("MAP");
-		for (int i = 0; i < data.map[0].length(); i++)
+		for (int i = 0; i < data.map[0].length() * 2; i++)
 			System.out.print("─");
 		System.out.println();
 
@@ -209,13 +225,13 @@ public class ConsoleView implements View, Runnable
 				switch (data.map[x].charAt(i))
 				{
 					case 'P':
-						System.out.print(green + "P" + reset);
+						System.out.print(green + " P" + reset);
 						break;
 					case '?':
-						System.out.print(red + "?" + reset);
+						System.out.print(red + " ?" + reset);
 						break;
 					default:
-						System.out.print(blue +  "O" + reset);
+						System.out.print(blue +  " O" + reset);
 						break;
 				}
 			}
