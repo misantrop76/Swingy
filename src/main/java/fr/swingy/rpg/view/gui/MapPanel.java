@@ -22,7 +22,7 @@ public class MapPanel extends JPanel
     private String[] map;
     private int rows, cols;
     private boolean drawGrid = true;
-    private Font cellFont;
+    private final Font cellFont;
     private final Map<Character, Image> iconMap = new HashMap<>();
 
     public MapPanel(String[] initialMap)
@@ -31,10 +31,6 @@ public class MapPanel extends JPanel
         setOpaque(true);
         this.cellFont = new Font("Monospaced", Font.BOLD, 18);
         setMap(initialMap);
-
-        setIconFor('P', loadImageFromResources("/cowboy.png"));
-        setIconFor('?', loadImageFromResources("/question.png"));
-        setIconFor('O', loadImageFromResources("/yellow_square.png"));
     }
 
     public final void setMap(String[] newMap)
@@ -135,7 +131,7 @@ public class MapPanel extends JPanel
                     Image icon = iconMap.get(chCell);
                     if (icon != null)
                     {
-                        int pad = Math.max(2, (int) Math.round(cw * 0.1));
+                        int pad = Math.max(2, (int) Math.round(cw * 0.05));
                         int availW = cw - 2 * pad;
                         int availH = ch - 2 * pad;
 

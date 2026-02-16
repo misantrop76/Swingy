@@ -17,20 +17,12 @@ public class GameController
 {
 	private View view;
 	private final GameState state;
-	private static GameController instance;
 
-	private GameController()
+	public GameController()
 	{
 		this.state = new GameState();
 		this.state.setMenuLvl(MenuLvl.MAIN_MENU);
 		this.state.setGameLvl(null);
-	}
-
-	public static GameController getInstance()
-	{
-		if (instance == null)
-			instance = new GameController();
-		return (instance);
 	}
 
 	public enum MenuLvl
@@ -56,44 +48,30 @@ public class GameController
 		{
 			switch (state.getMenuLvl())
 			{
-				case MAIN_MENU:
-					view.showMainMenu();
-					break;
-				case CHARACTER_MENU:
-					view.showNewCharacterMenu();
-					break;
-				case LOAD_MENU:
-					view.showGameListMenu();
-					break;
-				case NAME:
-					view.showNameInput();
-				default:
-					break;
+				case MAIN_MENU -> view.showMainMenu();
+				case CHARACTER_MENU -> view.showNewCharacterMenu();
+				case LOAD_MENU -> view.showGameListMenu();
+				case NAME -> view.showNameInput();
+				default -> {
+                        }
 			}
 		}
 		else if (state.getGameLvl() != null)
 		{
 			switch (state.getGameLvl())
 			{
-				case MAP:
-					view.showGame(getGameViewData());
-					break;
-				case FIGHT:
-					view.showFightChoice(getGameViewData());
-					break;
-				case ARTEFACT:
-					view.showFight(getGameViewData());
-					break;
-				case LOSE:
-					view.showLoseGame(getGameViewData());
-				default:
-					break;
+				case MAP -> view.showGame(getGameViewData());
+				case FIGHT -> view.showFightChoice(getGameViewData());
+				case ARTEFACT -> view.showFight(getGameViewData());
+				case LOSE -> view.showLoseGame(getGameViewData());
+				default -> {
+                        }
 			}
 		}
 	}
 
 
-	public void startGame(String mode)
+	public void resetGame(String mode)
 	{
 		this.view = ViewFactory.create(mode, this);
 		this.view.start();
@@ -104,22 +82,15 @@ public class GameController
 	{
 		switch (input)
 		{
-			case "1":
-			case "2":
-			case "3":
+			case "1", "2", "3" -> {
 				Player player = PlayerFactory.createPlayer("5", "default");
 				this.state.setPlayer(player);
-				this.state.setMap(new Map(state.getPlayer().getLvl(), player));
-				this.state.setMenuLvl(null);
-				this.state.setGameLvl(GameLvl.MAP);
-				break;
-			case "4":
-				switchView();
-				break;
-			case "5":
-				state.setMenuLvl(MenuLvl.MAIN_MENU);
-			default:
-				break;
+				startGame();
+			}
+			case "4" -> switchView();
+			case "5" -> state.setMenuLvl(MenuLvl.MAIN_MENU);
+			default -> {
+                }
 		}
 	}
 
@@ -142,6 +113,14 @@ public class GameController
 		}
 	}
 
+	private void startGame()
+	{
+		state.setMap(new Map());
+		state.getMap().updateMap(state.getPlayer());
+		state.setGameLvl(GameLvl.MAP);
+		state.setMenuLvl(null);
+	}
+
 	public	void handleInputPlayer(String input)
 	{
 		if (state.getMenuLvl() != null)
@@ -156,8 +135,7 @@ public class GameController
 					break;
 				case NAME:
 					state.getPlayer().setName(input);
-					state.setMenuLvl(null);
-					state.setGameLvl(GameLvl.MAP);
+					startGame();
 					break;
 				case LOAD_MENU:
 					handleLoadCharacter(input);
@@ -193,6 +171,8 @@ public class GameController
 			return;
 		}
 		refresh();
+		state.isLvlUp = false;
+		state.xpWin = 0;
 	}
 
 	private void handleMove(String input)
@@ -206,25 +186,14 @@ public class GameController
 
 		switch (input)
 		{
-			case "1" :
-				y--;
-				break;
-			case "2" :
-				y++;
-				break;
-			case "3" :
-				x++;
-				break;
-			case "4" :
-				x--;
-				break;
-			case "5" :
-				switchView();
-				break;
-			case "6":
-				state.stop();
-			default	:
-				break;
+			case "1" -> y--;
+			case "2" -> y++;
+			case "3" -> x++;
+			case "4" -> x--;
+			case "5" -> switchView();
+			case "6" -> state.stop();
+			default -> {
+                }
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
 		{
@@ -255,19 +224,12 @@ public class GameController
 			return;
 		switch (input)
 		{
-			case "1":
-				this.state.setMenuLvl(MenuLvl.CHARACTER_MENU);
-				break;
-			case "2":
-				this.state.setMenuLvl(MenuLvl.LOAD_MENU);
-				break;
-			case "3":
-				switchView();
-				break;
-			case "4":
-				this.state.stop();
-			default:
-				break;
+			case "1" -> this.state.setMenuLvl(MenuLvl.CHARACTER_MENU);
+			case "2" -> this.state.setMenuLvl(MenuLvl.LOAD_MENU);
+			case "3" -> switchView();
+			case "4" -> this.state.stop();
+			default -> {
+                }
 		}
 	}
 
@@ -275,23 +237,15 @@ public class GameController
 	{
 		switch (input)
 		{
-			case "1":
-			case "2":
-			case "3":
-			case "4":
-			case "5":
-				Player player = PlayerFactory.createPlayer(input, "default");
-				this.state.setPlayer(player);
-				this.state.setMap(new Map(state.getPlayer().getLvl(), player));
-				this.state.setMenuLvl(MenuLvl.NAME);
-				break;
-			case "6":
-				switchView();
-				break;
-			case "7":
-				this.state.setMenuLvl(MenuLvl.MAIN_MENU);
-			default:
-				break;
+			case "1", "2", "3", "4", "5" -> {
+                            Player player = PlayerFactory.createPlayer(input, "default");
+                            this.state.setPlayer(player);
+                            this.state.setMenuLvl(MenuLvl.NAME);
+                }
+			case "6" -> switchView();
+			case "7" -> this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+                        default -> {
+                }
 		}
 	}
 
@@ -314,11 +268,12 @@ public class GameController
 		String artefactPlayer = null;
 		String artefactEnemy = null;
 		String enemyName = null;
+		String name = player.getName();
 		ArrayList<Tile> map = state.getMap().getMap();
 		int height = state.getMap().getHeight();
 		String[] mapData = new String[height + 1];
 
-		if (player != null && player.getArtefact() != null)
+		if (player.getArtefact() != null)
 			artefactPlayer = player.getArtefact().getBonus();
 		if (state.getCurrentEnnemy() != null)
 		{
@@ -329,6 +284,7 @@ public class GameController
 
 		int a = 0;
 		int x = 0;
+
 		mapData[height] = null;
 		for (int i = 0; i < height; i++)
 			mapData[i] = "";
@@ -344,7 +300,7 @@ public class GameController
 			if (x % height == 0)
 				a++;
 		}
-		PlayerViewData pvd = new PlayerViewData(player.getName(), player.getLvl(), player.getHpMax(),
+		PlayerViewData pvd = new PlayerViewData(name, player.getLvl(), player.getHpMax(),
 		player.getHp(), player.getXpMax(), player.getXp(), player.getDefence(), player.getAttack(),
 		player.getClassName(), artefactPlayer);
 
@@ -353,7 +309,10 @@ public class GameController
 			mapData,
 			state.fightUpdate,
 			enemyName,
-			artefactEnemy
+			artefactEnemy,
+			null,
+			state.xpWin,
+			state.isLvlUp
 		));
 	}
 }

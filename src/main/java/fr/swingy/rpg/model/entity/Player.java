@@ -1,7 +1,5 @@
 package fr.swingy.rpg.model.entity;
 
-import fr.swingy.rpg.model.entity.Character;
-
 public abstract class Player extends Character
 {
 	protected int lvl;
@@ -70,7 +68,6 @@ public abstract class Player extends Character
 
 	public int getXpMax()
 	{
-		int lvl = this.lvl;
 		return (lvl * 1000 + ((lvl - 1) * (lvl - 1)) * 450);
 	}
 
@@ -102,11 +99,6 @@ public abstract class Player extends Character
 	public int getPrevPos()
 	{
 		return (this.prevPos);
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 
 	public abstract String getClassName();

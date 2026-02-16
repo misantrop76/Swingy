@@ -1,18 +1,20 @@
 package fr.swingy.rpg.model;
 
-import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.entity.Enemy;
-import fr.swingy.rpg.model.artefacts.Artefact;
-import fr.swingy.rpg.model.world.Map;
-import fr.swingy.rpg.model.dto.FightUpdateView;
-import fr.swingy.rpg.controller.GameController;
 import java.util.ArrayList;
+
+import fr.swingy.rpg.controller.GameController;
+import fr.swingy.rpg.model.dto.FightUpdateView;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.world.Map;
 
 public class GameState
 {
 	private GameController.MenuLvl menu = null;
 	private GameController.GameLvl gameLvl = null;
 	public  ArrayList<FightUpdateView> fightUpdate = null;
+	public int xpWin = 0;
+	public Boolean isLvlUp = false;
 	private Enemy	currentEnnemy = null;
 	private boolean running = true;
 	private Player	player = null;

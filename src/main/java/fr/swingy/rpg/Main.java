@@ -10,16 +10,14 @@ public class Main
 			throw new IllegalArgumentException("Error : Illegal Arguments");
 		switch (args[0].toUpperCase())
 		{
-			case "GUI":
-				break;
-			case "CONSOLE":
-				break;
-			default:
-				throw new IllegalArgumentException("Error : Illegal Arguments");
+			case "GUI" -> {
+                }
+			case "CONSOLE" -> {
+                }
+			default -> throw new IllegalArgumentException("Error : Illegal Arguments");
 		}
 
-		GameController controller = GameController.getInstance();
-
-		controller.startGame(args[0].toUpperCase());
+		GameController controller = new GameController();
+		controller.resetGame(args[0].toUpperCase());
 	}
 }

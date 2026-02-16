@@ -10,16 +10,21 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.net.URL;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import fr.swingy.rpg.controller.GameController;
@@ -32,6 +37,7 @@ public class GuiView implements View
 	private JFrame frame;
 	private JPanel panel;
 	private final GameController controller;
+	private boolean keyLocked = false;
 
 	public GuiView(GameController controller)
 	{
@@ -72,10 +78,10 @@ public class GuiView implements View
 	{
 		panel.revalidate();
 		panel.repaint();
-		panel.updateUI();
-		frame.revalidate();
-		frame.repaint();
+		// frame.revalidate();
+		// frame.repaint();
 	}
+
 
 	private JLabel createJLabel(String text, int size)
 	{
@@ -103,7 +109,6 @@ public class GuiView implements View
 	@Override
 	public void showNameInput()
 	{
-
 		JTextField nameInput = new JTextField();
 		JLabel text = createJLabel("Enter your name : ", 50);
 
@@ -162,7 +167,6 @@ public class GuiView implements View
 	@Override
 	public void showGameListMenu()
 	{
-
 		JButton rogue = createJButton("Rogue    HP : 120   ATK : 18   DEF : 10", 30);
 		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30);
 		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
@@ -199,7 +203,6 @@ public class GuiView implements View
 	@Override
 	public void showNewCharacterMenu()
 	{
-
 		JButton warrior = createJButton("Warrior    HP : 130   ATK : 15   DEF : 12", 30);
 		JButton mage = createJButton("Mage    HP : 80    ATK : 18   DEF : 5", 30);
 		JButton rogue = createJButton("Rogue    HP : 120   ATK : 18   DEF : 10", 30);
@@ -264,6 +267,73 @@ public class GuiView implements View
 		return new ImageIcon(scaled);
 	}
 
+	private void bindKey(InputMap im, ActionMap am, String key, String command)
+	{
+	    String actionNameP = "pressed " + key;
+	    String actionNameR = "released " + key;
+
+	    im.put(KeyStroke.getKeyStroke("released " + key), actionNameR);
+	    im.put(KeyStroke.getKeyStroke("pressed " + key), actionNameP);
+
+	    am.put(actionNameP, new AbstractAction()
+	    {
+	        @Override
+	        public void actionPerformed(ActionEvent e)
+	        {
+				if (keyLocked == false)
+					controller.handleInputPlayer(command);
+				keyLocked = true;
+	        }
+	    });
+
+	    am.put(actionNameR, new AbstractAction()
+	    {
+	        @Override
+	        public void actionPerformed(ActionEvent e)
+	        {
+	            keyLocked = false;
+	        }
+	    });
+	}
+
+	private void enableGameKeyBindings(Boolean isChoice)
+	{
+	    panel.setFocusable(true);
+	    panel.requestFocusInWindow();
+
+	    InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
+	    ActionMap am = panel.getActionMap();
+
+	    im.clear();
+	    am.clear();
+
+		keyLocked = false;
+	    bindKey(im, am, "UP", "1");
+	    bindKey(im, am, "DOWN", "2");
+		if (isChoice == false)
+	    {
+			bindKey(im, am, "LEFT", "4");
+	    	bindKey(im, am, "RIGHT", "3");
+		}
+	}
+
+	private void setMapIcon(MapPanel map, String className)
+	{
+		map.setIconFor('P', MapPanel.loadImageFromResources("/cowboy.png"));
+		switch (className)
+		{
+			case "Berserker" -> map.setIconFor('P', MapPanel.loadImageFromResources("/berserker.png"));
+			case "Mage" -> map.setIconFor('P', MapPanel.loadImageFromResources("/mage.png"));
+			case "Paladin" -> map.setIconFor('P', MapPanel.loadImageFromResources("/paladin.png"));
+			case "Rogue" -> map.setIconFor('P', MapPanel.loadImageFromResources("/rogue.png"));
+			case "Warrior" -> map.setIconFor('P', MapPanel.loadImageFromResources("/warrior.png"));
+
+			default -> throw new AssertionError();
+		}
+        map.setIconFor('?', MapPanel.loadImageFromResources("/question.png"));
+        map.setIconFor('O', MapPanel.loadImageFromResources("/black_square.png"));
+	}
+
 	@Override
 	public void showGame(GameViewData data)
 	{
@@ -299,8 +369,9 @@ public class GuiView implements View
 		console.addActionListener(e -> controller.handleInputPlayer("5"));
 		exit.addActionListener(e -> controller.handleInputPlayer("6"));
 
+		setMapIcon(mapPanel, data.heroData.heroClassName);
 		mapPanel.setPreferredSize( new Dimension(screenSize.height, screenSize.height));
-		mapPanel.setDrawGrid(false);
+		mapPanel.setDrawGrid(true);
 		mapPanel.setBackground(Color.BLACK);
 
 		statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
@@ -325,7 +396,6 @@ public class GuiView implements View
 			artefact.setFont(new Font("Arial", Font.BOLD, 20));
 			statsPanel.add(artefact);
 		}
-
 
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
 		controlPanel.setBackground(Color.DARK_GRAY);
@@ -365,18 +435,19 @@ public class GuiView implements View
 		rightPanel.add(statsPanel, BorderLayout.NORTH);
 		rightPanel.add(controlPanel, BorderLayout.SOUTH);
 
-
 		panel.removeAll();
 		panel.setLayout(new BorderLayout());
 		panel.add(mapPanel, BorderLayout.CENTER);
 		panel.add(rightPanel, BorderLayout.EAST);
-
 		updateWindow();
+		enableGameKeyBindings(false);
 	}
 
 	@Override
 	public void showFightChoice(GameViewData data)
 	{
+		panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).clear();
+		panel.getActionMap().clear();
 		String enemyName = data.enemyClassName;
 
 		JLabel text = createJLabel(enemyName, 70);
@@ -402,6 +473,7 @@ public class GuiView implements View
 		panel.add(Box.createVerticalGlue());
 
 		updateWindow();
+		enableGameKeyBindings(true);
 	}
 
 	private void showArtefactChoice(GameViewData data)
@@ -416,7 +488,7 @@ public class GuiView implements View
 		JLabel proposal = createJLabel(eArtefact, 70);
 		JButton yes = createJButton("YES", 30);
 		JButton no = createJButton("NO", 30);
-	
+
 		yes.addActionListener(e -> controller.handleInputPlayer("1"));
 		no.addActionListener(e -> controller.handleInputPlayer("2"));
 
@@ -437,50 +509,118 @@ public class GuiView implements View
 		panel.add(Box.createVerticalGlue());
 
 		updateWindow();
+		enableGameKeyBindings(true);
 	}
 
 	@Override
-	public void showFight(GameViewData data)
-	{
-		int index[] = {0};
-		Timer timer = new Timer(1000, null);
-		JLabel text = createJLabel("LET'S THE FIGHT BEGIN !!!", 40);
+	public void showFight(GameViewData data) {
 
-		panel.removeAll();		
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(Box.createVerticalGlue());
-		panel.add(text);
-		panel.add(Box.createVerticalGlue());
-		updateWindow();
-		timer.addActionListener(e -> 
-		{
-			if (index[0] >= data.fightUpdate.size())
-			{
-				timer.stop();
-				if (data.enemyArtefact != null)
-					showArtefactChoice(data);
-				else
-					controller.handleInputPlayer("");
-				return;
-			}
-			FightUpdateView fightHit = data.fightUpdate.get(index[0]++);
-			String annonce = "";
-			if (fightHit.isCritical)
-				annonce += "Bim !! Critical Hit ! ";
-			if (fightHit.isPlayerAttacking)
-				annonce += "You attack the " + data.enemyClassName + ", causing " + fightHit.damage + " damage. " + fightHit.enemyHp + " HP left.";
-			else
-				annonce += "The " + data.enemyClassName + " attack You, causing " + fightHit.damage + " damage. " + fightHit.playerHp + " HP left.";
-			text.setText(annonce);
+	    FightPanel fightPanel = new FightPanel(data);
 
-			panel.removeAll();
-			panel.add(Box.createVerticalGlue());
-			panel.add(text);
-			panel.add(Box.createVerticalGlue());
-			updateWindow();
-		});
-		timer.start();
+	    panel.removeAll();
+	    panel.setLayout(new BorderLayout());
+	    panel.add(fightPanel, BorderLayout.CENTER);
+	    updateWindow();
+
+	    int[] index = {0};
+
+	    Runnable nextStep = new Runnable() {
+	        @Override
+	        public void run() {
+
+	            if (index[0] >= data.fightUpdate.size()) {
+
+	                Timer endTimer = new Timer(1000, e -> {
+	                    ((Timer) e.getSource()).stop();
+
+	                    if (data.enemyArtefact != null)
+	                        showArtefactChoice(data);
+	                    else
+	                        controller.handleInputPlayer("");
+	                });
+
+	                endTimer.setRepeats(false);
+	                endTimer.start();
+	                return;
+	            }
+
+	            FightUpdateView update = data.fightUpdate.get(index[0]++);
+	            fightPanel.animateHit(update, this);
+	        }
+	    };
+
+	    nextStep.run();
 	}
+
+	// @Override
+	// public void showFight(GameViewData data)
+	// {
+	// 	int index[] = {0};
+	// 	int state[] = {0};
+	// 	Timer timer = new Timer(1000, null);
+	// 	JLabel text = createJLabel("LET'S THE FIGHT BEGIN !!!", 40);
+
+	// 	panel.removeAll();		
+	// 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	// 	panel.add(Box.createVerticalGlue());
+	// 	panel.add(text);
+	// 	panel.add(Box.createVerticalGlue());
+	// 	updateWindow();
+	// 	timer.addActionListener(e -> 
+	// 	{
+	// 		String annonce = "";
+	// 		switch (state[0])
+	// 		{
+	// 			case 0 ->
+	// 			{
+	// 				FightUpdateView fightHit = data.fightUpdate.get(index[0]++);
+	// 				if (fightHit.isCritical)
+	// 					annonce += "Bim !! Critical Hit ! ";
+	// 				if (fightHit.isPlayerAttacking)
+	// 					annonce += "You attack the " + data.enemyClassName + ", causing " + fightHit.damage + " damage. " + fightHit.enemyHp + " HP left.";
+	// 				else
+	// 					annonce += "The " + data.enemyClassName + " attack You, causing " + fightHit.damage + " damage. " + fightHit.playerHp + " HP left.";
+	// 				if (index[0] + 1 > data.fightUpdate.size())
+	// 					state[0]++;
+	// 			}
+	// 			case 1 ->
+	// 			{
+	// 				if (data.xpWin != 0)
+	// 					annonce = "You win the fight ! +" + data.xpWin + "XP";
+	// 				else
+	// 				{
+	// 					timer.stop();
+	// 					controller.handleInputPlayer("");
+	// 					return;
+	// 				}
+	// 				state[0] = 3;
+	// 				if (data.isLvlUp == true)
+	// 					state[0] = 2;
+	// 			}
+	// 			case 2 -> 
+	// 			{
+	// 				annonce = "You Level Up !";
+	// 				state[0] = 3;
+	// 			}
+	// 			case 3 ->
+	// 			{
+	// 				timer.stop();
+	// 				if (data.enemyArtefact != null)
+	// 					showArtefactChoice(data);
+	// 				else
+	// 					controller.handleInputPlayer("");
+	// 				return;
+	// 			}
+	// 		}
+	// 		text.setText(annonce);
+	// 		panel.removeAll();
+	// 		panel.add(Box.createVerticalGlue());
+	// 		panel.add(text);
+	// 		panel.add(Box.createVerticalGlue());
+	// 		updateWindow();
+	// 	});
+	// 	timer.start();
+	// }
 
 	@Override
 	public void showWinGame(GameViewData data)

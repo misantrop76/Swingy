@@ -1,30 +1,28 @@
 package fr.swingy.rpg.model.world;
 
 import java.util.ArrayList;
-import fr.swingy.rpg.model.entity.Character;
-import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.entity.Enemy;
-import fr.swingy.rpg.model.factory.EnemyFactory;
-import fr.swingy.rpg.model.factory.ArtefactFactory;
 import java.util.Random;
+
+import fr.swingy.rpg.model.entity.Character;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.entity.Player;
+import fr.swingy.rpg.model.factory.ArtefactFactory;
+import fr.swingy.rpg.model.factory.EnemyFactory;
 
 public class Map
 {
-	private ArrayList <Tile>	map = new ArrayList<Tile>();
+	private final ArrayList <Tile>	map = new ArrayList<>();
 	private int					height;
-
-	public Map(int lvl, Player player)
-	{
-		updateMap(lvl, player);
-	}
 
 	public int		getHeight()
 	{
 		return (this.height);
 	}
 
-	public void updateMap(int playerLvl, Player player)
+	public void updateMap(Player player)
 	{
+		int playerLvl = player.getLvl();
+	
 		this.height = (playerLvl - 1) * 5 + 10 - (playerLvl % 2);
 		map.clear();
 		for (int i = 0; i < this.height * this.height; i++)

@@ -1,14 +1,15 @@
 package fr.swingy.rpg.controller;
 
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
+
 import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.artefacts.Artefact;
+import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.world.Map;
-import fr.swingy.rpg.model.dto.FightUpdateView;
 
 public class FightController 
 {
@@ -18,18 +19,14 @@ public class FightController
 
 		switch (input)
 		{
-			case "1" :
-				startFight(controller, state);
-				break;
-			case "2" :
-				if (random.nextBoolean())
-					startFight(controller, state);
-				else
-					state.setGameLvl(GameController.GameLvl.MAP);
-				break;
-			default  :
-				startFight(controller, state);
-				break;
+			case "1" -> startFight(controller, state);
+			case "2" -> {
+                            if (random.nextBoolean())
+                                startFight(controller, state);
+                            else
+                                state.setGameLvl(GameController.GameLvl.MAP);
+                }
+			default -> startFight(controller, state);
 		}
 	}
 
@@ -40,12 +37,12 @@ public class FightController
 
 		switch (input)
 		{
-			case "1" : 
-				player.setArtefact(artefact);
-				player.setHp(player.getHp() + artefact.getHpBonus());
-				break;
-			default  :
-				break;
+			case "1" -> {
+                            player.setArtefact(artefact);
+                            player.setHp(player.getHp() + artefact.getHpBonus());
+                }
+			default -> {
+                }
 		}
 		state.setCurrentEnnemy(null);
 		state.setGameLvl(GameController.GameLvl.MAP);
@@ -76,30 +73,28 @@ public class FightController
 		Map map = state.getMap();
 		Boolean rand = random.nextBoolean();
 		Enemy enemy = state.getCurrentEnnemy();
-		state.fightUpdate = new ArrayList<FightUpdateView>();
-		int i = 0;
+
+		state.fightUpdate = new ArrayList<>();
 		while (player.getHp() > 0 && enemy.getHp() > 0)
 		{
-			if (rand)
-				state.fightUpdate.add(newFightUpdate(player, enemy, true));
-			else
-				state.fightUpdate.add(newFightUpdate(enemy, player, false));
-			rand = rand ? false: true;
+			state.fightUpdate.add(newFightUpdate(rand ? player: enemy, rand ? enemy: player, rand));
+			rand = !rand;
 		}
 		if (enemy.getHp() != 0)
 			state.setGameLvl(GameController.GameLvl.LOSE);
 		else
 		{
 			state.setGameLvl(GameController.GameLvl.ARTEFACT);
-			//iew.showUpdateFight("\nYou win the battle ! +" + ((enemy.getLvl() * 300) + (player.getLvl() * 100)) + "XP");
 			state.getMap().addCharacter(player.getPos(), null, null);
 			player.setPos(enemy.getPos());
 			state.getMap().addCharacter(enemy.getPos(), player, null);
+			state.xpWin = player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100);
 			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
 			while (player.getXp() >= player.getXpMax())
 			{
+				state.isLvlUp = true;
 				player.updateLvl();
-				map.updateMap(player.getLvl(), player);
+				map.updateMap(player);
 			}
 		}
 	}
