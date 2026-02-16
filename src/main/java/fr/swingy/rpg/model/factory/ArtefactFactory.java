@@ -29,5 +29,4 @@ public class ArtefactFactory
 			return (new Shield(lvl, "Shield"));
 		return (new Relic(lvl, "Relic"));
 	}
-
 }

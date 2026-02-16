@@ -269,51 +269,51 @@ public class GuiView implements View
 
 	private void bindKey(InputMap im, ActionMap am, String key, String command)
 	{
-	    String actionNameP = "pressed " + key;
-	    String actionNameR = "released " + key;
+		String actionNameP = "pressed " + key;
+		String actionNameR = "released " + key;
 
-	    im.put(KeyStroke.getKeyStroke("released " + key), actionNameR);
-	    im.put(KeyStroke.getKeyStroke("pressed " + key), actionNameP);
+		im.put(KeyStroke.getKeyStroke("released " + key), actionNameR);
+		im.put(KeyStroke.getKeyStroke("pressed " + key), actionNameP);
 
-	    am.put(actionNameP, new AbstractAction()
-	    {
-	        @Override
-	        public void actionPerformed(ActionEvent e)
-	        {
+		am.put(actionNameP, new AbstractAction()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
 				if (keyLocked == false)
 					controller.handleInputPlayer(command);
 				keyLocked = true;
-	        }
-	    });
+			}
+		});
 
-	    am.put(actionNameR, new AbstractAction()
-	    {
-	        @Override
-	        public void actionPerformed(ActionEvent e)
-	        {
-	            keyLocked = false;
-	        }
-	    });
+		am.put(actionNameR, new AbstractAction()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				keyLocked = false;
+			}
+		});
 	}
 
 	private void enableGameKeyBindings(Boolean isChoice)
 	{
-	    panel.setFocusable(true);
-	    panel.requestFocusInWindow();
+		panel.setFocusable(true);
+		panel.requestFocusInWindow();
 
-	    InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
-	    ActionMap am = panel.getActionMap();
+		InputMap im = panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap am = panel.getActionMap();
 
-	    im.clear();
-	    am.clear();
+		im.clear();
+		am.clear();
 
 		keyLocked = false;
-	    bindKey(im, am, "UP", "1");
-	    bindKey(im, am, "DOWN", "2");
+		bindKey(im, am, "UP", "1");
+		bindKey(im, am, "DOWN", "2");
 		if (isChoice == false)
-	    {
+		{
 			bindKey(im, am, "LEFT", "4");
-	    	bindKey(im, am, "RIGHT", "3");
+			bindKey(im, am, "RIGHT", "3");
 		}
 	}
 
@@ -513,114 +513,46 @@ public class GuiView implements View
 	}
 
 	@Override
-	public void showFight(GameViewData data) {
+	public void showFight(GameViewData data)
+	{
+		panel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).clear();
+		panel.getActionMap().clear();
+		FightPanel fightPanel = new FightPanel(data);
 
-	    FightPanel fightPanel = new FightPanel(data);
+		panel.removeAll();
+		panel.setLayout(new BorderLayout());
+		panel.add(fightPanel, BorderLayout.CENTER);
+		updateWindow();
 
-	    panel.removeAll();
-	    panel.setLayout(new BorderLayout());
-	    panel.add(fightPanel, BorderLayout.CENTER);
-	    updateWindow();
+		int[] index = {0};
 
-	    int[] index = {0};
+		Runnable nextStep = new Runnable() {
+			@Override
+			public void run() {
 
-	    Runnable nextStep = new Runnable() {
-	        @Override
-	        public void run() {
+				if (index[0] >= data.fightUpdate.size()) {
 
-	            if (index[0] >= data.fightUpdate.size()) {
+					Timer endTimer = new Timer(1000, e -> {
+						((Timer) e.getSource()).stop();
 
-	                Timer endTimer = new Timer(1000, e -> {
-	                    ((Timer) e.getSource()).stop();
+						if (data.enemyArtefact != null)
+							showArtefactChoice(data);
+						else
+							controller.handleInputPlayer("");
+					});
 
-	                    if (data.enemyArtefact != null)
-	                        showArtefactChoice(data);
-	                    else
-	                        controller.handleInputPlayer("");
-	                });
+					endTimer.setRepeats(false);
+					endTimer.start();
+					return;
+				}
 
-	                endTimer.setRepeats(false);
-	                endTimer.start();
-	                return;
-	            }
+				FightUpdateView update = data.fightUpdate.get(index[0]++);
+				fightPanel.animateHit(update, this);
+			}
+		};
 
-	            FightUpdateView update = data.fightUpdate.get(index[0]++);
-	            fightPanel.animateHit(update, this);
-	        }
-	    };
-
-	    nextStep.run();
+		nextStep.run();
 	}
-
-	// @Override
-	// public void showFight(GameViewData data)
-	// {
-	// 	int index[] = {0};
-	// 	int state[] = {0};
-	// 	Timer timer = new Timer(1000, null);
-	// 	JLabel text = createJLabel("LET'S THE FIGHT BEGIN !!!", 40);
-
-	// 	panel.removeAll();		
-	// 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-	// 	panel.add(Box.createVerticalGlue());
-	// 	panel.add(text);
-	// 	panel.add(Box.createVerticalGlue());
-	// 	updateWindow();
-	// 	timer.addActionListener(e -> 
-	// 	{
-	// 		String annonce = "";
-	// 		switch (state[0])
-	// 		{
-	// 			case 0 ->
-	// 			{
-	// 				FightUpdateView fightHit = data.fightUpdate.get(index[0]++);
-	// 				if (fightHit.isCritical)
-	// 					annonce += "Bim !! Critical Hit ! ";
-	// 				if (fightHit.isPlayerAttacking)
-	// 					annonce += "You attack the " + data.enemyClassName + ", causing " + fightHit.damage + " damage. " + fightHit.enemyHp + " HP left.";
-	// 				else
-	// 					annonce += "The " + data.enemyClassName + " attack You, causing " + fightHit.damage + " damage. " + fightHit.playerHp + " HP left.";
-	// 				if (index[0] + 1 > data.fightUpdate.size())
-	// 					state[0]++;
-	// 			}
-	// 			case 1 ->
-	// 			{
-	// 				if (data.xpWin != 0)
-	// 					annonce = "You win the fight ! +" + data.xpWin + "XP";
-	// 				else
-	// 				{
-	// 					timer.stop();
-	// 					controller.handleInputPlayer("");
-	// 					return;
-	// 				}
-	// 				state[0] = 3;
-	// 				if (data.isLvlUp == true)
-	// 					state[0] = 2;
-	// 			}
-	// 			case 2 -> 
-	// 			{
-	// 				annonce = "You Level Up !";
-	// 				state[0] = 3;
-	// 			}
-	// 			case 3 ->
-	// 			{
-	// 				timer.stop();
-	// 				if (data.enemyArtefact != null)
-	// 					showArtefactChoice(data);
-	// 				else
-	// 					controller.handleInputPlayer("");
-	// 				return;
-	// 			}
-	// 		}
-	// 		text.setText(annonce);
-	// 		panel.removeAll();
-	// 		panel.add(Box.createVerticalGlue());
-	// 		panel.add(text);
-	// 		panel.add(Box.createVerticalGlue());
-	// 		updateWindow();
-	// 	});
-	// 	timer.start();
-	// }
 
 	@Override
 	public void showWinGame(GameViewData data)

@@ -31,7 +31,7 @@ public class EnemyFactory
 			else if (ratio < 90)
 				return (new Skeleton("Skeleton"));
 			else
-				return (new DarkKnight("Dark Knight"));
+				return (new DarkKnight("DarkKnight"));
 		}
 		else if (lvl < 7)
 		{
@@ -40,7 +40,7 @@ public class EnemyFactory
 			else if (ratio < 60)
 				return (new Skeleton("Skeleton"));
 			else if (ratio < 95)
-				return (new DarkKnight("Dark Knight"));
+				return (new DarkKnight("DarkKnight"));
 			else
 				return (new Dragon("Dragon"));
 		}
@@ -49,7 +49,7 @@ public class EnemyFactory
 			if (ratio < 40)
 				return (new Skeleton("Skeleton"));
 			else if (ratio < 75)
-				return (new DarkKnight("Dark Knight"));
+				return (new DarkKnight("DarkKnight"));
 			else
 				return (new Dragon("Dragon"));
 		}

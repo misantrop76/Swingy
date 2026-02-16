@@ -85,6 +85,7 @@ public class GameController
 			case "1", "2", "3" -> {
 				Player player = PlayerFactory.createPlayer("5", "default");
 				this.state.setPlayer(player);
+				this.state.getPlayer().setLvl(20);
 				startGame();
 			}
 			case "4" -> switchView();
@@ -238,14 +239,14 @@ public class GameController
 		switch (input)
 		{
 			case "1", "2", "3", "4", "5" -> {
-                            Player player = PlayerFactory.createPlayer(input, "default");
-                            this.state.setPlayer(player);
-                            this.state.setMenuLvl(MenuLvl.NAME);
-                }
+							Player player = PlayerFactory.createPlayer(input, "default");
+							this.state.setPlayer(player);
+							this.state.setMenuLvl(MenuLvl.NAME);
+				}
 			case "6" -> switchView();
 			case "7" -> this.state.setMenuLvl(MenuLvl.MAIN_MENU);
-                        default -> {
-                }
+						default -> {
+				}
 		}
 	}
 
