@@ -85,7 +85,6 @@ public class GameController
 			case "1", "2", "3" -> {
 				Player player = PlayerFactory.createPlayer("5", "default");
 				this.state.setPlayer(player);
-				this.state.getPlayer().setLvl(20);
 				startGame();
 			}
 			case "4" -> switchView();
