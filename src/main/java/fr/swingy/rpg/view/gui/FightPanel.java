@@ -1,10 +1,12 @@
 package fr.swingy.rpg.view.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -20,6 +22,11 @@ class FightPanel extends JPanel
 	private final Image playerImg;
 	private final Image enemyImg;
 	private final Image impactImg;
+	private final Image criticalImpactImg;
+
+	private boolean showCriticalText = false;
+	private float criticalTextX;
+	private float criticalTextY;
 
 	private final int playerHp, playerHpMax;
 	private final int enemyHp, enemyHpMax;
@@ -57,6 +64,8 @@ class FightPanel extends JPanel
 				"/" + data.heroData.heroClassName.toLowerCase() + ".png"));
 		enemyImg = scale(MapPanel.loadImageFromResources("/" + data.enemyClassName.toLowerCase() + ".png"));
 		impactImg = scale(MapPanel.loadImageFromResources("/slash.png"), 150, 150);
+		criticalImpactImg = scale(MapPanel.loadImageFromResources("/critical.png"), 250, 250);
+		
 
 		addComponentListener(new ComponentAdapter()
 		{
@@ -98,12 +107,14 @@ public void animateHit(FightUpdateView update, Runnable callback)
 
 	phase = Phase.DASH;
 	showImpact = false;
+	showCriticalText = false;
 
 	final float dashDistance = 400f;
-	final float speed = 3f;
+	final float speed = 15f;
 	final float[] dashProgress = {0f};
 
-	Timer timer = new Timer(3, null);
+	Timer timer = new Timer(16, null);
+	timer.setCoalesce(true);
 	timer.addActionListener(e ->
 	{
 		switch (phase)
@@ -118,13 +129,21 @@ public void animateHit(FightUpdateView update, Runnable callback)
 					else
 						enemyX -= speed;
 					dashProgress[0] += speed;
-				} else
+				}
+				else
 				{
 					phase = Phase.IMPACT;
 					showImpact = true;
 					impactX = playerAttacks ? enemyX + IMG_SIZE/2f : playerX + IMG_SIZE/2f;
 					impactY = playerAttacks ? enemyY + IMG_SIZE/2f : playerY + IMG_SIZE/2f;
 				}
+
+		        if (update.isCritical)
+		        {
+		            showCriticalText = true;
+		            criticalTextX = impactX;
+		            criticalTextY = impactY - 150;
+		        }
 			}
 			case IMPACT ->
 			{
@@ -136,7 +155,8 @@ public void animateHit(FightUpdateView update, Runnable callback)
 				else
 				{
 					displayedPlayerHp = Math.max(targetHp, displayedPlayerHp - Math.max(1, (displayedPlayerHp - targetHp) / 5));
-					if (displayedPlayerHp <= targetHp) phase = Phase.RETURN;
+					if (displayedPlayerHp <= targetHp)
+						phase = Phase.RETURN;
 				}
 			}
 			case RETURN ->
@@ -172,6 +192,7 @@ public void animateHit(FightUpdateView update, Runnable callback)
 private void finish(Runnable callback)
 {
 	showImpact = false;
+	showCriticalText = false;
 	SwingUtilities.invokeLater(callback);
 }
 
@@ -185,7 +206,22 @@ private void finish(Runnable callback)
 		g2.drawImage(enemyImg, (int)enemyX, (int)enemyY, null);
 
 		if (showImpact)
-			g2.drawImage(impactImg, (int)impactX - 75, (int)impactY - 75, null);
+		{
+			if (showCriticalText)
+			{	
+		    	g2.drawImage(criticalImpactImg, (int)impactX - 75, (int)impactY - 75, null);
+			    g2.setColor(Color.RED);
+			    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 28f));
+
+			    String text = "CRITICAL HIT!";
+			    int textWidth = g2.getFontMetrics().stringWidth(text);
+
+			    g2.drawString(text, (int)(criticalTextX - textWidth/2), (int)criticalTextY);
+			}
+			else
+		    	g2.drawImage(impactImg, (int)impactX - 75, (int)impactY - 75, null);
+		}
+
 
 		drawHealthBar(g2,
 				(int)(getWidth() / 4f - BAR_WIDTH / 2f),
@@ -198,6 +234,7 @@ private void finish(Runnable callback)
 				200,
 				displayedEnemyHp,
 				enemyHpMax);
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	private void drawHealthBar(Graphics2D g2, int x, int y, int hp, int maxHp) {
