@@ -102,9 +102,19 @@ public class GuiView implements View
 		return (newJLabel);
 	}
 
-	private JButton createJButton(String name, int size)
+	private JButton createJButton(String name, int size, String iconPath)
 	{
+
+
 		JButton button = new JButton(name);
+		if (iconPath != null)
+		{
+	        URL url = GuiView.class.getResource("/" + iconPath);
+			ImageIcon icon = new ImageIcon(url);
+		    Image scaledImage = icon.getImage().getScaledInstance(size * 2, size * 2, Image.SCALE_SMOOTH);
+		    ImageIcon scaledIcon = new ImageIcon(scaledImage);
+			button.setIcon(scaledIcon);
+		}
 
 		button.setAlignmentX(Component.CENTER_ALIGNMENT);
 		button.setBackground(new Color(40, 40, 40));
@@ -143,10 +153,10 @@ public class GuiView implements View
 	@Override
 	public void showMainMenu()
 	{
-		JButton newGame = createJButton("New Game", 40);
-		JButton loadGame = createJButton("Load Game", 40);
-		JButton console = createJButton("Switch to Console", 40);
-		JButton exit = createJButton("Exit", 40);
+		JButton newGame = createJButton("New Game", 40, null);
+		JButton loadGame = createJButton("Load Game", 40, null);
+		JButton console = createJButton("Switch to Console", 40, null);
+		JButton exit = createJButton("Exit", 40, null);
 		JLabel text = createJLabel("SWINGY", 70, null);
 
 		newGame.addActionListener(e -> controller.handleInputPlayer("1"));
@@ -175,12 +185,14 @@ public class GuiView implements View
 	@Override
 	public void showGameListMenu()
 	{
-		JButton rogue = createJButton("Rogue    HP : 120   ATK : 18   DEF : 10", 30);
-		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30);
-		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
-		JButton console = createJButton("Switch to GUI mode", 50);
-		JButton back = createJButton("Back", 50);
+		JButton rogue = createJButton("Rogue    ❤️ 120   ⚔️ 18  ⛨ 10", 30, "rogue.png");
+		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30, "paladin.png");
+		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30, "berserker.png");
+		JButton console = createJButton("Switch to GUI mode", 50, null);
+		JButton back = createJButton("Back", 50, null);
 		JLabel text = createJLabel("CHOOSE YOUR GAME", 70, null);
+
+		rogue.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
 
 		rogue.addActionListener(e -> controller.handleInputPlayer("1"));
 		paladin.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -211,13 +223,13 @@ public class GuiView implements View
 	@Override
 	public void showNewCharacterMenu()
 	{
-		JButton warrior = createJButton("Warrior    HP : 130   ATK : 15   DEF : 12", 30);
-		JButton mage = createJButton("Mage    HP : 80    ATK : 18   DEF : 5", 30);
-		JButton rogue = createJButton("Rogue    HP : 120   ATK : 18   DEF : 10", 30);
-		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30);
-		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30);
-		JButton console = createJButton("Switch to GUI mode", 50);
-		JButton back = createJButton("Back", 50);
+		JButton warrior = createJButton("Warrior    ❤️ 130   ⚔️ 15  ⛨ 12", 30, "warrior.png");
+		JButton mage = createJButton("Mage    ❤️ 80   ⚔️ 18  ⛨ 5", 30, "mage.png");
+		JButton rogue = createJButton("Rogue    ❤️ 120   ⚔️ 18  ⛨ 10", 30, "rogue.png");
+		JButton paladin = createJButton("Paladin    ❤️ 120   ⚔️ 14  ⛨ 15", 30, "paladin.png");
+		JButton berserker = createJButton("Berserker    ❤️ 150   ⚔️ 20  ⛨ 7", 30, "berserker.png");
+		JButton console = createJButton("Switch to GUI mode", 50, null);
+		JButton back = createJButton("Back", 50, null);
 		JLabel text = createJLabel("CHOOSE YOUR\n CHARACTER", 70, null);
 
 		warrior.addActionListener(e -> controller.handleInputPlayer("1"));
@@ -232,21 +244,25 @@ public class GuiView implements View
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
 		panel.add(Box.createVerticalGlue());
+		panel.add(Box.createVerticalStrut(50));
+
 		panel.add(text);
-		panel.add(Box.createVerticalStrut(70));
+		panel.add(Box.createVerticalStrut(50));
 		panel.add(warrior);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(mage);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(rogue);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(paladin);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(berserker);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(console);
-		panel.add(Box.createVerticalStrut(50));
+		panel.add(Box.createVerticalStrut(30));
 		panel.add(back);
+		panel.add(Box.createVerticalStrut(50));
+
 		panel.add(Box.createVerticalGlue());
 
 		updateWindow();
@@ -357,9 +373,9 @@ public class GuiView implements View
 		
 		JLabel name = new JLabel("Name : " + data.heroData.heroName);
 		JLabel className = new JLabel("Class Name : " + data.heroData.heroClassName);
-		JLabel hp = new JLabel("HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
-		JLabel atk = new JLabel("ATK : " + data.heroData.heroAttack);
-		JLabel def = new JLabel("DEF : " + data.heroData.heroDefence);
+		JLabel hp = new JLabel("❤️ " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
+		JLabel atk = new JLabel("⚔️ " + data.heroData.heroAttack);
+		JLabel def = new JLabel("⛨ " + data.heroData.heroDefence);
 		JLabel xp = new JLabel("LVL " + data.heroData.heroLevel + " : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax + " XP");
 		JLabel artefact = new JLabel();
 		
@@ -367,8 +383,8 @@ public class GuiView implements View
 		JButton down = new JButton(createEmoji("/arrow_down.png", 58, 58));
 		JButton right = new JButton(createEmoji("/arrow_right.png", 58, 58));
 		JButton left = new JButton(createEmoji("/arrow_left.png", 58, 58));
-		JButton console = createJButton("Switch Console", 30);
-		JButton exit = createJButton("Exit", 30);
+		JButton console = createJButton("Switch Console", 30, null);
+		JButton exit = createJButton("Exit", 30, null);
 		
 		up.addActionListener(e -> controller.handleInputPlayer("1"));
 		down.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -460,8 +476,8 @@ public class GuiView implements View
 
 		JLabel text = createJLabel(enemyName, 70, enemyName);
 		JLabel fight = createJLabel("Fight ?", 70, null);
-		JButton yes = createJButton("YES", 30);
-		JButton no = createJButton("NO", 30);
+		JButton yes = createJButton("YES", 30, null);
+		JButton no = createJButton("NO", 30, null);
 
 		yes.addActionListener(e -> controller.handleInputPlayer("1"));
 		no.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -494,8 +510,8 @@ public class GuiView implements View
 		JLabel text = createJLabel("The enemy drop an artefact !", 70, null);
 		JLabel question = createJLabel("Equip it ?", 70, null);
 		JLabel proposal = createJLabel(eArtefact, 70, null);
-		JButton yes = createJButton("YES", 30);
-		JButton no = createJButton("NO", 30);
+		JButton yes = createJButton("YES", 30, null);
+		JButton no = createJButton("NO", 30, null);
 
 		yes.addActionListener(e -> controller.handleInputPlayer("1"));
 		no.addActionListener(e -> controller.handleInputPlayer("2"));
@@ -543,7 +559,7 @@ public class GuiView implements View
 					Timer endTimer = new Timer(1000, e -> {
 						((Timer) e.getSource()).stop();
 
-						if (data.enemyArtefact != null)
+						if (data.enemyArtefact != null && data.heroData.heroHp != 0)
 							showArtefactChoice(data);
 						else
 							controller.handleInputPlayer("");
@@ -570,9 +586,9 @@ public class GuiView implements View
 	@Override
 	public void showLoseGame(GameViewData data)
 	{
-		JButton newGame = createJButton("Main Menu", 40);
-		JButton console = createJButton("Switch to Console", 40);
-		JButton exit = createJButton("Exit", 40);
+		JButton newGame = createJButton("Main Menu", 40, null);
+		JButton console = createJButton("Switch to Console", 40, null);
+		JButton exit = createJButton("Exit", 40, null);
 		JLabel text = createJLabel("YOU LOSE !", 70, null);
 
 		newGame.addActionListener(e -> controller.handleInputPlayer("1"));

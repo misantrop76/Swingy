@@ -193,7 +193,7 @@ public class ConsoleView implements View, Runnable
 		System.out.print("║     Class : " + data.heroData.heroClassName);
 		printSpace(32 - data.heroData.heroClassName.length());
 		System.out.print("║        HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
-		printSpace(31 - (Integer.toString(data.heroData.heroHp).length() + Integer.toString(data.heroData.heroHp).length()));
+		printSpace(29 - (Integer.toString(data.heroData.heroHp).length() + Integer.toString(data.heroData.heroHp).length()));
 		System.out.print("║   Defence : " + data.heroData.heroDefence);
 		printSpace(32 - Integer.toString(data.heroData.heroDefence).length());
 		System.out.print("║    Attack : " + data.heroData.heroAttack);

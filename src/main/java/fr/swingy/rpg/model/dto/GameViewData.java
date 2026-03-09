@@ -12,9 +12,10 @@ public class GameViewData
 	public final String		winText;
 	public final int		xpWin;
 	public final Boolean	isLvlUp;
+	public final int		previousHp;
 
 	public GameViewData(PlayerViewData heroData, String [] map, ArrayList<FightUpdateView> fightUpdate,
-	String enemyClassName, String enemyArtefact, String winText, int xpWin, Boolean isLvlUp)
+	String enemyClassName, String enemyArtefact, String winText, int xpWin, Boolean isLvlUp, int previousHp)
 	{
 		this.heroData = heroData;
 		this.map = map;
@@ -24,5 +25,6 @@ public class GameViewData
 		this.winText = winText;
 		this.xpWin = xpWin;
 		this.isLvlUp = isLvlUp;
+		this.previousHp = previousHp;
 	}
 }

@@ -4,6 +4,7 @@ import fr.swingy.rpg.model.artefacts.Artefact;
 
 public abstract class Character
 {
+	protected int previousHp;
 	protected String name;
 	protected int hp;
 	protected int attack;
@@ -14,6 +15,7 @@ public abstract class Character
 
 	public Character(String name, int hp, int attack, int defence, String icon)
 	{
+		this.previousHp = hp;
 		this.name = name;
 		this.hp = hp;
 		this.attack = attack;
@@ -77,6 +79,16 @@ public abstract class Character
 		this.hp = hp;
 		if (hp < 0)
 			this.hp = 0;
+	}
+
+	public void setPreviousHp()
+	{
+		previousHp = hp;
+	}
+
+	public int getPreviousHp()
+	{
+		return (this.previousHp);
 	}
 
 	public int getAttack()

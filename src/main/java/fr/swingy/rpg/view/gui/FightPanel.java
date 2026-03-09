@@ -46,15 +46,15 @@ class FightPanel extends JPanel
 	private static final int IMG_SIZE = 200;
 	private static final int BAR_WIDTH = 220;
 
+
 	public FightPanel(GameViewData data)
 	{
 		setBackground(Color.DARK_GRAY);
 		setDoubleBuffered(true);
-		playerHp = data.heroData.heroHp;
+		playerHp = data.heroData.previousHp;
 		playerHpMax = data.heroData.heroHpMax;
 
-		FightUpdateView first = data.fightUpdate.get(0);
-		enemyHp = first.enemyHp + first.damage;
+		enemyHp = data.previousHp;
 		enemyHpMax = enemyHp;
 
 		displayedPlayerHp = playerHp;
@@ -110,7 +110,7 @@ public void animateHit(FightUpdateView update, Runnable callback)
 	showCriticalText = false;
 
 	final float dashDistance = 400f;
-	final float speed = 15f;
+	final float speed = 20f;
 	final float[] dashProgress = {0f};
 
 	Timer timer = new Timer(16, null);

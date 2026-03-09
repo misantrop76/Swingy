@@ -75,27 +75,24 @@ public class FightController
 		Enemy enemy = state.getCurrentEnnemy();
 
 		state.fightUpdate = new ArrayList<>();
+		enemy.setPreviousHp();
+		player.setPreviousHp();
 		while (player.getHp() > 0 && enemy.getHp() > 0)
 		{
 			state.fightUpdate.add(newFightUpdate(rand ? player: enemy, rand ? enemy: player, rand));
 			rand = !rand;
 		}
-		if (enemy.getHp() != 0)
-			state.setGameLvl(GameController.GameLvl.LOSE);
-		else
+		state.setGameLvl(GameController.GameLvl.ARTEFACT);
+		state.getMap().addCharacter(player.getPos(), null, null);
+		player.setPos(enemy.getPos());
+		state.getMap().addCharacter(enemy.getPos(), player, null);
+		state.xpWin = player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100);
+		player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
+		while (player.getXp() >= player.getXpMax())
 		{
-			state.setGameLvl(GameController.GameLvl.ARTEFACT);
-			state.getMap().addCharacter(player.getPos(), null, null);
-			player.setPos(enemy.getPos());
-			state.getMap().addCharacter(enemy.getPos(), player, null);
-			state.xpWin = player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100);
-			player.setXp(player.getXp() + (enemy.getLvl() * 300) + (player.getLvl() * 100));
-			while (player.getXp() >= player.getXpMax())
-			{
-				state.isLvlUp = true;
-				player.updateLvl();
-				map.updateMap(player);
-			}
+			state.isLvlUp = true;
+			player.updateLvl();
+			map.updateMap(player);
 		}
 	}
 }

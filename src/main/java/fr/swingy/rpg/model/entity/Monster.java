@@ -4,6 +4,6 @@ public class Monster extends Enemy
 {
 	public Monster(String name)
 	{
-		super(name, 25, 5, 5, "👾", 1);
+		super(name, 25, 10, 5, "👾", 1);
 	}
 }
