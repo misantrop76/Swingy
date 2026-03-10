@@ -113,7 +113,7 @@ public class ConsoleView implements View, Runnable
 				System.err.println(e);
 			}
 		}
-		if (data.enemyArtefact != null)
+		if (data.enemyArtefact != null && data.heroData.heroHp != 0)
 		{
 			System.out.println();
 			System.out.println("The enemy drop an Artefact !");
@@ -134,8 +134,8 @@ public class ConsoleView implements View, Runnable
 			System.out.println("╚════════════════════════════════════════════╝");
 			System.out.print("Enter your choice : ");
 		}
-		else
-			controller.handleInputPlayer("");
+		controller.handleInputPlayer("");
+		controller.handleInputPlayer("");
 	}
 
 	@Override
@@ -152,6 +152,12 @@ public class ConsoleView implements View, Runnable
 		System.out.println("               CONGRATULATIONS");
 		System.out.println();
 		showPlayer(data);
+		System.out.println("╔══════════════════ ACTION ══════════════════╗");
+		System.out.println("║ 1 -> Main Menu                             ║");
+		System.out.println("║ 2 -> Switch to GUI mode                    ║");
+		System.out.println("║ 3 -> Exit Game                             ║");
+		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
 	}
 
 	@Override
@@ -224,15 +230,9 @@ public class ConsoleView implements View, Runnable
 			{
 				switch (data.map[x].charAt(i))
 				{
-					case 'P':
-						System.out.print(green + " P" + reset);
-						break;
-					case '?':
-						System.out.print(red + " ?" + reset);
-						break;
-					default:
-						System.out.print(blue +  " O" + reset);
-						break;
+					case 'P' -> System.out.print(green + " P" + reset);
+					case '?' -> System.out.print(red + " ?" + reset);
+					default -> System.out.print(blue +  " O" + reset);
 				}
 			}
 			System.out.println();
@@ -281,7 +281,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║     HP : 130   ATK : 15   DEF : 12        ║");
 		System.out.println("║                                           ║");
 		System.out.println("║ 2 -> Mage                                 ║");
-		System.out.println("║     HP : 80    ATK : 18   DEF : 5         ║");
+		System.out.println("║     HP : 80    ATK : 25   DEF : 5         ║");
 		System.out.println("║                                           ║");
 		System.out.println("║ 3 -> Rogue                                ║");
 		System.out.println("║     HP : 120   ATK : 18   DEF : 10        ║");

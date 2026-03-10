@@ -224,7 +224,7 @@ public class GuiView implements View
 	public void showNewCharacterMenu()
 	{
 		JButton warrior = createJButton("Warrior    ❤️ 130   ⚔️ 15  ⛨ 12", 30, "warrior.png");
-		JButton mage = createJButton("Mage    ❤️ 80   ⚔️ 18  ⛨ 5", 30, "mage.png");
+		JButton mage = createJButton("Mage    ❤️ 80   ⚔️ 25  ⛨ 5", 30, "mage.png");
 		JButton rogue = createJButton("Rogue    ❤️ 120   ⚔️ 18  ⛨ 10", 30, "rogue.png");
 		JButton paladin = createJButton("Paladin    ❤️ 120   ⚔️ 14  ⛨ 15", 30, "paladin.png");
 		JButton berserker = createJButton("Berserker    ❤️ 150   ⚔️ 20  ⛨ 7", 30, "berserker.png");
@@ -509,7 +509,7 @@ public class GuiView implements View
 
 		JLabel text = createJLabel("The enemy drop an artefact !", 70, null);
 		JLabel question = createJLabel("Equip it ?", 70, null);
-		JLabel proposal = createJLabel(eArtefact, 70, null);
+		JLabel proposal = createJLabel(eArtefact, 40, null);
 		JButton yes = createJButton("YES", 30, null);
 		JButton no = createJButton("NO", 30, null);
 
@@ -581,11 +581,65 @@ public class GuiView implements View
 	@Override
 	public void showWinGame(GameViewData data)
 	{
+		JLabel name = createJLabel("Name : " + data.heroData.heroName, 30, null);
+		JLabel className = createJLabel("Class Name : " + data.heroData.heroClassName, 30, null);
+		JLabel hp = createJLabel("❤️ " + data.heroData.heroHp + "/" + data.heroData.heroHpMax, 30, null);
+		JLabel atk = createJLabel("⚔️ " + data.heroData.heroAttack, 30, null);
+		JLabel def = createJLabel("⛨ " + data.heroData.heroDefence, 30, null);
+		JLabel xp = createJLabel("LVL " + data.heroData.heroLevel + " : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax + " XP", 30, null);
+		JLabel artefact = createJLabel("", 20, null);
+		JButton newGame = createJButton("Main Menu", 40, null);
+		JButton console = createJButton("Switch to Console", 40, null);
+		JButton exit = createJButton("Exit", 40, null);
+		JLabel text = createJLabel("YOU WIN !", 70, null);
+
+		newGame.addActionListener(e -> controller.handleInputPlayer("1"));
+		console.addActionListener(e -> controller.handleInputPlayer("2"));
+		exit.addActionListener(e -> controller.handleInputPlayer("3"));
+	
+		panel.removeAll();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		panel.add(Box.createVerticalGlue());
+		panel.add(name);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(className);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(hp);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(atk);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(def);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(xp);
+		if (data.heroData.heroArtefact != null)
+		{
+			panel.add(Box.createVerticalStrut(15));
+			panel.add(artefact);
+		}
+		panel.add(Box.createVerticalStrut(40));
+		panel.add(text);
+		panel.add(Box.createVerticalStrut(90));
+		panel.add(newGame);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(console);
+		panel.add(Box.createVerticalStrut(50));
+		panel.add(exit);
+		panel.add(Box.createVerticalGlue());
+
+		updateWindow();
 	}
 
 	@Override
 	public void showLoseGame(GameViewData data)
 	{
+		JLabel name = createJLabel("Name : " + data.heroData.heroName, 30, null);
+		JLabel className = createJLabel("Class Name : " + data.heroData.heroClassName, 30, null);
+		JLabel hp = createJLabel("❤️ " + data.heroData.heroHp + "/" + data.heroData.heroHpMax, 30, null);
+		JLabel atk = createJLabel("⚔️ " + data.heroData.heroAttack, 30, null);
+		JLabel def = createJLabel("⛨ " + data.heroData.heroDefence, 30, null);
+		JLabel xp = createJLabel("LVL " + data.heroData.heroLevel + " : " + data.heroData.heroXp + "/" + data.heroData.heroXpMax + " XP", 30, null);
+		JLabel artefact = createJLabel("", 20, null);
 		JButton newGame = createJButton("Main Menu", 40, null);
 		JButton console = createJButton("Switch to Console", 40, null);
 		JButton exit = createJButton("Exit", 40, null);
@@ -599,6 +653,23 @@ public class GuiView implements View
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
 		panel.add(Box.createVerticalGlue());
+		panel.add(name);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(className);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(hp);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(atk);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(def);
+		panel.add(Box.createVerticalStrut(15));
+		panel.add(xp);
+		if (data.heroData.heroArtefact != null)
+		{
+			panel.add(Box.createVerticalStrut(15));
+			panel.add(artefact);
+		}
+		panel.add(Box.createVerticalStrut(40));
 		panel.add(text);
 		panel.add(Box.createVerticalStrut(90));
 		panel.add(newGame);

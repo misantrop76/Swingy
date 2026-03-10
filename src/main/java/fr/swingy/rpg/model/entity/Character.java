@@ -1,14 +1,23 @@
 package fr.swingy.rpg.model.entity;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 import fr.swingy.rpg.model.artefacts.Artefact;
 
 public abstract class Character
 {
+	@Min(value = 0, message = "previousHp connot be negatif")
 	protected int previousHp;
+	@NotBlank(message = "name cannot be blank")
 	protected String name;
+	@Min(value = 0, message = "hp cannot be negatif")
 	protected int hp;
+	@Min(value = 0, message = "attack cannot be negatif")
 	protected int attack;
+	@Min(value = 0, message = "defence cannot be negatif")
 	protected int defence;
+	@Min(value = 0, message = "pos cannot be negatif")
 	protected int pos;
 	protected String icon;
 	protected Artefact artefact;

@@ -1,12 +1,13 @@
 package fr.swingy.rpg.model.factory;
 
 
+import java.util.Random;
+
+import fr.swingy.rpg.model.artefacts.Artefact;
 import fr.swingy.rpg.model.artefacts.Attack;
 import fr.swingy.rpg.model.artefacts.Health;
 import fr.swingy.rpg.model.artefacts.Relic;
 import fr.swingy.rpg.model.artefacts.Shield;
-import fr.swingy.rpg.model.artefacts.Artefact;
-import java.util.Random;
 
 public class ArtefactFactory
 {
@@ -22,11 +23,11 @@ public class ArtefactFactory
 			lvl = 3;
 		int rand = random.nextInt(100);
 		if (rand < 30)
-			return (new Attack(lvl, "Attack"));
+			return (new Attack(lvl, "⚔️"));
 		else if (rand < 60)
-			return (new Health(lvl, "Health"));
+			return (new Health(lvl, "❤️"));
 		else if (rand < 90)
-			return (new Shield(lvl, "Shield"));
-		return (new Relic(lvl, "Relic"));
+			return (new Shield(lvl, "⛨"));
+		return (new Relic(lvl, "💎"));
 	}
 }

@@ -3,6 +3,8 @@ package fr.swingy.rpg.model.world;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.validation.constraints.Positive;
+
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Player;
@@ -12,6 +14,7 @@ import fr.swingy.rpg.model.factory.EnemyFactory;
 public class Map
 {
 	private final ArrayList <Tile>	map = new ArrayList<>();
+	@Positive(message = "height cannot be negatif")
 	private int					height;
 
 	public int		getHeight()

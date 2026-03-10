@@ -1,10 +1,16 @@
 package fr.swingy.rpg.model.entity;
 
+import javax.validation.constraints.Min;
+
 public abstract class Player extends Character
 {
+	@Min(value = 0, message = "lvl cannot be negatif")
 	protected int lvl;
+	@Min(value = 0, message = "xp cannot be negatif")
 	protected int xp;
+	@Min(value = 0, message = "prevPov cannot be negatif")
 	protected int prevPos;
+	@Min(value = 0, message = "hpMax cannot be negatif")
 	protected int hpMax;
 
 	public Player (String name, int hp, int attack, int defence, String icon)
@@ -20,7 +26,7 @@ public abstract class Player extends Character
 	{
 		this.xp -= this.getXpMax();
 		this.hpMax += 10;
-		this.hp = this.hpMax;
+		this.hp = this.getHpMax();
 		this.defence++;
 		this.attack++;
 		this.lvl++;

@@ -11,6 +11,7 @@ import fr.swingy.rpg.model.entity.Player;
 import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.world.Tile;
+import fr.swingy.rpg.validator.ValidatorUtil;
 import fr.swingy.rpg.view.View;
 
 public class GameController
@@ -63,6 +64,7 @@ public class GameController
 				case FIGHT -> view.showFightChoice(getGameViewData());
 				case ARTEFACT -> view.showFight(getGameViewData());
 				case LOSE -> view.showLoseGame(getGameViewData());
+				case WIN -> view.showWinGame(getGameViewData());
 				default -> {}
 			}
 		}
@@ -80,7 +82,7 @@ public class GameController
 	{
 		switch (input)
 		{
-			case "1", "2", "3" -> 
+			case "1", "2", "3" ->
 			{
 				Player player = PlayerFactory.createPlayer("5", "default");
 				this.state.setPlayer(player);
@@ -127,6 +129,11 @@ public class GameController
 				case NAME ->
 				{
 					state.getPlayer().setName(input);
+					if (!ValidatorUtil.validate(state.getPlayer()))
+					{
+					    System.out.println("Invalid hero data. Please try again.");
+					    return;
+					}
 					startGame();
                 }
 				case LOAD_MENU -> handleLoadCharacter(input);
@@ -146,7 +153,7 @@ public class GameController
 					else
 						state.setGameLvl(GameLvl.MAP);
                 }
-				case LOSE -> handleLoseMenu(input);
+				case LOSE, WIN -> handleLoseMenu(input);
 				default -> {}
 			}
 		}
@@ -197,11 +204,7 @@ public class GameController
 			map.addCharacter(player.getPos(), player, null);
 		}
 		else
-		{
-			state.stop();
-			view.showWinGame(getGameViewData());
-			view.close();
-		}
+			state.setGameLvl(GameLvl.WIN);
 	}
 
 	public void handleMainMenu(String input)
@@ -227,6 +230,7 @@ public class GameController
 				Player player = PlayerFactory.createPlayer(input, "default");
 				this.state.setPlayer(player);
 				this.state.setMenuLvl(MenuLvl.NAME);
+				this.state.getPlayer().setHp(1);
 			}
 			case "6" -> switchView();
 			case "7" -> this.state.setMenuLvl(MenuLvl.MAIN_MENU);

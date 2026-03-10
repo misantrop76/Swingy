@@ -20,12 +20,13 @@ public class FightController
 		switch (input)
 		{
 			case "1" -> startFight(controller, state);
-			case "2" -> {
-                            if (random.nextBoolean())
-                                startFight(controller, state);
-                            else
-                                state.setGameLvl(GameController.GameLvl.MAP);
-                }
+			case "2" ->
+			{
+				if (random.nextBoolean())
+					startFight(controller, state);
+				else
+					state.setGameLvl(GameController.GameLvl.MAP);
+            }
 			default -> startFight(controller, state);
 		}
 	}
@@ -37,12 +38,12 @@ public class FightController
 
 		switch (input)
 		{
-			case "1" -> {
-                            player.setArtefact(artefact);
-                            player.setHp(player.getHp() + artefact.getHpBonus());
-                }
-			default -> {
-                }
+			case "1" ->
+			{
+				player.setArtefact(artefact);
+				player.setHp(player.getHp() + artefact.getHpBonus());
+            }
+			default -> {}
 		}
 		state.setCurrentEnnemy(null);
 		state.setGameLvl(GameController.GameLvl.MAP);

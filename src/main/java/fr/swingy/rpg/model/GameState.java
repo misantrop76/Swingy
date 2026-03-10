@@ -2,6 +2,8 @@ package fr.swingy.rpg.model;
 
 import java.util.ArrayList;
 
+import javax.validation.constraints.Positive;
+
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.model.entity.Enemy;
@@ -13,6 +15,7 @@ public class GameState
 	private GameController.MenuLvl menu = null;
 	private GameController.GameLvl gameLvl = null;
 	public  ArrayList<FightUpdateView> fightUpdate = null;
+	@Positive(message = "xpWin cannot be negatif")
 	public int xpWin = 0;
 	public Boolean isLvlUp = false;
 	private Enemy	currentEnnemy = null;
