@@ -84,6 +84,8 @@ public class FightController
 			rand = !rand;
 		}
 		state.setGameLvl(GameController.GameLvl.ARTEFACT);
+		if (player.getHp() == 0)
+			return;
 		state.getMap().addCharacter(player.getPos(), null, null);
 		player.setPos(enemy.getPos());
 		state.getMap().addCharacter(enemy.getPos(), player, null);

@@ -84,7 +84,19 @@ public class GameController
 					}
 				}
 				case NAME -> view.showNameInput();
-				case RM_SAVE -> view.showRmMenu(savedPlayer);
+				case RM_SAVE ->
+				{
+					try
+					{
+						savedPlayer = heroDAO.loadHeroes();
+						view.showRmMenu(savedPlayer);
+					}
+					catch (SQLException e)
+					{
+						System.err.println(e.getMessage());
+						state.stop();
+					}
+				}
 				default -> {}
 			}
 		}
@@ -146,6 +158,7 @@ public class GameController
 				{
 					heroDAO.deleteHero(savedPlayer.get(Integer.parseInt(input) - 1).id);
 					state.setMenuLvl(MenuLvl.CHARACTER_MENU);
+					state.setGameLvl(null);
 				}
 				catch (SQLException e)
 				{

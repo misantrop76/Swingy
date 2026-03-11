@@ -69,7 +69,7 @@ public class HeroDAO
 	{
 		List<PlayerViewData> heroes = new ArrayList<>();
 
-		String sql = "SELECT * FROM heroes";
+		String sql = "SELECT * FROM heroes ORDER BY level";
 
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(sql);
@@ -140,7 +140,6 @@ public class HeroDAO
 			default -> player = new Berserker(name);
 		}
 
-		player.setHp(rs.getInt("hp"));
 		player.setHpMax(rs.getInt("hpMax"));
 		player.setXp(rs.getInt("xp"));
 		player.setLvl(rs.getInt("level"));
@@ -153,13 +152,14 @@ public class HeroDAO
 
 			switch (rs.getString("artefactName"))
 			{
-				case "Attack" -> artefact = new Attack(lvl, "⚔️");
-				case "Health" -> artefact = new Health(lvl, "❤️");
-				case "Shield" -> artefact = new Shield(lvl, "⛨");
-				case "Relic" -> artefact = new Relic(lvl, "💎");
+				case "⚔️" -> artefact = new Attack(lvl, "⚔️");
+				case "❤️" -> artefact = new Health(lvl, "❤️");
+				case "⛨" -> artefact = new Shield(lvl, "⛨");
+				case "💎" -> artefact = new Relic(lvl, "💎");
 				default -> artefact = new Relic(lvl, "💎");
 			}
 			player.setArtefact(artefact);
+			player.setHp(rs.getInt("hp"));
 		}
 		return player;
 	}

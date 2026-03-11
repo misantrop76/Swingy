@@ -1,6 +1,7 @@
 package fr.swingy.rpg.model.entity;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.NotBlank;
 
 import fr.swingy.rpg.model.artefacts.Artefact;
@@ -9,6 +10,8 @@ public abstract class Character
 {
 	@Min(value = 0, message = "previousHp connot be negatif")
 	protected int previousHp;
+
+	@Size(max=10, message = "name is too long")
 	@NotBlank(message = "name cannot be blank")
 	protected String name;
 	@Min(value = 0, message = "hp cannot be negatif")

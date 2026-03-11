@@ -202,10 +202,11 @@ public class GuiView implements View
 		for (PlayerViewData savedGame: savedPlayer)
 		{
 			panel.add(Box.createVerticalStrut(50));
-			String stats = savedGame.heroClassName 
-				+ "	❤️ " + savedGame.heroHp 
-				+ "	⚔️ " + savedGame.heroAttack
-				+ "	⛨ " + savedGame.heroDefence;
+			String stats = savedGame.heroName
+				+ "   ❤️ " + savedGame.heroHp 
+				+ "   ⚔️ " + savedGame.heroAttack
+				+ "   ⛨ " + savedGame.heroDefence
+				+ "   Lvl " + savedGame.heroLevel;
 			JButton saveButton = createJButton(stats, 30, savedGame.heroClassName.toLowerCase() + ".png");
 			String index = "" + i;
 			saveButton.addActionListener(e -> controller.handleInputPlayer(index));
@@ -240,10 +241,11 @@ public class GuiView implements View
 		for (PlayerViewData savedGame: savedPlayer)
 		{
 			panel.add(Box.createVerticalStrut(50));
-			String stats = savedGame.heroClassName 
-				+ "	❤️ " + savedGame.heroHp 
-				+ "	⚔️ " + savedGame.heroAttack
-				+ "	⛨ " + savedGame.heroDefence;
+			String stats = savedGame.heroName
+				+ "   ❤️ " + savedGame.heroHp 
+				+ "   ⚔️ " + savedGame.heroAttack
+				+ "   ⛨ " + savedGame.heroDefence
+				+ "   Lvl " + savedGame.heroLevel;
 			JButton saveButton = createJButton(stats, 30, savedGame.heroClassName.toLowerCase() + ".png");
 			String index = "" + i;
 			saveButton.addActionListener(e -> controller.handleInputPlayer(index));
@@ -423,7 +425,7 @@ public class GuiView implements View
 		JButton right = new JButton(createEmoji("/arrow_right.png", 58, 58));
 		JButton left = new JButton(createEmoji("/arrow_left.png", 58, 58));
 		JButton console = createJButton("Switch Console", 30, null);
-		JButton exit = createJButton("Exit", 30, null);
+		JButton exit = createJButton("Save & Quit", 30, null);
 		
 		up.addActionListener(e -> controller.handleInputPlayer("1"));
 		down.addActionListener(e -> controller.handleInputPlayer("2"));

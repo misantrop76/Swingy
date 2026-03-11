@@ -29,11 +29,6 @@ public class ConsoleView implements View, Runnable
 		this.controller = controller;
 	}
 
-	public void showRmMenu(List <PlayerViewData> savedPlayer)
-	{
-		
-	}
-
 	@Override
 	public void start()
 	{
@@ -141,8 +136,11 @@ public class ConsoleView implements View, Runnable
 			System.out.println("╚════════════════════════════════════════════╝");
 			System.out.print("Enter your choice : ");
 		}
-		controller.handleInputPlayer("");
-		controller.handleInputPlayer("");
+		else
+		{
+			controller.handleInputPlayer("");
+			controller.handleInputPlayer("");
+		}
 	}
 
 	@Override
@@ -164,6 +162,55 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 2 -> Switch to GUI mode                    ║");
 		System.out.println("║ 3 -> Exit Game                             ║");
 		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
+	}
+
+	@Override
+	public void showRmMenu(List <PlayerViewData> savedPlayer)
+	{
+		clearConsole();
+		showTitle();
+
+		System.out.println("╔═════════ YOU MUST REMOVE A SAVE ══════════╗");
+		int i = 1;
+		for (PlayerViewData savedGame: savedPlayer)
+		{
+			String stats = savedGame.heroName
+				+ " "
+				+ "   ❤️ " + savedGame.heroHp 
+				+ "   ⚔️ " + savedGame.heroAttack
+				+ "   ⛨ " + savedGame.heroDefence
+				+ "   Lvl " + savedGame.heroLevel;
+			System.out.println("║ " + i + "-> " + stats);
+			i++;
+		}
+		System.out.println("║ 6 -> Switch to GUI mode                   ");	
+		System.out.println("║ 7 -> Back                                 ");
+		System.out.println("╚═══════════════════════════════════════════╝");
+		System.out.print("Enter your choice : ");
+	}
+
+	@Override
+	public void showGameListMenu(List <PlayerViewData> savedPlayer)
+	{
+		clearConsole();
+		showTitle();
+
+		System.out.println("╔════════════════ LOAD GAME ════════════════╗");
+		int i = 1;
+		for (PlayerViewData savedGame: savedPlayer)
+		{
+			String stats = savedGame.heroName
+				+ "   ❤️ " + savedGame.heroHp 
+				+ "   ⚔️ " + savedGame.heroAttack
+				+ "   ⛨ " + savedGame.heroDefence
+				+ "   Lvl " + savedGame.heroLevel;
+			System.out.println("║ " + i + "-> " + stats);
+			i++;
+		}
+		System.out.println("║ 6 -> Switch to GUI mode                   ║");	
+		System.out.println("║ 7 -> Back                                 ║");
+		System.out.println("╚═══════════════════════════════════════════╝");
 		System.out.print("Enter your choice : ");
 	}
 
@@ -246,21 +293,6 @@ public class ConsoleView implements View, Runnable
 		}
 	}
 
-	@Override
-	public void showGameListMenu(List <PlayerViewData> savedPlayer)
-	{
-		clearConsole();
-		showTitle();
-
-		System.out.println("╔══════════════ LOAD GAME ══════════════╗");
-		System.out.println("║ 1 -> Saved Game 1                     ║");
-		System.out.println("║ 2 -> Saved Game 2                     ║");
-		System.out.println("║ 3 -> Saved Game 2                     ║");
-		System.out.println("║ 4 -> Switch to GUI mode               ║");	
-		System.out.println("║ 5 -> Back                             ║");
-		System.out.println("╚═══════════════════════════════════════╝");
-		System.out.print("Enter your choice : ");
-	}
 
 	@Override
 	public void showMainMenu()
