@@ -4,7 +4,7 @@ public class Berserker extends Player
 {
 	public Berserker(String name)
 	{
-		super(name, 150, 20, 7, "🪓");
+		super(name, 150, 20, 7);
 	}
 
 	@Override

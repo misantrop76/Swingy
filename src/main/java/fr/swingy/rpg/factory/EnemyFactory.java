@@ -1,11 +1,12 @@
-package fr.swingy.rpg.model.factory;
+package fr.swingy.rpg.factory;
 
-import fr.swingy.rpg.model.entity.Monster;
-import fr.swingy.rpg.model.entity.Dragon;
-import fr.swingy.rpg.model.entity.DarkKnight;
-import fr.swingy.rpg.model.entity.Skeleton;
-import fr.swingy.rpg.model.entity.Enemy;
 import java.util.Random;
+
+import fr.swingy.rpg.model.entity.DarkKnight;
+import fr.swingy.rpg.model.entity.Dragon;
+import fr.swingy.rpg.model.entity.Enemy;
+import fr.swingy.rpg.model.entity.Monster;
+import fr.swingy.rpg.model.entity.Skeleton;
 
 public class EnemyFactory
 {

@@ -19,17 +19,15 @@ public abstract class Character
 	protected int defence;
 	@Min(value = 0, message = "pos cannot be negatif")
 	protected int pos;
-	protected String icon;
 	protected Artefact artefact;
 
-	public Character(String name, int hp, int attack, int defence, String icon)
+	public Character(String name, int hp, int attack, int defence)
 	{
 		this.previousHp = hp;
 		this.name = name;
 		this.hp = hp;
 		this.attack = attack;
 		this.defence = defence;
-		this.icon = icon;
 		this.artefact = null;
 	}
 
@@ -66,16 +64,6 @@ public abstract class Character
 	public int getPos()
 	{
 		return (this.pos);
-	}
-
-	public void setIcon(String icon)
-	{
-		this.icon = icon;
-	}
-
-	public String getIcon()
-	{
-		return (this.icon);
 	}
 
 	public int getHp()

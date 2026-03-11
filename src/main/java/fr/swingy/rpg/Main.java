@@ -6,15 +6,11 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		if (args.length != 1)
-			throw new IllegalArgumentException("Error : Illegal Arguments");
-		switch (args[0].toUpperCase())
+		if (args.length != 1 || (!args[0].toUpperCase().equals("GUI")
+		&& !args[0].toUpperCase().equals("CONSOLE")))
 		{
-			case "GUI" -> {
-                }
-			case "CONSOLE" -> {
-                }
-			default -> throw new IllegalArgumentException("Error : Illegal Arguments");
+			System.err.println("Error : Illegal Arguments");
+			return;
 		}
 
 		GameController controller = new GameController();

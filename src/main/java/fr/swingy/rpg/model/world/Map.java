@@ -5,11 +5,11 @@ import java.util.Random;
 
 import javax.validation.constraints.Positive;
 
+import fr.swingy.rpg.factory.ArtefactFactory;
+import fr.swingy.rpg.factory.EnemyFactory;
 import fr.swingy.rpg.model.entity.Character;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.factory.ArtefactFactory;
-import fr.swingy.rpg.model.factory.EnemyFactory;
 
 public class Map
 {

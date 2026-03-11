@@ -1,14 +1,19 @@
 package fr.swingy.rpg.controller;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
+import fr.swingy.rpg.database.DataBaseManager;
+import fr.swingy.rpg.database.HeroDAO;
+import fr.swingy.rpg.factory.PlayerFactory;
 import fr.swingy.rpg.factory.ViewFactory;
 import fr.swingy.rpg.model.GameState;
 import fr.swingy.rpg.model.dto.GameViewData;
 import fr.swingy.rpg.model.dto.PlayerViewData;
 import fr.swingy.rpg.model.entity.Enemy;
 import fr.swingy.rpg.model.entity.Player;
-import fr.swingy.rpg.model.factory.PlayerFactory;
 import fr.swingy.rpg.model.world.Map;
 import fr.swingy.rpg.model.world.Tile;
 import fr.swingy.rpg.validator.ValidatorUtil;
@@ -18,12 +23,25 @@ public class GameController
 {
 	private View view;
 	private final GameState state;
+	private final HeroDAO heroDAO;
+	private List<PlayerViewData> savedPlayer;
 
 	public GameController()
 	{
 		this.state = new GameState();
 		this.state.setMenuLvl(MenuLvl.MAIN_MENU);
 		this.state.setGameLvl(null);
+		Connection conn = DataBaseManager.createDataBase();
+		this.heroDAO = new HeroDAO(conn);
+		try
+		{
+			savedPlayer = heroDAO.loadHeroes();
+		}
+		catch (SQLException e)
+		{
+			System.err.println(e.getMessage());
+			state.stop();
+		}
 	}
 
 	public enum MenuLvl
@@ -31,6 +49,7 @@ public class GameController
 		MAIN_MENU,
 		CHARACTER_MENU,
 		LOAD_MENU,
+		RM_SAVE,
 		NAME
 	}
 
@@ -51,8 +70,21 @@ public class GameController
 			{
 				case MAIN_MENU -> view.showMainMenu();
 				case CHARACTER_MENU -> view.showNewCharacterMenu();
-				case LOAD_MENU -> view.showGameListMenu();
+				case LOAD_MENU ->
+				{
+					try
+					{
+						savedPlayer = heroDAO.loadHeroes();
+						view.showGameListMenu(savedPlayer);
+					}
+					catch (SQLException e)
+					{
+						System.err.println(e.getMessage());
+						state.stop();
+					}
+				}
 				case NAME -> view.showNameInput();
+				case RM_SAVE -> view.showRmMenu(savedPlayer);
 				default -> {}
 			}
 		}
@@ -70,7 +102,6 @@ public class GameController
 		}
 	}
 
-
 	public void resetGame(String mode)
 	{
 		this.view = ViewFactory.create(mode, this);
@@ -82,14 +113,48 @@ public class GameController
 	{
 		switch (input)
 		{
-			case "1", "2", "3" ->
+			case "1", "2", "3", "4", "5" ->
 			{
-				Player player = PlayerFactory.createPlayer("5", "default");
-				this.state.setPlayer(player);
-				startGame();
+				if (Integer.parseInt(input) > savedPlayer.size())
+					return;
+				try
+				{
+					Player player = heroDAO.getPlayer(savedPlayer.get(Integer.parseInt(input) - 1).id);
+					heroDAO.deleteHero(savedPlayer.get(Integer.parseInt(input) - 1).id);
+					this.state.setPlayer(player);
+					startGame();
+				}
+				catch (SQLException e)
+				{
+					System.err.println(e.getMessage());
+					state.stop();
+				}
 			}
-			case "4" -> switchView();
-			case "5" -> state.setMenuLvl(MenuLvl.MAIN_MENU);
+			case "6" -> switchView();
+			case "7" -> state.setMenuLvl(MenuLvl.MAIN_MENU);
+			default -> {}
+		}
+	}
+
+	private void handleRmCharacter(String input)
+	{
+		switch (input)
+		{
+			case "1", "2", "3", "4", "5" ->
+			{
+				try
+				{
+					heroDAO.deleteHero(savedPlayer.get(Integer.parseInt(input) - 1).id);
+					state.setMenuLvl(MenuLvl.CHARACTER_MENU);
+				}
+				catch (SQLException e)
+				{
+					System.err.println(e.getMessage());
+					state.stop();
+				}
+			}
+			case "6" -> switchView();
+			case "7" -> state.setMenuLvl(MenuLvl.MAIN_MENU);
 			default -> {}
 		}
 	}
@@ -137,6 +202,7 @@ public class GameController
 					startGame();
                 }
 				case LOAD_MENU -> handleLoadCharacter(input);
+				case RM_SAVE -> handleRmCharacter(input);
 				default -> {}
 			}
 		}
@@ -185,7 +251,19 @@ public class GameController
 			case "3" -> x++;
 			case "4" -> x--;
 			case "5" -> switchView();
-			case "6" -> state.stop();
+			case "6" ->
+			{
+				try
+				{
+					heroDAO.saveHero(player);
+					this.state.setMenuLvl(MenuLvl.MAIN_MENU);
+				}
+				catch (SQLException e)
+				{
+					System.err.println(e.getMessage());
+					state.stop();
+				}
+			}
 			default -> {}
 		}
 		if (x >= 0 && x < mapHeight && y >= 0 && y < mapHeight)
@@ -213,7 +291,21 @@ public class GameController
 			return;
 		switch (input)
 		{
-			case "1" -> this.state.setMenuLvl(MenuLvl.CHARACTER_MENU);
+			case "1" ->
+			{
+				try
+				{
+					if (heroDAO.countHeroes() < 5)
+						this.state.setMenuLvl(MenuLvl.CHARACTER_MENU);
+					else
+						this.state.setMenuLvl(MenuLvl.RM_SAVE);
+				}
+				catch (SQLException e)
+				{
+					System.err.println(e.getMessage());
+					state.stop();
+				}
+			}
 			case "2" -> this.state.setMenuLvl(MenuLvl.LOAD_MENU);
 			case "3" -> switchView();
 			case "4" -> this.state.stop();
@@ -230,7 +322,6 @@ public class GameController
 				Player player = PlayerFactory.createPlayer(input, "default");
 				this.state.setPlayer(player);
 				this.state.setMenuLvl(MenuLvl.NAME);
-				this.state.getPlayer().setHp(1);
 			}
 			case "6" -> switchView();
 			case "7" -> this.state.setMenuLvl(MenuLvl.MAIN_MENU);
@@ -293,7 +384,7 @@ public class GameController
 		}
 		PlayerViewData pvd = new PlayerViewData(name, player.getLvl(), player.getHpMax(),
 		player.getHp(), player.getXpMax(), player.getXp(), player.getDefence(), player.getAttack(),
-		player.getClassName(), artefactPlayer, player.getPreviousHp());
+		player.getClassName(), artefactPlayer, player.getPreviousHp(), 0);
 
 		return (new GameViewData(
 			pvd,

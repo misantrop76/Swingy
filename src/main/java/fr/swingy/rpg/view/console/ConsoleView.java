@@ -1,10 +1,12 @@
 package fr.swingy.rpg.view.console;
 
+import java.util.List;
 import java.util.Scanner;
 
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.model.dto.GameViewData;
+import fr.swingy.rpg.model.dto.PlayerViewData;
 import fr.swingy.rpg.view.View;
 
 public class ConsoleView implements View, Runnable
@@ -25,6 +27,11 @@ public class ConsoleView implements View, Runnable
 	{
 		this.isRunning = false;
 		this.controller = controller;
+	}
+
+	public void showRmMenu(List <PlayerViewData> savedPlayer)
+	{
+		
 	}
 
 	@Override
@@ -240,7 +247,7 @@ public class ConsoleView implements View, Runnable
 	}
 
 	@Override
-	public void showGameListMenu()
+	public void showGameListMenu(List <PlayerViewData> savedPlayer)
 	{
 		clearConsole();
 		showTitle();

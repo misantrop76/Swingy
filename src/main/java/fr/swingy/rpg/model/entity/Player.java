@@ -13,9 +13,9 @@ public abstract class Player extends Character
 	@Min(value = 0, message = "hpMax cannot be negatif")
 	protected int hpMax;
 
-	public Player (String name, int hp, int attack, int defence, String icon)
+	public Player (String name, int hp, int attack, int defence)
 	{
-		super(name, hp, attack, defence, icon);
+		super(name, hp, attack, defence);
 		this.hpMax = hp;
 		this.lvl = 1;
 		this.xp = 0;
@@ -38,8 +38,8 @@ public abstract class Player extends Character
 		this.hp = hp;
 		if (this.hp < 0)
 			this.hp = 0;
-		if (this.hp > this.hpMax)
-			this.hp = this.hpMax;
+		if (this.hp > this.getHpMax())
+			this.hp = this.getHpMax();
 	}
 
 	@Override
@@ -50,12 +50,22 @@ public abstract class Player extends Character
 		return (this.defence);
 	}
 
+	public void setDefence(int defence)
+	{
+		this.defence = defence;
+	}
+
 	@Override
 	public int getAttack()
 	{
 		if (this.artefact != null)
 			return (this.artefact.getAttackBonus() + this.attack);
 		return (this.attack);
+	}
+
+	public void setAttack(int attack)
+	{
+		this.attack = attack;
 	}
 
 	public int getHpMax()

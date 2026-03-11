@@ -13,9 +13,10 @@ public class PlayerViewData
 	public final String heroClassName;
 	public final String heroArtefact;
 	public final int	previousHp;
+	public final int 	id;
 
 	public PlayerViewData(String heroName, int heroLevel, int heroHpMax, int heroHp,
-	int heroXpMax, int heroXp, int heroDefence, int heroAttack, String heroClassName, String heroArtefact, int previousHp)
+	int heroXpMax, int heroXp, int heroDefence, int heroAttack, String heroClassName, String heroArtefact, int previousHp, int id)
 	{
 		this.heroName = heroName;
 		this.heroLevel = heroLevel;
@@ -28,5 +29,6 @@ public class PlayerViewData
 		this.heroArtefact = heroArtefact;
 		this.heroClassName = heroClassName;
 		this.previousHp = previousHp;
+		this.id = id;
 	}
 }

@@ -11,7 +11,6 @@ public abstract class Artefact
 	protected int hpBonus;
 	@Positive(message = "defenceBonus cannot be negatif")
 	protected int defenceBonus;
-	protected String icon;
 	@NotBlank(message = "name cannot be blank")
 	protected String name;
 	@Positive(message = "lvl cannot be negatif")
@@ -35,11 +34,6 @@ public abstract class Artefact
 	public int getDefenceBonus()
 	{
 		return (this.defenceBonus);
-	}
-
-	public String getIcon()
-	{
-		return (this.icon);
 	}
 
 	public String getName()

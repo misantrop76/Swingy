@@ -1,5 +1,4 @@
-package fr.swingy.rpg.model.factory;
-
+package fr.swingy.rpg.factory;
 
 import java.util.Random;
 

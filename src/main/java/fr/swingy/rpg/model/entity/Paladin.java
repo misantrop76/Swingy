@@ -4,7 +4,7 @@ public class Paladin extends Player
 {
 	public Paladin(String name)
 	{
-		super(name, 120, 14, 15, "🌟");
+		super(name, 120, 14, 15);
 	}
 
 	@Override

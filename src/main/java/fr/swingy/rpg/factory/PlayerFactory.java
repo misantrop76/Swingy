@@ -1,4 +1,4 @@
-package fr.swingy.rpg.model.factory;
+package fr.swingy.rpg.factory;
 
 import fr.swingy.rpg.model.entity.Berserker;
 import fr.swingy.rpg.model.entity.Mage;

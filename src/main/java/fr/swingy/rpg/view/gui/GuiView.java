@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -30,6 +31,7 @@ import javax.swing.Timer;
 import fr.swingy.rpg.controller.GameController;
 import fr.swingy.rpg.model.dto.FightUpdateView;
 import fr.swingy.rpg.model.dto.GameViewData;
+import fr.swingy.rpg.model.dto.PlayerViewData;
 import fr.swingy.rpg.view.View;
 
 public class GuiView implements View
@@ -183,34 +185,71 @@ public class GuiView implements View
 	}
 
 	@Override
-	public void showGameListMenu()
+	public void showRmMenu(List <PlayerViewData> savedPlayer)
 	{
-		JButton rogue = createJButton("Rogue    ❤️ 120   ⚔️ 18  ⛨ 10", 30, "rogue.png");
-		JButton paladin = createJButton("Paladin    HP : 120   ATK : 14   DEF : 15", 30, "paladin.png");
-		JButton berserker = createJButton("Berserker    HP : 150   ATK : 20   DEF : 7", 30, "berserker.png");
 		JButton console = createJButton("Switch to GUI mode", 50, null);
 		JButton back = createJButton("Back", 50, null);
-		JLabel text = createJLabel("CHOOSE YOUR GAME", 70, null);
-
-		rogue.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
-
-		rogue.addActionListener(e -> controller.handleInputPlayer("1"));
-		paladin.addActionListener(e -> controller.handleInputPlayer("2"));
-		berserker.addActionListener(e -> controller.handleInputPlayer("3"));
-		console.addActionListener(e -> controller.handleInputPlayer("4"));
-		back.addActionListener(e -> controller.handleInputPlayer("5"));
+		JLabel text = createJLabel("YOU MUST REMOVE A SAVE", 70, null);
+		console.addActionListener(e -> controller.handleInputPlayer("6"));
+		back.addActionListener(e -> controller.handleInputPlayer("7"));
 
 		panel.removeAll();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBackground(Color.DARK_GRAY);
 		panel.add(Box.createVerticalGlue());
 		panel.add(text);
-		panel.add(Box.createVerticalStrut(90));
-		panel.add(rogue);
+		int i = 1;
+		for (PlayerViewData savedGame: savedPlayer)
+		{
+			panel.add(Box.createVerticalStrut(50));
+			String stats = savedGame.heroClassName 
+				+ "	❤️ " + savedGame.heroHp 
+				+ "	⚔️ " + savedGame.heroAttack
+				+ "	⛨ " + savedGame.heroDefence;
+			JButton saveButton = createJButton(stats, 30, savedGame.heroClassName.toLowerCase() + ".png");
+			String index = "" + i;
+			saveButton.addActionListener(e -> controller.handleInputPlayer(index));
+			panel.add(saveButton);
+			i++;
+		}
 		panel.add(Box.createVerticalStrut(50));
-		panel.add(paladin);
+		panel.add(console);
 		panel.add(Box.createVerticalStrut(50));
-		panel.add(berserker);
+		panel.add(back);
+		panel.add(Box.createVerticalGlue());
+
+		updateWindow();
+	}
+
+
+	@Override
+	public void showGameListMenu(List <PlayerViewData> savedPlayer)
+	{
+		JButton console = createJButton("Switch to GUI mode", 50, null);
+		JButton back = createJButton("Back", 50, null);
+		JLabel text = createJLabel("CHOOSE YOUR GAME", 70, null);
+		console.addActionListener(e -> controller.handleInputPlayer("6"));
+		back.addActionListener(e -> controller.handleInputPlayer("7"));
+
+		panel.removeAll();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBackground(Color.DARK_GRAY);
+		panel.add(Box.createVerticalGlue());
+		panel.add(text);
+		int i = 1;
+		for (PlayerViewData savedGame: savedPlayer)
+		{
+			panel.add(Box.createVerticalStrut(50));
+			String stats = savedGame.heroClassName 
+				+ "	❤️ " + savedGame.heroHp 
+				+ "	⚔️ " + savedGame.heroAttack
+				+ "	⛨ " + savedGame.heroDefence;
+			JButton saveButton = createJButton(stats, 30, savedGame.heroClassName.toLowerCase() + ".png");
+			String index = "" + i;
+			saveButton.addActionListener(e -> controller.handleInputPlayer(index));
+			panel.add(saveButton);
+			i++;
+		}
 		panel.add(Box.createVerticalStrut(50));
 		panel.add(console);
 		panel.add(Box.createVerticalStrut(50));
