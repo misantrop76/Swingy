@@ -89,7 +89,6 @@ public class ConsoleView implements View, Runnable
 	{
 		for (int i = 0; i < space; i++)
 			System.out.print(" ");
-		System.out.println("║");
 	}
 
 	@Override
@@ -161,7 +160,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 1 -> Main Menu                             ║");
 		System.out.println("║ 2 -> Switch to GUI mode                    ║");
 		System.out.println("║ 3 -> Exit Game                             ║");
-		System.out.println("╚════════════════════════════════════════════╝");
+		System.out.println("╚═════════════════════════════════════════════╝");
 		System.out.print("Enter your choice : ");
 	}
 
@@ -171,22 +170,26 @@ public class ConsoleView implements View, Runnable
 		clearConsole();
 		showTitle();
 
-		System.out.println("╔═════════ YOU MUST REMOVE A SAVE ══════════╗");
+		System.out.println("╔═══════════ YOU MUST REMOVE A SAVE ═══════════╗");
 		int i = 1;
 		for (PlayerViewData savedGame: savedPlayer)
 		{
-			String stats = savedGame.heroName
-				+ " "
-				+ "   ❤️ " + savedGame.heroHp 
-				+ "   ⚔️ " + savedGame.heroAttack
-				+ "   ⛨ " + savedGame.heroDefence
-				+ "   Lvl " + savedGame.heroLevel;
-			System.out.println("║ " + i + "-> " + stats);
+			System.out.print("║ " + i + " -> " + savedGame.heroName);
+			printSpace(11 - savedGame.heroName.length());
+			System.out.print("❤️  " + savedGame.heroHp);
+			printSpace(5 - ("" + savedGame.heroHp).length());
+			System.out.print("⚔️  " + savedGame.heroAttack);
+			printSpace(5 - ("" + savedGame.heroAttack).length());
+			System.out.print("⛨ " + savedGame.heroDefence);
+			printSpace(4 - ("" + savedGame.heroDefence).length());
+			System.out.print("Lvl " + savedGame.heroLevel);
+			printSpace(3 - ("" + savedGame.heroLevel).length());
+			System.out.println("║");
 			i++;
 		}
-		System.out.println("║ 6 -> Switch to GUI mode                   ");	
-		System.out.println("║ 7 -> Back                                 ");
-		System.out.println("╚═══════════════════════════════════════════╝");
+		System.out.println("║ 6 -> Switch to GUI mode                      ║");	
+		System.out.println("║ 7 -> Back                                    ║");
+		System.out.println("╚══════════════════════════════════════════════╝");
 		System.out.print("Enter your choice : ");
 	}
 
@@ -196,21 +199,26 @@ public class ConsoleView implements View, Runnable
 		clearConsole();
 		showTitle();
 
-		System.out.println("╔════════════════ LOAD GAME ════════════════╗");
+		System.out.println("╔══════════════════ LOAD GAME ═════════════════╗");
 		int i = 1;
 		for (PlayerViewData savedGame: savedPlayer)
 		{
-			String stats = savedGame.heroName
-				+ "   ❤️ " + savedGame.heroHp 
-				+ "   ⚔️ " + savedGame.heroAttack
-				+ "   ⛨ " + savedGame.heroDefence
-				+ "   Lvl " + savedGame.heroLevel;
-			System.out.println("║ " + i + "-> " + stats);
+			System.out.print("║ " + i + " -> " + savedGame.heroName);
+			printSpace(11 - savedGame.heroName.length());
+			System.out.print("❤️  " + savedGame.heroHp);
+			printSpace(5 - ("" + savedGame.heroHp).length());
+			System.out.print("⚔️  " + savedGame.heroAttack);
+			printSpace(5 - ("" + savedGame.heroAttack).length());
+			System.out.print("⛨ " + savedGame.heroDefence);
+			printSpace(4 - ("" + savedGame.heroDefence).length());
+			System.out.print("Lvl " + savedGame.heroLevel);
+			printSpace(3 - ("" + savedGame.heroLevel).length());
+			System.out.println("║");
 			i++;
 		}
-		System.out.println("║ 6 -> Switch to GUI mode                   ║");	
-		System.out.println("║ 7 -> Back                                 ║");
-		System.out.println("╚═══════════════════════════════════════════╝");
+		System.out.println("║ 6 -> Switch to GUI mode                      ║");	
+		System.out.println("║ 7 -> Back                                    ║");
+		System.out.println("╚══════════════════════════════════════════════╝");
 		System.out.print("Enter your choice : ");
 	}
 
@@ -240,7 +248,7 @@ public class ConsoleView implements View, Runnable
 		System.out.println("║ 3 -> Move Right                            ║");
 		System.out.println("║ 4 -> Move Left                             ║");
 		System.out.println("║ 5 -> Switch to GUI mode                    ║");
-		System.out.println("║ 6 -> Exit Game                             ║");
+		System.out.println("║ 6 -> Save & Quit                           ║");
 		System.out.println("╚════════════════════════════════════════════╝");
 		System.out.print("Enter your choice : ");
 	}
@@ -250,22 +258,25 @@ public class ConsoleView implements View, Runnable
 		System.out.println("╔════════════════ PLAYER STATS ═══════════════╗");
 		System.out.print("║ Character : " + data.heroData.heroName);
 		printSpace(32 - data.heroData.heroName.length());
+		System.out.println("║");
 		System.out.print("║     Class : " + data.heroData.heroClassName);
 		printSpace(32 - data.heroData.heroClassName.length());
+		System.out.println("║");
 		System.out.print("║        HP : " + data.heroData.heroHp + "/" + data.heroData.heroHpMax);
-		printSpace(29 - (Integer.toString(data.heroData.heroHp).length() + Integer.toString(data.heroData.heroHp).length()));
+		printSpace(32 - ("/" + data.heroData.heroHp  + data.heroData.heroHp).length());
+		System.out.println("║");
 		System.out.print("║   Defence : " + data.heroData.heroDefence);
 		printSpace(32 - Integer.toString(data.heroData.heroDefence).length());
+		System.out.println("║");
 		System.out.print("║    Attack : " + data.heroData.heroAttack);
 		printSpace(32 - Integer.toString(data.heroData.heroAttack).length());
+		System.out.println("║");
 		System.out.print("║       Lvl : " + data.heroData.heroLevel + " (" + data.heroData.heroXp  + "/" + data.heroData.heroXpMax + "XP)");
 		printSpace(26 - (Integer.toString(data.heroData.heroLevel).length() + Integer.toString(data.heroData.heroXp).length() + Integer.toString(data.heroData.heroXpMax).length()));
-		if (data.heroData.heroArtefact != null)
-		{
-			System.out.print("║  Artefact : " + data.heroData.heroArtefact);
-			printSpace(32 - data.heroData.heroArtefact.length());
-		}
+		System.out.println("║");
 		System.out.println("╚═════════════════════════════════════════════╝");
+		if (data.heroData.heroArtefact != null)
+			System.out.println("   Artefact : " + data.heroData.heroArtefact);
 	}
 
 	private void showMap(GameViewData data)

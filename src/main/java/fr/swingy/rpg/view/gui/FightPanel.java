@@ -110,7 +110,7 @@ public void animateHit(FightUpdateView update, Runnable callback)
 	showCriticalText = false;
 
 	final float dashDistance = 400f;
-	final float speed = 20f;
+	final float speed = 30f;
 	final float[] dashProgress = {0f};
 
 	Timer timer = new Timer(16, null);
